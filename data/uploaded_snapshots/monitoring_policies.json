@@ -1,0 +1,89 @@
+{
+    "totalCount": "4",
+    "imdata": [
+        {
+            "monCommonPol": {
+                "attributes": {
+                    "annotation": "",
+                    "childAction": "",
+                    "descr": "",
+                    "dn": "uni/fabric/moncommon",
+                    "extMngdBy": "",
+                    "lcOwn": "local",
+                    "modTs": "2019-11-29T21:54:40.788+00:00",
+                    "monPolDn": "uni/fabric/moncommon",
+                    "name": "default",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": "",
+                    "status": "",
+                    "uid": "0",
+                    "userdom": "all"
+                }
+            }
+        },
+        {
+            "monEPGPol": {
+                "attributes": {
+                    "annotation": "",
+                    "childAction": "",
+                    "descr": "",
+                    "dn": "uni/tn-common/monepg-default",
+                    "extMngdBy": "",
+                    "lcOwn": "local",
+                    "modTs": "2019-11-29T21:54:40.657+00:00",
+                    "monPolDn": "uni/tn-common/monepg-default",
+                    "name": "default",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": "",
+                    "status": "",
+                    "uid": "0",
+                    "userdom": "all"
+                }
+            }
+        },
+        {
+            "monFabricPol": {
+                "attributes": {
+                    "annotation": "",
+                    "childAction": "",
+                    "descr": "",
+                    "dn": "uni/fabric/monfab-default",
+                    "extMngdBy": "",
+                    "lcOwn": "local",
+                    "modTs": "2019-11-29T21:54:40.788+00:00",
+                    "monPolDn": "uni/fabric/monfab-default",
+                    "name": "default",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": "",
+                    "status": "",
+                    "uid": "0",
+                    "userdom": "all"
+                }
+            }
+        },
+        {
+            "monInfraPol": {
+                "attributes": {
+                    "annotation": "",
+                    "childAction": "",
+                    "descr": "",
+                    "dn": "uni/infra/moninfra-default",
+                    "extMngdBy": "",
+                    "lcOwn": "local",
+                    "modTs": "2019-11-29T21:54:40.964+00:00",
+                    "monPolDn": "uni/infra/moninfra-default",
+                    "name": "default",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": "",
+                    "status": "",
+                    "uid": "0",
+                    "userdom": "all"
+                }
+            }
+        }
+    ]
+}

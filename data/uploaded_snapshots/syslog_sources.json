@@ -1,0 +1,51 @@
+{
+    "totalCount": "1",
+    "imdata": [
+        {
+            "syslogSrc": {
+                "attributes": {
+                    "annotation": "",
+                    "childAction": "",
+                    "descr": "",
+                    "dn": "uni/fabric/moncommon/slsrc-10.5.106.40",
+                    "extMngdBy": "",
+                    "incl": "all,audit,events,faults,session",
+                    "lcOwn": "local",
+                    "minSev": "information",
+                    "modTs": "2020-08-13T16:36:23.706+00:00",
+                    "monPolDn": "uni/fabric/moncommon",
+                    "name": "10.5.106.40",
+                    "nameAlias": "",
+                    "status": "",
+                    "uid": "22548",
+                    "userdom": "all"
+                },
+                "children": [
+                    {
+                        "syslogRsDestGroup": {
+                            "attributes": {
+                                "annotation": "",
+                                "childAction": "",
+                                "extMngdBy": "",
+                                "forceResolve": "yes",
+                                "lcOwn": "local",
+                                "modTs": "2020-08-13T16:36:23.706+00:00",
+                                "monPolDn": "uni/fabric/moncommon",
+                                "rType": "mo",
+                                "rn": "rsdestGroup",
+                                "state": "formed",
+                                "stateQual": "none",
+                                "status": "",
+                                "tCl": "syslogGroup",
+                                "tDn": "uni/fabric/slgroup-10.5.106.40",
+                                "tType": "mo",
+                                "uid": "22548",
+                                "userdom": "all"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
