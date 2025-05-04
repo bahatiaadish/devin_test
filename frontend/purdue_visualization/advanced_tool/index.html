@@ -1997,43 +1997,43 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                     purdueLevel = '3';
                     suggestions += `<p><strong>Purdue Level:</strong> Based on the network infrastructure function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
                     zones.push('management');
-            } else if (primaryFunction === 'identity') {
-                purdueLevel = '3.5';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the identity and access management function, this application likely belongs to <span class="badge badge-level-3-5">Level 3.5</span> (DMZ).</p>`;
-                zones.push('security', 'management');
-            } else if (primaryFunction === 'dns') {
-                purdueLevel = '3';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the DNS/DHCP services function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
-                zones.push('management');
-            } else if (primaryFunction === 'monitoring') {
-                purdueLevel = '3';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the system monitoring function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
-                zones.push('management', 'operations');
-            } else if (primaryFunction === 'backup') {
-                purdueLevel = '3';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the backup and recovery function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
-                zones.push('management');
-            } else if (primaryFunction === 'database') {
-                purdueLevel = '3-4';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the database services function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> or <span class="badge badge-level-4">Level 4</span> depending on data type.</p>`;
-                zones.push('management', 'enterprise');
-            } else if (primaryFunction === 'storage') {
-                purdueLevel = '3';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the storage services function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
-                zones.push('management');
-            } else if (primaryFunction === 'virtualization') {
-                purdueLevel = '3';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the virtualization platform function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
-                zones.push('management');
-            } else if (primaryFunction === 'communication') {
-                purdueLevel = '3.5';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the communication services function, this application likely belongs to <span class="badge badge-level-3-5">Level 3.5</span> (DMZ).</p>`;
-                zones.push('management', 'enterprise');
-            } else if (primaryFunction === 'collaboration') {
-                purdueLevel = '4';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the collaboration tools function, this application likely belongs to <span class="badge badge-level-4">Level 4</span> (Business Planning).</p>`;
-                zones.push('enterprise');
-            }
+                } else if (primaryFunction === 'identity') {
+                    purdueLevel = '3.5';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the identity and access management function, this application likely belongs to <span class="badge badge-level-3-5">Level 3.5</span> (DMZ).</p>`;
+                    zones.push('security', 'management');
+                } else if (primaryFunction === 'dns') {
+                    purdueLevel = '3';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the DNS/DHCP services function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
+                    zones.push('management');
+                } else if (primaryFunction === 'monitoring') {
+                    purdueLevel = '3';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the system monitoring function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
+                    zones.push('management', 'operations');
+                } else if (primaryFunction === 'backup') {
+                    purdueLevel = '3';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the backup and recovery function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
+                    zones.push('management');
+                } else if (primaryFunction === 'database') {
+                    purdueLevel = '3-4';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the database services function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> or <span class="badge badge-level-4">Level 4</span> depending on data type.</p>`;
+                    zones.push('management', 'enterprise');
+                } else if (primaryFunction === 'storage') {
+                    purdueLevel = '3';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the storage services function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
+                    zones.push('management');
+                } else if (primaryFunction === 'virtualization') {
+                    purdueLevel = '3';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the virtualization platform function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
+                    zones.push('management');
+                } else if (primaryFunction === 'communication') {
+                    purdueLevel = '3.5';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the communication services function, this application likely belongs to <span class="badge badge-level-3-5">Level 3.5</span> (DMZ).</p>`;
+                    zones.push('management', 'enterprise');
+                } else if (primaryFunction === 'collaboration') {
+                    purdueLevel = '4';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the collaboration tools function, this application likely belongs to <span class="badge badge-level-4">Level 4</span> (Business Planning).</p>`;
+                    zones.push('enterprise');
+                }
 
             // Determine likely zones based on users
             if (primaryUsers === 'all') {
