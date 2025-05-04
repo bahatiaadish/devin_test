@@ -2093,6 +2093,10 @@ sible                 interface: 'Distribution Network Interface',
 
             // Update results
             updateResults(purdueLevel, zones);
+        } catch (error) {
+            console.error('Error generating smart suggestions:', error);
+            alert('An error occurred while generating suggestions. Please try again.');
+        }
         }
 
         // Function to apply smart suggestions
