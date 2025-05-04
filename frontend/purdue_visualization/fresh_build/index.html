@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-bottom: 50px;
+        }
+        .header {
+            background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        .badge {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.6rem;
+            margin-right: 0.3rem;
+            margin-bottom: 0.3rem;
+        }
+        .badge-level-0 { background-color: #FFD700; color: #000; }
+        .badge-level-1 { background-color: #FF9800; color: #000; }
+        .badge-level-2 { background-color: #4CAF50; color: white; }
+        .badge-level-3 { background-color: #2196F3; color: white; }
+        .badge-level-3-5 { background-color: #9C27B0; color: white; }
+        .badge-level-4 { background-color: #F44336; color: white; }
+        .badge-level-5 { background-color: #607D8B; color: white; }
+
+        .badge-zone-mgmt { background-color: #E3F2FD; color: #0d47a1; border: 1px solid #0d47a1; }
+        .badge-zone-enterprise { background-color: #FFF3E0; color: #e65100; border: 1px solid #e65100; }
+        .badge-zone-ot { background-color: #E8F5E9; color: #1b5e20; border: 1px solid #1b5e20; }
+        .badge-zone-operations { background-color: #FFEBEE; color: #b71c1c; border: 1px solid #b71c1c; }
+        .badge-zone-security { background-color: #EDE7F6; color: #4a148c; border: 1px solid #4a148c; }
+        .badge-zone-app-dmz { background-color: #FFF8E1; color: #f57f17; border: 1px solid #f57f17; }
+        .badge-zone-field { background-color: #F3E5F5; color: #4a148c; border: 1px solid #4a148c; }
+
+        .app-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .quick-start-card {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .quick-start-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        .suggestion-card {
+            border-left: 5px solid #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1 class="display-5 fw-bold">Advanced Network Zone &amp; Purdue Level Classification Tool</h1>
+            <p class="lead">Determine the appropriate network zone, Purdue level, datacenter type, and site location for your applications</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="card sticky-top">
+                    <div class="card-header bg-primary text-white">
+                        Navigation
+                    </div>
+                    <div class="card-body">
+                        <nav class="nav flex-column nav-pills">
+                            <a class="nav-link active" href="#quick-start">Quick Start</a>
+                            <a class="nav-link" href="#app-details">Application Details</a>
+                            <a class="nav-link" href="#results">Results &amp; Recommendations</a>
+                            <a class="nav-link" href="#common-apps">Common Network Services</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <!-- Quick Start Section -->
+                <div id="quick-start" class="mb-5">
+                    <h2 class="mb-4">Quick Start</h2>
+                    <p>Select an application type to get started with pre-filled recommendations, or enter your application details manually.</p>
+
+                    <!-- Common Network Services -->
+                    <h3 class="mb-3">Common Network Services</h3>
+                    <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+                        <!-- ITSM -->
+                        <div class="col">
+                            <div class="card h-100 quick-start-card" onclick="selectAppType('itsm')">
+                                <div class="card-body text-center">
+                                    <div class="app-icon text-primary">
+                                        <i class="bi bi-gear-fill"></i>
+                                    </div>
+                                    <h5 class="card-title">ITSM</h5>
+                                    <p class="card-text">IT Service Management</p>
+                                    <div class="d-flex justify-content-center">
+                                        <span class="badge badge-level-4 me-1">Level 4</span>
+                                        <span class="badge badge-zone-mgmt">Management Zone</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- ServiceNow -->
+                        <div class="col">
+                            <div class="card h-100 quick-start-card" onclick="selectAppType('servicenow')">
+                                <div class="card-body text-center">
+                                    <div class="app-icon text-success">
+                                        <i class="bi bi-ticket-detailed"></i>
+                                    </div>
+                                    <h5 class="card-title">ServiceNow</h5>
+                                    <p class="card-text">Service Management Platform</p>
+                                    <div class="d-flex justify-content-center">
+                                        <span class="badge badge-level-4 me-1">Level 4</span>
+                                        <span class="badge badge-zone-enterprise">Enterprise Zone</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- DNS -->
+                        <div class="col">
+                            <div class="card h-100 quick-start-card" onclick="selectAppType('dns')">
+                                <div class="card-body text-center">
+                                    <div class="app-icon text-info">
+                                        <i class="bi bi-globe"></i>
+                                    </div>
+                                    <h5 class="card-title">DNS</h5>
+                                    <p class="card-text">Domain Name System</p>
+                                    <div class="d-flex justify-content-center">
+                                        <span class="badge badge-level-3 me-1">Level 3</span>
+                                        <span class="badge badge-zone-mgmt">Management Zone</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- IPAM -->
+                        <div class="col">
+                            <div class="card h-100 quick-start-card" onclick="selectAppType('ipam')">
+                                <div class="card-body text-center">
+                                    <div class="app-icon text-warning">
+                                        <i class="bi bi-diagram-2"></i>
+                                    </div>
+                                    <h5 class="card-title">IPAM</h5>
+                                    <p class="card-text">IP Address Management</p>
+                                    <div class="d-flex justify-content-center">
+                                        <span class="badge badge-level-3 me-1">Level 3</span>
+                                        <span class="badge badge-zone-mgmt">Management Zone</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- DHCP -->
+                        <div class="col">
+                            <div class="card h-100 quick-start-card" onclick="selectAppType('dhcp')">
+                                <div class="card-body text-center">
+                                    <div class="app-icon text-danger">
+                                        <i class="bi bi-hdd-network"></i>
+                                    </div>
+                                    <h5 class="card-title">DHCP</h5>
+                                    <p class="card-text">Dynamic Host Configuration Protocol</p>
+                                    <div class="d-flex justify-content-center">
+                                        <span class="badge badge-level-3 me-1">Level 3</span>
+                                        <span class="badge badge-zone-mgmt">Management Zone</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Active Directory -->
+                        <div class="col">
+                            <div class="card h-100 quick-start-card" onclick="selectAppType('ad')">
+                                <div class="card-body text-center">
+                                    <div class="app-icon text-secondary">
+                                        <i class="bi bi-person-badge"></i>
+                                    </div>
+                                    <h5 class="card-title">Active Directory</h5>
+                                    <p class="card-text">Directory Service</p>
+                                    <div class="d-flex justify-content-center">
+                                        <span class="badge badge-level-3-5 me-1">Level 3.5</span>
+                                        <span class="badge badge-zone-security">Security Zone</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- PAM -->
+                        <div class="col">
+                            <div class="card h-100 quick-start-card" onclick="selectAppType('pam')">
+                                <div class="card-body text-center">
+                                    <div class="app-icon text-dark">
+                                        <i class="bi bi-shield-lock-fill"></i>
+                                    </div>
+                                    <h5 class="card-title">PAM</h5>
+                                    <p class="card-text">Privileged Access Management</p>
+                                    <div class="d-flex justify-content-center">
+                                        <span class="badge badge-level-3-5 me-1">Level 3.5</span>
+                                        <span class="badge badge-zone-security">Security Zone</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Application -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            Custom Application
+                        </div>
+                        <div class="card-body">
+                            <p>Or enter your application details manually:</p>
+                            <button class="btn btn-primary" id="start-manual-btn" onclick="scrollToSection('app-details')">Start Manual Classification</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Application Details Section -->
+                <div id="app-details" class="mb-5">
+                    <h2 class="mb-4">Application Details</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="app-name" class="form-label">Application Name</label>
+                                <input type="text" class="form-control" id="app-name" placeholder="Enter application name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="interface-name" class="form-label">Interface Name</label>
+                                <input type="text" class="form-control" id="interface-name" placeholder="Enter interface name (optional)">
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Brief Description</label>
+                                <textarea class="form-control" id="description" rows="3" placeholder="Describe the application's purpose and functionality"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="primary-function" class="form-label">Primary Function</label>
+                                <select class="form-select" id="primary-function">
+                                    <option selected disabled>Select primary function...</option>
+                                    <option value="control">Control physical processes</option>
+                                    <option value="monitor">Monitor processes or equipment</option>
+                                    <option value="operations">Operations management</option>
+                                    <option value="business">Business planning and logistics</option>
+                                    <option value="security">Security monitoring and enforcement</option>
+                                    <option value="external">External connectivity or cloud service</option>
+                                    <option value="network">Network infrastructure</option>
+                                    <option value="identity">Identity and access management</option>
+                                    <option value="dns">DNS/DHCP services</option>
+                                    <option value="monitoring">System monitoring</option>
+                                    <option value="backup">Backup and recovery</option>
+                                    <option value="database">Database services</option>
+                                    <option value="storage">Storage services</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="primary-users" class="form-label">Primary Users</label>
+                                <select class="form-select" id="primary-users">
+                                    <option selected disabled>Select primary users...</option>
+                                    <option value="all">All Users (Organization-wide)</option>
+                                    <option value="operators">Operators</option>
+                                    <option value="engineers">Engineers/Technicians</option>
+                                    <option value="supervisors">Supervisors/Managers</option>
+                                    <option value="business">Business Staff</option>
+                                    <option value="it">IT Administrators</option>
+                                    <option value="security">Security Personnel</option>
+                                    <option value="external">External Users</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" id="generate-suggestions-btn">Generate Smart Suggestions</button>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4 suggestion-card" id="smart-suggestions" style="display: none;">
+                        <div class="card-header bg-success text-white">
+                            Smart Suggestions
+                        </div>
+                        <div class="card-body" id="suggestion-content">
+                            <!-- Suggestions will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="results" class="mb-5">
+                    <h2 class="mb-4">Results &amp; Recommendations</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-primary text-white">
+                                    Purdue Level
+                                </div>
+                                <div class="card-body" id="purdue-result">
+                                    <p class="text-muted">Complete the assessment to see recommendations</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-primary text-white">
+                                    Network Zone
+                                </div>
+                                <div class="card-body" id="zone-result">
+                                    <p class="text-muted">Complete the assessment to see recommendations</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            Security Considerations
+                        </div>
+                        <div class="card-body" id="security-considerations">
+                            <p class="text-muted">Complete the assessment to see recommendations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Function to scroll to a section by ID
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                console.error('Section not found:', sectionId);
+            }
+        }
+
+        // Function to select an application type
+        function selectAppType(appType) {
+            // Clear previous selections
+            document.getElementById('app-name').value = '';
+            document.getElementById('interface-name').value = '';
+            document.getElementById('description').value = '';
+            
+            // Reset dropdowns
+            document.getElementById('primary-function').selectedIndex = 0;
+            document.getElementById('primary-users').selectedIndex = 0;
+            
+            // Hide suggestions
+            document.getElementById('smart-suggestions').style.display = 'none';
+            
+            // Set values based on app type
+            switch(appType) {
+                case 'itsm':
+                    document.getElementById('app-name').value = 'IT Service Management';
+                    document.getElementById('description').value = 'Platform for managing IT services and support';
+                    setSelectValue('primary-function', 'operations');
+                    setSelectValue('primary-users', 'it');
+                    break;
+                case 'servicenow':
+                    document.getElementById('app-name').value = 'ServiceNow';
+                    document.getElementById('description').value = 'Cloud-based service management platform';
+                    setSelectValue('primary-function', 'operations');
+                    setSelectValue('primary-users', 'business');
+                    break;
+                case 'dns':
+                    document.getElementById('app-name').value = 'DNS Server';
+                    document.getElementById('description').value = 'Domain Name System service for network name resolution';
+                    setSelectValue('primary-function', 'dns');
+                    setSelectValue('primary-users', 'it');
+                    break;
+                case 'ipam':
+                    document.getElementById('app-name').value = 'IP Address Management';
+                    document.getElementById('description').value = 'System for managing IP address space and related infrastructure';
+                    setSelectValue('primary-function', 'network');
+                    setSelectValue('primary-users', 'it');
+                    break;
+                case 'dhcp':
+                    document.getElementById('app-name').value = 'DHCP Server';
+                    document.getElementById('description').value = 'Dynamic Host Configuration Protocol service for IP address assignment';
+                    setSelectValue('primary-function', 'dns');
+                    setSelectValue('primary-users', 'it');
+                    break;
+                case 'ad':
+                    document.getElementById('app-name').value = 'Active Directory';
+                    document.getElementById('description').value = 'Directory service for identity and access management';
+                    setSelectValue('primary-function', 'identity');
+                    setSelectValue('primary-users', 'all');
+                    break;
+                case 'pam':
+                    document.getElementById('app-name').value = 'Privileged Access Management';
+                    document.getElementById('description').value = 'System for managing privileged access to critical systems';
+                    setSelectValue('primary-function', 'security');
+                    setSelectValue('primary-users', 'security');
+                    break;
+            }
+            
+            // Scroll to application details
+            scrollToSection('app-details');
+            
+            // Generate suggestions automatically
+            generateSmartSuggestions();
+        }
+        
+        // Helper function to set select value
+        function setSelectValue(selectId, value) {
+            const select = document.getElementById(selectId);
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === value) {
+                    select.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+        
+        // Function to generate smart suggestions
+        function generateSmartSuggestions() {
+            try {
+                // Get input values
+                const appName = document.getElementById('app-name').value;
+                const primaryFunction = document.getElementById('primary-function').value;
+                const primaryUsers = document.getElementById('primary-users').value;
+                
+                // Validate inputs
+                if (!appName || primaryFunction === null || primaryUsers === null) {
+                    alert('Please enter application name and select primary function and users.');
+                    return;
+                }
+                
+                // Initialize variables
+                let suggestions = '';
+                let purdueLevel = '';
+                let zones = [];
+                
+                // Determine likely Purdue level based on function
+                if (primaryFunction === 'control') {
+                    purdueLevel = '0-1';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the control function, this application likely belongs to <span class="badge badge-level-1">Level 0-1</span> (Process/Basic Control).</p>`;
+                    zones.push('ot', 'field');
+                } else if (primaryFunction === 'monitor') {
+                    purdueLevel = '2';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the monitoring function, this application likely belongs to <span class="badge badge-level-2">Level 2</span> (Area Control).</p>`;
+                    zones.push('ot', 'operations');
+                } else if (primaryFunction === 'operations') {
+                    purdueLevel = '3';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the operations management function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
+                    zones.push('operations', 'management');
+                } else if (primaryFunction === 'business') {
+                    purdueLevel = '4';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the business function, this application likely belongs to <span class="badge badge-level-4">Level 4</span> (Business Planning).</p>`;
+                    zones.push('enterprise');
+                } else if (primaryFunction === 'security') {
+                    purdueLevel = '3-3.5';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the security function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> or <span class="badge badge-level-3-5">Level 3.5</span> (Site Operations/DMZ).</p>`;
+                    zones.push('security', 'management');
+                } else if (primaryFunction === 'external') {
+                    purdueLevel = '5';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the external connectivity function, this application likely belongs to <span class="badge badge-level-5">Level 5</span> (Enterprise).</p>`;
+                    zones.push('app-dmz', 'enterprise');
+                } else if (primaryFunction === 'network') {
+                    purdueLevel = '3';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the network infrastructure function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
+                    zones.push('management');
+                } else if (primaryFunction === 'identity') {
+                    purdueLevel = '3.5';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the identity and access management function, this application likely belongs to <span class="badge badge-level-3-5">Level 3.5</span> (DMZ).</p>`;
+                    zones.push('security', 'management');
+                } else if (primaryFunction === 'dns') {
+                    purdueLevel = '3';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the DNS/DHCP services function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
+                    zones.push('management');
+                }
+                
+                // Determine likely zones based on users
+                if (primaryUsers === 'all') {
+                    suggestions += `<p><strong>Network Zone:</strong> Based on organization-wide usage, this application likely belongs to the <span class="badge badge-zone-app-dmz">App DMZ</span> or <span class="badge badge-zone-mgmt">Management Zone</span> with proper access controls.</p>`;
+                    if (!zones.includes('app-dmz')) zones.push('app-dmz');
+                    if (!zones.includes('management')) zones.push('management');
+                    
+                    // For applications used by everyone, recommend Purdue level 3.5 (DMZ)
+                    if (purdueLevel === '') {
+                        purdueLevel = '3.5';
+                        suggestions = `<p><strong>Purdue Level:</strong> Based on organization-wide usage, this application likely belongs to <span class="badge badge-level-3-5">Level 3.5</span> (DMZ).</p>` + suggestions;
+                    }
+                } else if (primaryUsers === 'operators') {
+                    suggestions += `<p><strong>Network Zone:</strong> Based on operator users, this application likely belongs to the <span class="badge badge-zone-ot">OT Zone</span>.</p>`;
+                    if (!zones.includes('ot')) zones.push('ot');
+                } else if (primaryUsers === 'engineers') {
+                    suggestions += `<p><strong>Network Zone:</strong> Based on engineer/technician users, this application likely belongs to the <span class="badge badge-zone-mgmt">Management Zone</span> or <span class="badge badge-zone-ot">OT Zone</span>.</p>`;
+                    if (!zones.includes('management')) zones.push('management');
+                } else if (primaryUsers === 'it') {
+                    suggestions += `<p><strong>Network Zone:</strong> Based on IT administrator users, this application likely belongs to the <span class="badge badge-zone-mgmt">Management Zone</span>.</p>`;
+                    if (!zones.includes('management')) zones.push('management');
+                } else if (primaryUsers === 'security') {
+                    suggestions += `<p><strong>Network Zone:</strong> Based on security personnel users, this application likely belongs to the <span class="badge badge-zone-security">Security Zone</span>.</p>`;
+                    if (!zones.includes('security')) zones.push('security');
+                }
+                
+                // Add security considerations
+                suggestions += `<p><strong>Security Considerations:</strong> `;
+                if (zones.includes('ot') || zones.includes('field')) {
+                    suggestions += `This application may handle critical operational data. Consider strict access controls and network segmentation.`;
+                } else if (zones.includes('enterprise') || zones.includes('app-dmz')) {
+                    suggestions += `This application may be exposed to external threats. Consider implementing defense-in-depth strategies.`;
+                } else if (zones.includes('security')) {
+                    suggestions += `This application handles sensitive security functions. Ensure proper authentication and authorization mechanisms.`;
+                } else {
+                    suggestions += `Implement appropriate access controls and monitoring based on the sensitivity of the data handled.`;
+                }
+                suggestions += `</p>`;
+                
+                // Display suggestions
+                const suggestionContent = document.getElementById('suggestion-content');
+                if (suggestionContent) {
+                    suggestionContent.innerHTML = suggestions;
+                    document.getElementById('smart-suggestions').style.display = 'block';
+                } else {
+                    alert('Error: Could not find suggestion-content element');
+                }
+                
+                // Update results
+                updateResults(purdueLevel, zones);
+            } catch (error) {
+                console.error('Error generating smart suggestions:', error);
+                alert('An error occurred while generating suggestions. Please try again.');
+            }
+        }
+        
+        // Function to update results
+        function updateResults(purdueLevel, zones) {
+            let purdueResult = '';
+            let zoneResult = '';
+            let securityConsiderations = '';
+            
+            // Purdue level result
+            if (purdueLevel) {
+                if (purdueLevel === '0-1') {
+                    purdueResult = `<strong>Level 0-1 (Process/Basic Control)</strong>
+                                    <p>This interface directly interacts with or controls physical processes.</p>`;
+                    securityConsiderations += `<p>For Level 0-1 interfaces, physical security is critical. Ensure that access to these systems is strictly controlled.</p>`;
+                } else if (purdueLevel === '2') {
+                    purdueResult = `<strong>Level 2 (Area Control)</strong>
+                                    <p>This interface provides supervisory control and monitoring capabilities.</p>`;
+                    securityConsiderations += `<p>For Level 2 interfaces, ensure proper authentication and authorization mechanisms. Monitor for unusual command patterns.</p>`;
+                } else if (purdueLevel === '3') {
+                    purdueResult = `<strong>Level 3 (Site Operations)</strong>
+                                    <p>This interface manages site-wide operations and workflow.</p>`;
+                    securityConsiderations += `<p>For Level 3 interfaces, implement proper data validation and secure coding practices. Protect against lateral movement.</p>`;
+                } else if (purdueLevel === '3-3.5') {
+                    purdueResult = `<strong>Level 3-3.5 (Site Operations/DMZ)</strong>
+                                    <p>This interface bridges operational and business systems.</p>`;
+                    securityConsiderations += `<p>For Level 3-3.5 interfaces, implement strict data validation and filtering. Consider data diodes or unidirectional gateways.</p>`;
+                } else if (purdueLevel === '3.5') {
+                    purdueResult = `<strong>Level 3.5 (DMZ)</strong>
+                                    <p>This interface serves as a secure gateway between different security domains.</p>`;
+                    securityConsiderations += `<p>For Level 3.5 interfaces, implement strict data validation and filtering. Consider data diodes or unidirectional gateways.</p>`;
+                } else if (purdueLevel === '4') {
+                    purdueResult = `<strong>Level 4 (Business Planning)</strong>
+                                    <p>This interface handles business planning and logistics.</p>`;
+                    securityConsiderations += `<p>For Level 4 interfaces, implement strong authentication and encryption. Protect sensitive business data.</p>`;
+                } else if (purdueLevel === '5') {
+                    purdueResult = `<strong>Level 5 (Enterprise)</strong>
+                                    <p>This interface connects to external networks or the internet.</p>`;
+                    securityConsiderations += `<p>For Level 5 interfaces, implement defense-in-depth strategies. Assume the interface will be targeted by attackers.</p>`;
+                }
+            } else {
+                purdueResult = `<p class="text-muted">Complete the assessment to see recommendations</p>`;
+            }
+            
+            // Zone result
+            if (zones && zones.length > 0) {
+                zoneResult = `<div>`;
+                
+                zones.forEach(zone => {
+                    if (zone === 'mgmt' || zone === 'management') {
+                        zoneResult += `<span class="badge badge-zone-mgmt mb-2">Management Zone</span><br>`;
+                    } else if (zone === 'enterprise') {
+                        zoneResult += `<span class="badge badge-zone-enterprise mb-2">Enterprise Zone</span><br>`;
+                    } else if (zone === 'ot') {
+                        zoneResult += `<span class="badge badge-zone-ot mb-2">OT Zone</span><br>`;
+                    } else if (zone === 'operations') {
+                        zoneResult += `<span class="badge badge-zone-operations mb-2">Operations Zone</span><br>`;
+                    } else if (zone === 'security') {
+                        zoneResult += `<span class="badge badge-zone-security mb-2">Security Zone</span><br>`;
+                    } else if (zone === 'app-dmz') {
+                        zoneResult += `<span class="badge badge-zone-app-dmz mb-2">App DMZ</span><br>`;
+                    } else if (zone === 'field') {
+                        zoneResult += `<span class="badge badge-zone-field mb-2">Field Zone</span><br>`;
+                    }
+                });
+                
+                zoneResult += `<p class="mt-2">This interface should be placed in the zone(s) listed above based on its function and users.</p>`;
+                zoneResult += `</div>`;
+            } else {
+                zoneResult = `<p class="text-muted">Complete the assessment to see recommendations</p>`;
+            }
+            
+            // Update the results sections
+            document.getElementById('purdue-result').innerHTML = purdueResult;
+            document.getElementById('zone-result').innerHTML = zoneResult;
+            document.getElementById('security-considerations').innerHTML = securityConsiderations || `<p class="text-muted">Complete the assessment to see recommendations</p>`;
+        }
+        
+        // Add event listener for the Generate Smart Suggestions button
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateBtn = document.getElementById('generate-suggestions-btn');
+            if (generateBtn) {
+                generateBtn.addEventListener('click', generateSmartSuggestions);
+            }
+        });
+    </script>
+</body>
+</html>
