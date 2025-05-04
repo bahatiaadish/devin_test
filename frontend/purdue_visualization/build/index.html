@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface Zone Matrix with Purdue Levels</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .view-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .btn.active {
+            background-color: #367c39;
+        }
+        .search-box {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 300px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .check {
+            color: green;
+            font-weight: bold;
+        }
+        .x-mark {
+            color: #999;
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        .color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        /* Purdue Level Colors */
+        .purdue-0 { background-color: #FFD700; } /* Gold */
+        .purdue-1 { background-color: #FF9800; } /* Orange */
+        .purdue-2 { background-color: #4CAF50; } /* Green */
+        .purdue-3 { background-color: #2196F3; } /* Blue */
+        .purdue-3.5 { background-color: #9C27B0; } /* Purple */
+        .purdue-4 { background-color: #F44336; } /* Red */
+        .purdue-5 { background-color: #607D8B; } /* Blue Grey */
+        
+        /* Zone Colors */
+        .mgmt-zone { background-color: #E3F2FD; }
+        .enterprise { background-color: #FFF3E0; }
+        .ot { background-color: #E8F5E9; }
+        .operations { background-color: #FFEBEE; }
+        .security { background-color: #EDE7F6; }
+        .app-dmz { background-color: #FFF8E1; }
+        .field-zone { background-color: #F3E5F5; }
+        
+        .visualization-toggle {
+            margin: 15px 0;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .checkbox-label {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-label input {
+            margin-right: 5px;
+        }
+        
+        #diagram-view {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .diagram-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .purdue-level {
+            display: flex;
+            width: 100%;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .level-label {
+            width: 100px;
+            padding: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .level-items {
+            display: flex;
+            flex-wrap: wrap;
+            flex: 1;
+            padding: 10px;
+            gap: 10px;
+        }
+        
+        .app-item {
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            min-width: 150px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Interface Zone Matrix with Purdue Levels</h1>
+        
+        <div class="controls">
+            <div class="filter-section">
+                <h3>Visualization Options</h3>
+                <div class="visualization-toggle">
+                    <div class="checkbox-container">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-purdue-column" checked> Show Purdue Level Column
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="use-color-coding" checked> Use Purdue Level Color Coding
+                        </label>
+                    </div>
+                </div>
+                
+                <h3>Filter by Zone</h3>
+                <div class="checkbox-container">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="zone-filter" data-zone="mgmt" checked> Management Zone
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="zone-filter" data-zone="enterprise" checked> Enterprise
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="zone-filter" data-zone="ot" checked> OT
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="zone-filter" data-zone="operations" checked> Operations
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="zone-filter" data-zone="security" checked> Security Zone
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="zone-filter" data-zone="app-dmz" checked> App DMZ
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="zone-filter" data-zone="field" checked> Field Zone
+                    </label>
+                </div>
+                
+                <h3>Filter by Purdue Level</h3>
+                <div class="checkbox-container">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="purdue-filter" data-level="0" checked> Level 0 (Process)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="purdue-filter" data-level="1" checked> Level 1 (Basic Control)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="purdue-filter" data-level="2" checked> Level 2 (Area Control)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="purdue-filter" data-level="3" checked> Level 3 (Site Operations)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="purdue-filter" data-level="3.5" checked> Level 3.5 (DMZ)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="purdue-filter" data-level="4" checked> Level 4 (Business Planning)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="purdue-filter" data-level="5" checked> Level 5 (Enterprise)
+                    </label>
+                </div>
+            </div>
+            
+            <div class="filter-section">
+                <h3>View Type</h3>
+                <div class="view-buttons">
+                    <button class="btn active" id="table-btn">Table View</button>
+                    <button class="btn" id="diagram-btn">Diagram View</button>
+                </div>
+                
+                <h3>Search</h3>
+                <input type="text" id="search-input" class="search-box" placeholder="Search applications or interfaces...">
+            </div>
+        </div>
+        
+        <div class="legend">
+            <h3>Purdue Level Legend:</h3>
+            <div class="legend-item">
+                <div class="color-box purdue-0"></div>
+                <span>Level 0 (Process)</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box purdue-1"></div>
+                <span>Level 1 (Basic Control)</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box purdue-2"></div>
+                <span>Level 2 (Area Control)</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box purdue-3"></div>
+                <span>Level 3 (Site Operations)</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box purdue-3.5"></div>
+                <span>Level 3.5 (DMZ)</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box purdue-4"></div>
+                <span>Level 4 (Business Planning)</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box purdue-5"></div>
+                <span>Level 5 (Enterprise)</span>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <h3>Zone Legend:</h3>
+            <div class="legend-item">
+                <div class="color-box mgmt-zone"></div>
+                <span>Management Zone</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box enterprise"></div>
+                <span>Enterprise</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box ot"></div>
+                <span>OT</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box operations"></div>
+                <span>Operations</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box security"></div>
+                <span>Security Zone</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box app-dmz"></div>
+                <span>App DMZ</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box field-zone"></div>
+                <span>Field Zone</span>
+            </div>
+        </div>
+        
+        <div id="table-view">
+            <table id="matrix-table">
+                <thead>
+                    <tr>
+                        <th>Application / Tool</th>
+                        <th>Interface Name</th>
+                        <th id="purdue-level-header">Purdue Level</th>
+                        <th>Mgmt Zone</th>
+                        <th>Enterprise</th>
+                        <th>OT</th>
+                        <th>Operations</th>
+                        <th>Security Zone</th>
+                        <th>App DMZ</th>
+                        <th>Field Zone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="diagram-view">
+            <div class="diagram-container">
+                <!-- Purdue levels will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application data with Purdue levels
+        const applicationData = [
+            { 
+                app: "Nexus Dashboard", 
+                interface: "Management Interface", 
+                purdueLevel: 3,
+                zones: { mgmt: true, enterprise: false, ot: false, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "Nexus Dashboard", 
+                interface: "Data Interface", 
+                purdueLevel: 2,
+                zones: { mgmt: false, enterprise: false, ot: false, operations: true, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "Splunk Indexer", 
+                interface: "Management Interface", 
+                purdueLevel: 3,
+                zones: { mgmt: true, enterprise: false, ot: false, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "Splunk Indexer", 
+                interface: "Data Interface", 
+                purdueLevel: 3.5,
+                zones: { mgmt: false, enterprise: false, ot: false, operations: false, security: true, appDmz: false, field: false }
+            },
+            { 
+                app: "ThousandEyes Probes", 
+                interface: "Management Interface", 
+                purdueLevel: 3,
+                zones: { mgmt: true, enterprise: false, ot: false, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "ThousandEyes Probes", 
+                interface: "Test Agent Interface", 
+                purdueLevel: 2,
+                zones: { mgmt: false, enterprise: false, ot: false, operations: true, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "CyberArk PAM", 
+                interface: "PVWA Web Portal", 
+                purdueLevel: 3,
+                zones: { mgmt: true, enterprise: false, ot: false, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "CyberArk PAM", 
+                interface: "Vault Data Interface", 
+                purdueLevel: 2,
+                zones: { mgmt: false, enterprise: false, ot: false, operations: true, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "Cisco ISE", 
+                interface: "Admin GUI Interface", 
+                purdueLevel: 3,
+                zones: { mgmt: true, enterprise: false, ot: false, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "Cisco ISE", 
+                interface: "RADIUS Endpoint Interface", 
+                purdueLevel: 3.5,
+                zones: { mgmt: false, enterprise: true, ot: false, operations: true, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "Infoblox DNS/IPAM", 
+                interface: "Grid Admin Interface", 
+                purdueLevel: 3,
+                zones: { mgmt: true, enterprise: false, ot: false, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "Infoblox DNS/IPAM", 
+                interface: "Service Interface (DNS/NTP)", 
+                purdueLevel: 3.5,
+                zones: { mgmt: false, enterprise: true, ot: false, operations: true, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "Cisco ACI/NDFC", 
+                interface: "Management Interface", 
+                purdueLevel: 3,
+                zones: { mgmt: true, enterprise: false, ot: false, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "Cisco ACI/NDFC", 
+                interface: "Overlay Fabric Interface", 
+                purdueLevel: 2,
+                zones: { mgmt: false, enterprise: false, ot: false, operations: true, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "SIEM Platform", 
+                interface: "Admin Dashboard", 
+                purdueLevel: 3,
+                zones: { mgmt: true, enterprise: false, ot: false, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "SIEM Platform", 
+                interface: "Log Collector Interface", 
+                purdueLevel: 3.5,
+                zones: { mgmt: false, enterprise: false, ot: false, operations: false, security: true, appDmz: false, field: false }
+            },
+            { 
+                app: "Firewall Management", 
+                interface: "Admin Console", 
+                purdueLevel: 3,
+                zones: { mgmt: true, enterprise: false, ot: false, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "Firewall Management", 
+                interface: "Policy Distribution", 
+                purdueLevel: 3.5,
+                zones: { mgmt: false, enterprise: true, ot: true, operations: true, security: true, appDmz: true, field: true }
+            },
+            { 
+                app: "Industrial HMI", 
+                interface: "Operator Interface", 
+                purdueLevel: 2,
+                zones: { mgmt: false, enterprise: false, ot: true, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "Industrial HMI", 
+                interface: "Control Network", 
+                purdueLevel: 1,
+                zones: { mgmt: false, enterprise: false, ot: true, operations: false, security: false, appDmz: false, field: true }
+            },
+            { 
+                app: "PLC/RTU", 
+                interface: "Programming Interface", 
+                purdueLevel: 1,
+                zones: { mgmt: false, enterprise: false, ot: true, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "PLC/RTU", 
+                interface: "I/O Interface", 
+                purdueLevel: 0,
+                zones: { mgmt: false, enterprise: false, ot: false, operations: false, security: false, appDmz: false, field: true }
+            },
+            { 
+                app: "ERP System", 
+                interface: "User Interface", 
+                purdueLevel: 4,
+                zones: { mgmt: false, enterprise: true, ot: false, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "ERP System", 
+                interface: "Database Connection", 
+                purdueLevel: 4,
+                zones: { mgmt: false, enterprise: true, ot: false, operations: false, security: false, appDmz: false, field: false }
+            },
+            { 
+                app: "Cloud Services", 
+                interface: "API Gateway", 
+                purdueLevel: 5,
+                zones: { mgmt: false, enterprise: true, ot: false, operations: false, security: false, appDmz: true, field: false }
+            },
+            { 
+                app: "Cloud Services", 
+                interface: "Data Sync", 
+                purdueLevel: 4,
+                zones: { mgmt: false, enterprise: true, ot: false, operations: false, security: false, appDmz: true, field: false }
+            }
+        ];
+
+        // Function to populate the table
+        function populateTable() {
+            const tableBody = document.querySelector('#matrix-table tbody');
+            tableBody.innerHTML = '';
+            
+            const showPurdueColumn = document.getElementById('show-purdue-column').checked;
+            const useColorCoding = document.getElementById('use-color-coding').checked;
+            const purdueHeader = document.getElementById('purdue-level-header');
+            
+            // Show/hide Purdue level column
+            purdueHeader.style.display = showPurdueColumn ? '' : 'none';
+            
+            // Get active filters
+            const activeZones = Array.from(document.querySelectorAll('.zone-filter:checked')).map(cb => cb.dataset.zone);
+            const activeLevels = Array.from(document.querySelectorAll('.purdue-filter:checked')).map(cb => parseFloat(cb.dataset.level));
+            
+            // Get search term
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            // Filter data based on active filters and search term
+            const filteredData = applicationData.filter(item => {
+                // Check if Purdue level is active
+                if (!activeLevels.includes(item.purdueLevel)) return false;
+                
+                // Check if at least one active zone is true for this item
+                const hasActiveZone = activeZones.some(zone => {
+                    if (zone === 'mgmt') return item.zones.mgmt;
+                    if (zone === 'enterprise') return item.zones.enterprise;
+                    if (zone === 'ot') return item.zones.ot;
+                    if (zone === 'operations') return item.zones.operations;
+                    if (zone === 'security') return item.zones.security;
+                    if (zone === 'app-dmz') return item.zones.appDmz;
+                    if (zone === 'field') return item.zones.field;
+                    return false;
+                });
+                
+                if (!hasActiveZone) return false;
+                
+                // Check search term
+                if (searchTerm) {
+                    return item.app.toLowerCase().includes(searchTerm) || 
+                           item.interface.toLowerCase().includes(searchTerm);
+                }
+                
+                return true;
+            });
+            
+            // Create rows for filtered data
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Apply color coding if enabled
+                if (useColorCoding) {
+                    row.classList.add(`purdue-${item.purdueLevel}`);
+                }
+                
+                // App name
+                const appCell = document.createElement('td');
+                appCell.textContent = item.app;
+                row.appendChild(appCell);
+                
+                // Interface name
+                const interfaceCell = document.createElement('td');
+                interfaceCell.textContent = item.interface;
+                row.appendChild(interfaceCell);
+                
+                // Purdue level (conditionally shown)
+                if (showPurdueColumn) {
+                    const purdueCell = document.createElement('td');
+                    purdueCell.textContent = `Level ${item.purdueLevel}`;
+                    row.appendChild(purdueCell);
+                }
+                
+                // Zone cells
+                addZoneCell(row, item.zones.mgmt, 'mgmt-zone');
+                addZoneCell(row, item.zones.enterprise, 'enterprise');
+                addZoneCell(row, item.zones.ot, 'ot');
+                addZoneCell(row, item.zones.operations, 'operations');
+                addZoneCell(row, item.zones.security, 'security');
+                addZoneCell(row, item.zones.appDmz, 'app-dmz');
+                addZoneCell(row, item.zones.field, 'field-zone');
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Helper function to add zone cells
+        function addZoneCell(row, isActive, zoneClass) {
+            const cell = document.createElement('td');
+            cell.classList.add(zoneClass);
+            cell.innerHTML = isActive ? '<span class="check">✓</span>' : '<span class="x-mark">✗</span>';
+            row.appendChild(cell);
+        }
+        
+        // Function to populate the diagram view
+        function populateDiagram() {
+            const diagramContainer = document.querySelector('.diagram-container');
+            diagramContainer.innerHTML = '';
+            
+            // Get active filters
+            const activeZones = Array.from(document.querySelectorAll('.zone-filter:checked')).map(cb => cb.dataset.zone);
+            const activeLevels = Array.from(document.querySelectorAll('.purdue-filter:checked')).map(cb => parseFloat(cb.dataset.level));
+            
+            // Get search term
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            // Filter data based on active filters and search term
+            const filteredData = applicationData.filter(item => {
+                // Check if Purdue level is active
+                if (!activeLevels.includes(item.purdueLevel)) return false;
+                
+                // Check if at least one active zone is true for this item
+                const hasActiveZone = activeZones.some(zone => {
+                    if (zone === 'mgmt') return item.zones.mgmt;
+                    if (zone === 'enterprise') return item.zones.enterprise;
+                    if (zone === 'ot') return item.zones.ot;
+                    if (zone === 'operations') return item.zones.operations;
+                    if (zone === 'security') return item.zones.security;
+                    if (zone === 'app-dmz') return item.zones.appDmz;
+                    if (zone === 'field') return item.zones.field;
+                    return false;
+                });
+                
+                if (!hasActiveZone) return false;
+                
+                // Check search term
+                if (searchTerm) {
+                    return item.app.toLowerCase().includes(searchTerm) || 
+                           item.interface.toLowerCase().includes(searchTerm);
+                }
+                
+                return true;
+            });
+            
+            // Group by Purdue level
+            const levelGroups = {};
+            filteredData.forEach(item => {
+                if (!levelGroups[item.purdueLevel]) {
+                    levelGroups[item.purdueLevel] = [];
+                }
+                levelGroups[item.purdueLevel].push(item);
+            });
+            
+            // Create level sections in order (5 down to 0)
+            [5, 4, 3.5, 3, 2, 1, 0].forEach(level => {
+                if (levelGroups[level] && levelGroups[level].length > 0) {
+                    const levelSection = document.createElement('div');
+                    levelSection.className = `purdue-level purdue-${level}`;
+                    
+                    const levelLabel = document.createElement('div');
+                    levelLabel.className = 'level-label';
+                    levelLabel.textContent = `Level ${level}`;
+                    levelSection.appendChild(levelLabel);
+                    
+                    const levelItems = document.createElement('div');
+                    levelItems.className = 'level-items';
+                    
+                    // Add items for this level
+                    levelGroups[level].forEach(item => {
+                        const appItem = document.createElement('div');
+                        appItem.className = 'app-item';
+                        
+                        // Add zone classes to the item
+                        Object.entries(item.zones).forEach(([zone, isActive]) => {
+                            if (isActive) {
+                                if (zone === 'mgmt') appItem.classList.add('mgmt-zone');
+                                if (zone === 'enterprise') appItem.classList.add('enterprise');
+                                if (zone === 'ot') appItem.classList.add('ot');
+                                if (zone === 'operations') appItem.classList.add('operations');
+                                if (zone === 'security') appItem.classList.add('security');
+                                if (zone === 'appDmz') appItem.classList.add('app-dmz');
+                                if (zone === 'field') appItem.classList.add('field-zone');
+                            }
+                        });
+                        
+                        appItem.innerHTML = `<strong>${item.app}</strong><br>${item.interface}`;
+                        levelItems.appendChild(appItem);
+                    });
+                    
+                    levelSection.appendChild(levelItems);
+                    diagramContainer.appendChild(levelSection);
+                }
+            });
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial population
+            populateTable();
+            populateDiagram();
+            
+            // Set up event listeners for filters
+            document.querySelectorAll('.zone-filter, .purdue-filter').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    populateTable();
+                    populateDiagram();
+                });
+            });
+            
+            // Set up event listeners for visualization options
+            document.getElementById('show-purdue-column').addEventListener('change', populateTable);
+            document.getElementById('use-color-coding').addEventListener('change', populateTable);
+            
+            // Set up search functionality
+            document.getElementById('search-input').addEventListener('input', function() {
+                populateTable();
+                populateDiagram();
+            });
+            
+            // Set up view switching
+            document.getElementById('table-btn').addEventListener('click', function() {
+                document.getElementById('table-view').style.display = 'block';
+                document.getElementById('diagram-view').style.display = 'none';
+                document.getElementById('table-btn').classList.add('active');
+                document.getElementById('diagram-btn').classList.remove('active');
+            });
+            
+            document.getElementById('diagram-btn').addEventListener('click', function() {
+                document.getElementById('table-view').style.display = 'none';
+                document.getElementById('diagram-view').style.display = 'block';
+                document.getElementById('table-btn').classList.remove('active');
+                document.getElementById('diagram-btn').classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
