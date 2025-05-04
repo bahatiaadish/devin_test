@@ -872,6 +872,7 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                                             <th>Application Type</th>
                                             <th>Typical Purdue Level</th>
                                             <th>Common Zones</th>
+                                            <th>Justification</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -879,21 +880,53 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                                             <td>HMI (Human-Machine Interface)</td>
                                             <td>Level 2</td>
                                             <td>OT, Operations</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Provides visualization and control interface for operators</li>
+                                                    <li>Supervises multiple Level 1 devices but doesn't directly control physical processes</li>
+                                                    <li>Typically located in control rooms rather than on the factory floor</li>
+                                                    <li>Requires operational visibility but not millisecond response times</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>PLC (Programmable Logic Controller)</td>
                                             <td>Level 1</td>
                                             <td>OT, Field</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Directly controls physical equipment and processes</li>
+                                                    <li>Requires real-time, deterministic response (millisecond level)</li>
+                                                    <li>Located close to the equipment being controlled</li>
+                                                    <li>Runs critical control logic that directly affects production</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>DCS (Distributed Control System)</td>
                                             <td>Level 1-2</td>
                                             <td>OT, Operations</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Spans both basic control and supervisory functions</li>
+                                                    <li>Integrates multiple control loops across a process area</li>
+                                                    <li>Provides both direct control (Level 1) and coordination (Level 2)</li>
+                                                    <li>Typically distributed across both field and control room locations</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>SCADA (Supervisory Control and Data Acquisition)</td>
                                             <td>Level 2-3</td>
                                             <td>OT, Operations, Management</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Provides wide-area monitoring and control capabilities</li>
+                                                    <li>Bridges supervisory control (Level 2) and site operations (Level 3)</li>
+                                                    <li>Typically centralized with connections to remote field devices</li>
+                                                    <li>Supports both operational and management functions</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -907,6 +940,7 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                                             <th>Application Type</th>
                                             <th>Typical Purdue Level</th>
                                             <th>Common Zones</th>
+                                            <th>Justification</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -914,16 +948,40 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                                             <td>ERP (Enterprise Resource Planning)</td>
                                             <td>Level 4</td>
                                             <td>Enterprise, Operations</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Handles business planning and logistics functions</li>
+                                                    <li>Integrates with financial, inventory, and order processing systems</li>
+                                                    <li>Operates at the business level rather than the control level</li>
+                                                    <li>Requires connectivity to corporate networks and business systems</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>MES (Manufacturing Execution System)</td>
                                             <td>Level 3</td>
                                             <td>Operations, OT</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Manages production scheduling and workflow coordination</li>
+                                                    <li>Bridges the gap between control systems and business systems</li>
+                                                    <li>Provides site-level operational management capabilities</li>
+                                                    <li>Requires access to both OT data and business planning information</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Historian</td>
                                             <td>Level 3</td>
                                             <td>OT, Operations</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Collects and stores historical process data from control systems</li>
+                                                    <li>Provides data analysis and reporting capabilities at the site level</li>
+                                                    <li>Serves as a data bridge between operational and business systems</li>
+                                                    <li>Requires access to process data but doesn't directly control equipment</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -937,6 +995,7 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                                             <th>Application Type</th>
                                             <th>Typical Purdue Level</th>
                                             <th>Common Zones</th>
+                                            <th>Justification</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -944,16 +1003,40 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                                             <td>Firewall Management Interface</td>
                                             <td>Level 3</td>
                                             <td>Management, Security</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Provides administrative access to security infrastructure</li>
+                                                    <li>Requires privileged access for configuration and monitoring</li>
+                                                    <li>Operates at the site operations level to enforce security policies</li>
+                                                    <li>Manages traffic between different security zones and Purdue levels</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>SIEM (Security Information and Event Management)</td>
                                             <td>Level 3-4</td>
                                             <td>Security, Management</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Collects and analyzes security events from multiple sources</li>
+                                                    <li>Spans both site operations (Level 3) and business planning (Level 4)</li>
+                                                    <li>Provides security monitoring and incident response capabilities</li>
+                                                    <li>Requires visibility into both OT and IT networks for comprehensive security</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Identity Management</td>
                                             <td>Level 3-4</td>
                                             <td>Security, Management, Enterprise</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Manages user identities, authentication, and access control</li>
+                                                    <li>Spans both operational (Level 3) and business (Level 4) domains</li>
+                                                    <li>Enforces security policies across multiple systems and zones</li>
+                                                    <li>Requires integration with both OT and IT systems for unified access control</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -967,6 +1050,7 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                                             <th>Application Type</th>
                                             <th>Typical Purdue Level</th>
                                             <th>Common Zones</th>
+                                            <th>Justification</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -974,36 +1058,92 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                                             <td>ITSM (IT Service Management)</td>
                                             <td>Level 4</td>
                                             <td>Management, Enterprise</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Manages IT service delivery and support processes</li>
+                                                    <li>Operates at the business planning level (Level 4)</li>
+                                                    <li>Requires integration with enterprise systems and business processes</li>
+                                                    <li>Supports both management and enterprise functions</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>ServiceNow</td>
                                             <td>Level 4</td>
                                             <td>Enterprise, Management</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Cloud-based ITSM platform for enterprise service management</li>
+                                                    <li>Operates at the business planning level (Level 4)</li>
+                                                    <li>Integrates with business processes and enterprise applications</li>
+                                                    <li>Primarily used by IT staff and business users, not OT personnel</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>DNS (Domain Name System)</td>
                                             <td>Level 3</td>
                                             <td>Management</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Provides critical name resolution services for network communications</li>
+                                                    <li>Operates at the site operations level (Level 3) to support all network services</li>
+                                                    <li>Requires careful management to maintain network reliability</li>
+                                                    <li>Typically managed by IT administrators in the Management zone</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>IPAM (IP Address Management)</td>
                                             <td>Level 3</td>
                                             <td>Management</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Manages IP address allocation and tracking across the network</li>
+                                                    <li>Operates at the site operations level (Level 3) for network administration</li>
+                                                    <li>Requires centralized management to prevent IP conflicts</li>
+                                                    <li>Typically administered by network teams in the Management zone</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>DHCP (Dynamic Host Configuration Protocol)</td>
                                             <td>Level 3</td>
                                             <td>Management</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Automates IP address assignment to network devices</li>
+                                                    <li>Operates at the site operations level (Level 3) for network administration</li>
+                                                    <li>Works in conjunction with IPAM for efficient address management</li>
+                                                    <li>Typically administered by network teams in the Management zone</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Active Directory</td>
                                             <td>Level 3.5</td>
                                             <td>Security, Management</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Provides centralized authentication and directory services</li>
+                                                    <li>Positioned at Level 3.5 (DMZ) as it bridges IT and OT environments</li>
+                                                    <li>Critical for enforcing access control policies across domains</li>
+                                                    <li>Requires careful security management due to its privileged access</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>PAM (Privileged Access Management)</td>
                                             <td>Level 3.5</td>
                                             <td>Security, Management</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Controls and monitors privileged access to critical systems</li>
+                                                    <li>Positioned at Level 3.5 (DMZ) to manage access across IT/OT boundaries</li>
+                                                    <li>Essential for protecting high-value targets from unauthorized access</li>
+                                                    <li>Requires strict security controls due to its sensitive nature</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1017,6 +1157,7 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                                             <th>Application Type</th>
                                             <th>Typical Purdue Level</th>
                                             <th>Common Zones</th>
+                                            <th>Justification</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1024,61 +1165,157 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                                             <td>EMS (Energy Management System)</td>
                                             <td>Level 3</td>
                                             <td>Operations, OT</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Manages and optimizes energy generation and distribution</li>
+                                                    <li>Operates at site operations level (Level 3) for grid management</li>
+                                                    <li>Requires real-time monitoring and control capabilities</li>
+                                                    <li>Spans both Operations and OT zones due to its control functions</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>DMS (Distribution Management System)</td>
                                             <td>Level 3</td>
                                             <td>Operations, OT</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Manages power distribution networks and grid operations</li>
+                                                    <li>Operates at site operations level (Level 3) for distribution control</li>
+                                                    <li>Requires integration with field devices and SCADA systems</li>
+                                                    <li>Spans both Operations and OT zones due to its control functions</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>OMS (Outage Management System)</td>
                                             <td>Level 3</td>
                                             <td>Operations, OT</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Tracks and manages power outages and restoration efforts</li>
+                                                    <li>Operates at site operations level (Level 3) for incident management</li>
+                                                    <li>Integrates with customer information systems and field crews</li>
+                                                    <li>Spans Operations and OT zones for coordinating response activities</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Smart Grid Components</td>
                                             <td>Level 1-2</td>
                                             <td>OT, Field</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Includes intelligent field devices like smart meters and sensors</li>
+                                                    <li>Operates at basic control levels (1-2) for direct grid interaction</li>
+                                                    <li>Requires real-time communication with control systems</li>
+                                                    <li>Located in OT and Field zones due to physical proximity to grid infrastructure</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Smart Meters / AMI</td>
                                             <td>Level 1</td>
                                             <td>Field, OT</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Directly interfaces with customer energy consumption points</li>
+                                                    <li>Operates at basic control level (Level 1) for direct measurement</li>
+                                                    <li>Provides real-time consumption data to higher-level systems</li>
+                                                    <li>Located in Field and OT zones due to physical deployment and control functions</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Renewable Energy Monitoring</td>
                                             <td>Level 2-3</td>
                                             <td>OT, Operations</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Monitors and manages renewable energy sources (solar, wind, etc.)</li>
+                                                    <li>Spans area control (Level 2) and site operations (Level 3) for comprehensive management</li>
+                                                    <li>Requires integration with grid control systems and energy markets</li>
+                                                    <li>Located in both OT and Operations zones for control and coordination functions</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Protection Relays</td>
                                             <td>Level 1</td>
                                             <td>OT, Field</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Provides critical protection functions for power system equipment</li>
+                                                    <li>Operates at basic control level (Level 1) for immediate fault detection and response</li>
+                                                    <li>Requires millisecond-level response times for safety and equipment protection</li>
+                                                    <li>Located in OT and Field zones due to physical deployment and control functions</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Substation Automation</td>
                                             <td>Level 1-2</td>
                                             <td>OT, Field</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Controls and monitors electrical substation equipment</li>
+                                                    <li>Spans basic control (Level 1) and area control (Level 2) for substation operations</li>
+                                                    <li>Integrates with SCADA systems and protection devices</li>
+                                                    <li>Located in OT and Field zones due to physical proximity to substation equipment</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Energy Trading Platform</td>
                                             <td>Level 4</td>
                                             <td>Enterprise</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Facilitates buying and selling of energy in wholesale markets</li>
+                                                    <li>Operates at business planning level (Level 4) for financial transactions</li>
+                                                    <li>Requires integration with market data, pricing systems, and financial systems</li>
+                                                    <li>Located in Enterprise zone due to business-critical financial operations</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Load Forecasting Tools</td>
                                             <td>Level 3-4</td>
                                             <td>Operations, Enterprise</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Predicts future energy demand based on historical data and external factors</li>
+                                                    <li>Spans site operations (Level 3) and business planning (Level 4) for comprehensive forecasting</li>
+                                                    <li>Requires integration with weather data, historical consumption, and business systems</li>
+                                                    <li>Located in Operations and Enterprise zones to support both operational and business planning</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Regulatory Compliance Systems</td>
                                             <td>Level 4</td>
                                             <td>Enterprise, Security</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Manages regulatory reporting and compliance requirements for energy operations</li>
+                                                    <li>Operates at business planning level (Level 4) for organizational governance</li>
+                                                    <li>Requires integration with business systems, audit trails, and documentation</li>
+                                                    <li>Located in Enterprise and Security zones due to sensitive compliance data handling</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Grid Analytics Platform</td>
                                             <td>Level 3-4</td>
                                             <td>Operations, Enterprise</td>
+                                            <td>
+                                                <ul class="mb-0">
+                                                    <li>Analyzes grid performance, health, and optimization opportunities</li>
+                                                    <li>Spans site operations (Level 3) and business planning (Level 4) for comprehensive analytics</li>
+                                                    <li>Processes data from multiple sources including SCADA, smart meters, and weather systems</li>
+                                                    <li>Located in Operations and Enterprise zones to support both operational and strategic decisions</li>
+                                                </ul>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
