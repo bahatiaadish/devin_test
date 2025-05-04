@@ -1945,55 +1945,58 @@ sible                 interface: 'Distribution Network Interface',
             const section = document.getElementById(sectionId);
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                console.log('Section not found:', sectionId);
             }
         }
 
         // Function to generate smart suggestions based on application details
         function generateSmartSuggestions() {
-            alert('Generate Smart Suggestions function called');
-            const appName = document.querySelector('input[devinid="109"]').value;
-            const interfaceName = document.querySelector('input[devinid="110"]').value;
-            const primaryFunction = document.querySelector('select[devinid="112"]').value;
-            const primaryUsers = document.querySelector('select[devinid="113"]').value;
+            console.log('Generate Smart Suggestions function called');
+            try {
+                const appName = document.querySelector('input[devinid="109"]').value;
+                const interfaceName = document.querySelector('input[devinid="110"]').value;
+                const primaryFunction = document.querySelector('select[devinid="112"]').value;
+                const primaryUsers = document.querySelector('select[devinid="113"]').value;
 
-            if (!appName || !interfaceName) {
-                alert('Please enter application and interface names');
-                return;
-            }
+                if (!appName) {
+                    alert('Please enter at least an application name');
+                    return;
+                }
 
-            let suggestions = '';
-            let purdueLevel = '';
-            let zones = [];
+                let suggestions = '';
+                let purdueLevel = '';
+                let zones = [];
 
-            // Determine likely Purdue level based on function
-            if (primaryFunction === 'control') {
-                purdueLevel = '0-1';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the control function, this application likely belongs to <span class="badge badge-level-1">Level 0-1</span> (Process/Basic Control).</p>`;
-                zones.push('ot', 'field');
-            } else if (primaryFunction === 'monitor') {
-                purdueLevel = '2';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the monitoring function, this application likely belongs to <span class="badge badge-level-2">Level 2</span> (Area Control).</p>`;
-                zones.push('ot', 'operations');
-            } else if (primaryFunction === 'operations') {
-                purdueLevel = '3';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the operations management function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
-                zones.push('operations', 'management');
-            } else if (primaryFunction === 'business') {
-                purdueLevel = '4';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the business function, this application likely belongs to <span class="badge badge-level-4">Level 4</span> (Business Planning).</p>`;
-                zones.push('enterprise');
-            } else if (primaryFunction === 'security') {
-                purdueLevel = '3-3.5';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the security function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> or <span class="badge badge-level-3-5">Level 3.5</span> (Site Operations/DMZ).</p>`;
-                zones.push('security', 'management');
-            } else if (primaryFunction === 'external') {
-                purdueLevel = '5';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the external connectivity function, this application likely belongs to <span class="badge badge-level-5">Level 5</span> (Enterprise).</p>`;
-                zones.push('app-dmz', 'enterprise');
-            } else if (primaryFunction === 'network') {
-                purdueLevel = '3';
-                suggestions += `<p><strong>Purdue Level:</strong> Based on the network infrastructure function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
-                zones.push('management');
+                // Determine likely Purdue level based on function
+                if (primaryFunction === 'control') {
+                    purdueLevel = '0-1';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the control function, this application likely belongs to <span class="badge badge-level-1">Level 0-1</span> (Process/Basic Control).</p>`;
+                    zones.push('ot', 'field');
+                } else if (primaryFunction === 'monitor') {
+                    purdueLevel = '2';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the monitoring function, this application likely belongs to <span class="badge badge-level-2">Level 2</span> (Area Control).</p>`;
+                    zones.push('ot', 'operations');
+                } else if (primaryFunction === 'operations') {
+                    purdueLevel = '3';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the operations management function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
+                    zones.push('operations', 'management');
+                } else if (primaryFunction === 'business') {
+                    purdueLevel = '4';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the business function, this application likely belongs to <span class="badge badge-level-4">Level 4</span> (Business Planning).</p>`;
+                    zones.push('enterprise');
+                } else if (primaryFunction === 'security') {
+                    purdueLevel = '3-3.5';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the security function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> or <span class="badge badge-level-3-5">Level 3.5</span> (Site Operations/DMZ).</p>`;
+                    zones.push('security', 'management');
+                } else if (primaryFunction === 'external') {
+                    purdueLevel = '5';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the external connectivity function, this application likely belongs to <span class="badge badge-level-5">Level 5</span> (Enterprise).</p>`;
+                    zones.push('app-dmz', 'enterprise');
+                } else if (primaryFunction === 'network') {
+                    purdueLevel = '3';
+                    suggestions += `<p><strong>Purdue Level:</strong> Based on the network infrastructure function, this application likely belongs to <span class="badge badge-level-3">Level 3</span> (Site Operations).</p>`;
+                    zones.push('management');
             } else if (primaryFunction === 'identity') {
                 purdueLevel = '3.5';
                 suggestions += `<p><strong>Purdue Level:</strong> Based on the identity and access management function, this application likely belongs to <span class="badge badge-level-3-5">Level 3.5</span> (DMZ).</p>`;
@@ -2096,7 +2099,21 @@ sible                 interface: 'Distribution Network Interface',
         function applySmartSuggestions() {
             // This would pre-check the appropriate checkboxes in the assessment
             alert('Smart suggestions applied! Continue with the detailed assessment to refine your results.');
-            scrollToSection('purdue-questions');
+            // Scroll to the Purdue questions section
+            const element = document.getElementById('purdue-questions');
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Function to scroll to a section by ID
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                console.error('Section not found:', sectionId);
+            }
         }
 
         // Function to update results
