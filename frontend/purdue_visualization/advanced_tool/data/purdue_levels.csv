@@ -1,0 +1,71 @@
+Level,Name,Definition,Justification,Examples
+0,Process (Field) Level,"The level where physical processes occur and are directly measured or controlled. This includes sensors, actuators, and physical equipment that directly interface with the industrial process.","Level 0 is necessary to establish a clear boundary for devices that directly interact with physical processes. These devices require the highest level of protection as they can directly impact safety, production, and physical operations. They typically have minimal security features and operate in real-time with millisecond response requirements.","1. Sensors (temperature, pressure, flow)
+2. Actuators (valves, motors, switches)
+3. Physical process equipment
+4. Instrumentation devices
+5. Field I/O modules
+6. Raw measurement devices
+7. Physical protection relays
+8. Analog control circuits
+9. Process instruments (analyzers, meters)
+10. Physical safety interlocks"
+1,Basic Control Level,"The level where direct, real-time control of physical processes occurs. This includes PLCs, RTUs, and other controllers that execute control logic to manage physical equipment.","Level 1 is necessary to separate basic control functions from higher-level supervisory systems. These devices implement the core control logic that directly affects physical processes and require real-time operation with deterministic performance. They typically have limited computing resources and specialized protocols.","1. Programmable Logic Controllers (PLCs)
+2. Remote Terminal Units (RTUs)
+3. Basic process controllers
+4. Drive controllers
+5. Distributed control system controllers
+6. Protection relays with logic
+7. Intelligent Electronic Devices (IEDs)
+8. Basic machine controllers
+9. Embedded control systems
+10. Local control panels"
+2,Area Supervisory Control,"The level where area-specific supervision and coordination of multiple Level 1 controllers occurs. This includes HMIs, SCADA systems, and other supervisory systems that monitor and coordinate multiple basic controllers.","Level 2 is necessary to provide coordination and supervision across multiple controllers within a specific area or function. These systems aggregate data from multiple Level 1 devices and provide operator interfaces for monitoring and control. They operate with near real-time requirements but with more computing resources than Level 1.","1. Human-Machine Interfaces (HMIs)
+2. Supervisory Control systems
+3. Area-specific SCADA systems
+4. Batch management systems
+5. Local historian servers
+6. Area-level alarm management
+7. Process optimization systems
+8. Local operator workstations
+9. Area-level sequence controllers
+10. Local engineering workstations"
+3,Site Operations Management,"The level where site-wide operations management occurs. This includes manufacturing execution systems, site-wide SCADA, and other systems that manage operations across multiple areas within a facility.","Level 3 is necessary to manage operations across an entire site or facility. These systems coordinate activities across multiple areas, manage workflows, collect historical data, and interface with business systems. They operate with less stringent real-time requirements than Levels 1-2 but still need reliable performance for operational decisions.","1. Manufacturing Execution Systems (MES)
+2. Site-wide SCADA systems
+3. Production scheduling systems
+4. Facility-wide historians
+5. Asset management systems
+6. Quality management systems
+7. Maintenance management systems
+8. Production reporting systems
+9. Workflow management systems
+10. Operations dashboards"
+3.5,Industrial DMZ,"A buffer zone between operational technology (OT) networks and information technology (IT) networks. This level provides secure data exchange between business and control systems while maintaining separation.","Level 3.5 (Industrial DMZ) is necessary to establish a secure boundary between operational and business networks. This zone allows for controlled data exchange while preventing direct access between IT and OT systems. It implements security controls specifically designed for the IT/OT boundary and helps satisfy both operational and security requirements.","1. Data diodes
+2. Jump servers
+3. Secure file transfer systems
+4. OT-specific firewalls
+5. Historian replication servers
+6. Secure remote access gateways
+7. Protocol converters
+8. Data brokers
+9. Security monitoring systems for OT/IT boundary
+10. Application proxies"
+4,Business Planning and Logistics,"The level where business planning and logistics functions occur. This includes ERP systems, supply chain management, and other business systems that interface with operational systems.","Level 4 is necessary to separate business planning functions from both operational systems and enterprise IT. These systems manage business aspects of production including scheduling, inventory, and resource planning. They operate on business timeframes (hours to days) rather than operational timeframes and have different security requirements than operational systems.","1. Enterprise Resource Planning (ERP) systems
+2. Supply chain management systems
+3. Production planning systems
+4. Inventory management systems
+5. Order management systems
+6. Logistics systems
+7. Asset lifecycle management
+8. Maintenance planning systems
+9. Business intelligence for operations
+10. Compliance management systems"
+5,Enterprise,"The level where enterprise-wide functions occur. This includes corporate IT systems, cloud services, and connections to external networks including the internet.","Level 5 is necessary to establish the boundary for enterprise-wide systems and external connectivity. These systems operate at the corporate level across multiple sites and often connect to external networks. They have the least stringent operational requirements but often the most complex security challenges due to their exposure.","1. Corporate IT systems
+2. Cloud services
+3. Internet-facing applications
+4. Corporate email systems
+5. Enterprise collaboration tools
+6. Corporate financial systems
+7. Human resources systems
+8. Customer relationship management (CRM)
+9. Corporate websites
+10. External partner connections"

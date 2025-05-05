@@ -1,0 +1,71 @@
+Zone,Question,Explanation,Weight
+Management Zone,Does the application provide administrative access to systems or infrastructure?,Applications that manage or configure other systems typically belong in the Management Zone,High
+Management Zone,Is the application used primarily by IT or OT administrators rather than regular users?,Management Zone applications are typically used by specialized administrative personnel,High
+Management Zone,Does the application require privileged access to multiple systems?,Applications needing elevated privileges across systems are typically placed in the Management Zone,High
+Management Zone,Is the application used for monitoring system health or performance?,System monitoring tools typically belong in the Management Zone,Medium
+Management Zone,Does the application manage configurations for other systems or devices?,Configuration management tools are typically placed in the Management Zone,High
+Management Zone,Is the application used for patching or updating other systems?,Patch management systems typically belong in the Management Zone,High
+Management Zone,Does the application need to access management interfaces of other systems?,Applications that access management interfaces should be in the Management Zone,High
+Management Zone,Is the application used for IT service management or support?,IT service management tools typically belong in the Management Zone,Medium
+Management Zone,Does the application manage user accounts or access rights?,Identity and access management tools typically belong in the Management Zone,High
+Management Zone,Is the application used for backup or recovery operations?,Backup and recovery systems typically belong in the Management Zone,Medium
+Enterprise Zone,Is the application primarily used for business functions rather than operational control?,Business applications typically belong in the Enterprise Zone,High
+Enterprise Zone,Is the application used by office staff or business personnel?,Applications used by business staff typically belong in the Enterprise Zone,High
+Enterprise Zone,Does the application handle business data rather than operational data?,Applications processing business data typically belong in the Enterprise Zone,High
+Enterprise Zone,Does the application integrate with other business systems like ERP or CRM?,Business applications that integrate with other enterprise systems typically belong in the Enterprise Zone,Medium
+Enterprise Zone,Is the application used for financial management or reporting?,Financial applications typically belong in the Enterprise Zone,High
+Enterprise Zone,Does the application handle human resources or personnel data?,HR applications typically belong in the Enterprise Zone,High
+Enterprise Zone,Is the application used for business planning or analytics?,Business intelligence and planning tools typically belong in the Enterprise Zone,Medium
+Enterprise Zone,Does the application need to be accessed by users across multiple business units?,Applications with broad business user bases typically belong in the Enterprise Zone,Medium
+Enterprise Zone,Is the application used for document management or collaboration?,Collaboration and document management tools typically belong in the Enterprise Zone,Medium
+Enterprise Zone,Does the application have minimal direct impact on operations if unavailable?,Applications with low operational impact typically belong in the Enterprise Zone,Medium
+OT (Operational Technology) Zone,Does the application directly monitor or control physical processes or equipment?,Applications that control physical processes typically belong in the OT Zone,High
+OT (Operational Technology) Zone,Is the application part of an industrial control system?,Industrial control systems typically belong in the OT Zone,High
+OT (Operational Technology) Zone,Does the application require real-time or near-real-time operation?,Applications with real-time requirements typically belong in the OT Zone,High
+OT (Operational Technology) Zone,Is the application used by plant operators or engineers?,Applications used by operational staff typically belong in the OT Zone,High
+OT (Operational Technology) Zone,Does the application handle data related to physical processes?,Applications processing operational data typically belong in the OT Zone,High
+OT (Operational Technology) Zone,Would a failure of the application directly impact physical operations?,Applications with direct operational impact typically belong in the OT Zone,High
+OT (Operational Technology) Zone,Does the application use industrial protocols (Modbus, DNP3, etc.)?,Applications using industrial protocols typically belong in the OT Zone,High
+OT (Operational Technology) Zone,Is the application subject to industrial regulations or standards?,Applications subject to industrial regulations typically belong in the OT Zone,Medium
+OT (Operational Technology) Zone,Does the application interface with PLCs, RTUs, or other control devices?,Applications interfacing with control devices typically belong in the OT Zone,High
+OT (Operational Technology) Zone,Is the application critical for safe operation of physical processes?,Safety-critical applications typically belong in the OT Zone,High
+Operations Zone,Is the application used for day-to-day operational activities?,Applications supporting daily operations typically belong in the Operations Zone,High
+Operations Zone,Does the application handle workflow management or operational scheduling?,Workflow and scheduling applications typically belong in the Operations Zone,High
+Operations Zone,Is the application used by operational staff rather than management?,Applications used by operational staff typically belong in the Operations Zone,Medium
+Operations Zone,Does the application coordinate activities across multiple systems?,Applications that coordinate operational activities typically belong in the Operations Zone,High
+Operations Zone,Is the application involved in executing operational plans?,Applications executing operational plans typically belong in the Operations Zone,High
+Operations Zone,Does the application bridge between business planning and physical operations?,Applications bridging planning and operations typically belong in the Operations Zone,High
+Operations Zone,Is the application used for operational reporting or analytics?,Operational analytics applications typically belong in the Operations Zone,Medium
+Operations Zone,Does the application manage operational data that isn't directly controlling equipment?,Applications managing non-control operational data typically belong in the Operations Zone,Medium
+Operations Zone,Is the application used for quality management or compliance in operations?,Quality and compliance applications typically belong in the Operations Zone,Medium
+Operations Zone,Does the application need to access both business and control systems data?,Applications needing access to both business and control data typically belong in the Operations Zone,High
+Security Zone,Is the application part of a security system (firewall, IDS/IPS, SIEM)?,Security systems typically belong in the Security Zone,High
+Security Zone,Does the application handle security monitoring, logging, or incident response?,Security monitoring applications typically belong in the Security Zone,High
+Security Zone,Is the application used primarily by security personnel?,Applications used by security staff typically belong in the Security Zone,High
+Security Zone,Does the application enforce security policies or access controls?,Security policy enforcement applications typically belong in the Security Zone,High
+Security Zone,Is the application designed to protect other systems or data?,Applications protecting other systems typically belong in the Security Zone,High
+Security Zone,Does the application handle sensitive security data or logs?,Applications processing security data typically belong in the Security Zone,High
+Security Zone,Is the application used for vulnerability management or scanning?,Vulnerability management applications typically belong in the Security Zone,High
+Security Zone,Does the application need to monitor traffic or activity across multiple zones?,Applications monitoring cross-zone traffic typically belong in the Security Zone,High
+Security Zone,Is the application used for security compliance or audit purposes?,Security compliance applications typically belong in the Security Zone,Medium
+Security Zone,Does the application manage encryption keys or certificates?,Cryptographic management applications typically belong in the Security Zone,High
+App DMZ (Demilitarized Zone),Is the application exposed to external networks or users?,Externally exposed applications typically belong in the App DMZ,High
+App DMZ (Demilitarized Zone),Does the application serve as a buffer between internal and external systems?,Applications buffering internal/external systems typically belong in the App DMZ,High
+App DMZ (Demilitarized Zone),Is the application part of a web application or public-facing service?,Public-facing web applications typically belong in the App DMZ,High
+App DMZ (Demilitarized Zone),Does the application handle data exchange with external entities?,Applications exchanging data with external entities typically belong in the App DMZ,High
+App DMZ (Demilitarized Zone),Is the application designed with extra security controls due to its exposure?,Applications with enhanced security due to exposure typically belong in the App DMZ,Medium
+App DMZ (Demilitarized Zone),Does the application need to be accessible from the internet?,Internet-accessible applications typically belong in the App DMZ,High
+App DMZ (Demilitarized Zone),Is the application a proxy or gateway for internal services?,Proxy or gateway applications typically belong in the App DMZ,High
+App DMZ (Demilitarized Zone),Does the application handle customer-facing functions?,Customer-facing applications typically belong in the App DMZ,High
+App DMZ (Demilitarized Zone),Is the application designed to withstand direct external attacks?,Applications hardened against external attacks typically belong in the App DMZ,Medium
+App DMZ (Demilitarized Zone),Does the application need to be separated from internal systems for security?,Applications requiring separation from internal systems typically belong in the App DMZ,High
+Field Zone,Is the interface located in or directly connected to the industrial environment?,Interfaces in industrial environments typically belong in the Field Zone,High
+Field Zone,Does the interface handle raw sensor data or control signals?,Interfaces handling raw data typically belong in the Field Zone,High
+Field Zone,Is the interface part of field equipment or instrumentation?,Field equipment interfaces typically belong in the Field Zone,High
+Field Zone,Does the interface operate in harsh environmental conditions?,Interfaces in harsh environments typically belong in the Field Zone,Medium
+Field Zone,Is the interface physically located on the factory floor or in the process area?,Interfaces on the factory floor typically belong in the Field Zone,High
+Field Zone,Does the interface directly connect to sensors or actuators?,Interfaces connecting to sensors/actuators typically belong in the Field Zone,High
+Field Zone,Is the interface part of a device that directly measures physical processes?,Measurement interfaces typically belong in the Field Zone,High
+Field Zone,Does the interface have minimal processing capabilities?,Interfaces with minimal processing typically belong in the Field Zone,Medium
+Field Zone,Is the interface subject to physical security concerns?,Interfaces with physical security concerns typically belong in the Field Zone,Medium
+Field Zone,Does the interface require specialized protocols or connections for field devices?,Interfaces using specialized field protocols typically belong in the Field Zone,High

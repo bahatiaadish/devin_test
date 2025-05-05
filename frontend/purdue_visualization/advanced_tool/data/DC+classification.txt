@@ -1,0 +1,41 @@
+# Interactive Datacenter Classification Checklist
+
+## Instructions
+Answer each question with Yes or No. Count the number of "Yes" answers in each section. The section with more "Yes" answers indicates your recommended datacenter type.
+
+## Application Characteristics
+
+### Tertiary DC (Primary Control Hub) Indicators
+- [ ] Does the application directly control physical equipment or processes?
+- [ ] Is real-time response (under 100ms) required?
+- [ ] Would operational downtime directly impact physical processes?
+- [ ] Is the application part of SCADA, DCS, or industrial control systems?
+- [ ] Does the application require physical proximity to controlled systems?
+- [ ] Is 99.99% or higher availability required?
+- [ ] Is the application subject to industrial regulations (NERC CIP, IEC 62443)?
+- [ ] Is the application primarily used by operators or engineers?
+- [ ] Does the application handle sensitive control systems data?
+- [ ] Is recovery time measured in minutes rather than hours?
+
+**Tertiary DC Score:** _____ / 10
+
+### Regular DC Indicators
+- [ ] Is the application primarily for business functions rather than control?
+- [ ] Is standard response time (seconds to minutes) acceptable?
+- [ ] Can the application tolerate brief downtime with minimal operational impact?
+- [ ] Is the application part of ERP, CRM, or business intelligence systems?
+- [ ] Can the application operate effectively from a geographically distant location?
+- [ ] Is 99.9% availability sufficient?
+- [ ] Is the application subject to standard IT regulations (ISO 27001, SOC2)?
+- [ ] Is the application primarily used by business staff?
+- [ ] Does the application handle business data rather than control systems data?
+- [ ] Is recovery time measured in hours rather than minutes?
+
+**Regular DC Score:** _____ / 10
+
+## Recommendation
+- If Tertiary DC Score > Regular DC Score: Host in Tertiary DC (Primary Control Hub)
+- If Regular DC Score > Tertiary DC Score: Host in Regular DC
+- If scores are equal: Consider application criticality and security requirements as tiebreakers
+
+I can provide this in a more detailed format if needed, or create an HTML version with automatic calculation.

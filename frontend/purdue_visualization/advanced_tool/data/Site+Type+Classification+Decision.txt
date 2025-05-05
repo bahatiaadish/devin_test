@@ -1,0 +1,65 @@
+# Site Type Classification Decision-Making Checklist
+
+## Instructions
+Answer each question with Yes or No. Count the number of "Yes" answers in each section. The section with more "Yes" answers indicates your recommended site type.
+
+## Industrial Site Indicators
+- [ ] Is the site primarily focused on production, generation, or processing of goods/energy?
+- [ ] Does the site operate 24/7 with continuous physical processes?
+- [ ] Does the site have a high concentration of OT systems (SCADA, DCS, PLCs)?
+- [ ] Does the site require specialized physical and cyber protection for critical infrastructure?
+- [ ] Is the site subject to industrial regulations (NERC CIP, IEC 62443)?
+- [ ] Does the site house equipment that directly controls physical processes?
+- [ ] Is the site located near resource inputs or distribution networks?
+- [ ] Does the site require specialized environmental controls for industrial processes?
+- [ ] Are operations staff the primary personnel at this location?
+- [ ] Would site disruption directly impact physical production or energy generation?
+
+**Industrial Site Score:** _____ / 10
+
+## Enterprise Site Indicators
+- [ ] Is the site focused on core business operations and corporate management?
+- [ ] Does the site house executive leadership and strategic decision-makers?
+- [ ] Does the site have a mix of IT and OT systems with enterprise-grade infrastructure?
+- [ ] Does the site require comprehensive security with multiple defense layers?
+- [ ] Is the site subject to multiple compliance requirements (SOX, ISO 27001)?
+- [ ] Does the site serve as a central hub for business operations across multiple locations?
+- [ ] Does the site house critical business data and intellectual property?
+- [ ] Does the site have advanced communications infrastructure?
+- [ ] Are business leaders and knowledge workers the primary personnel?
+- [ ] Would site disruption impact strategic business functions across the organization?
+
+**Enterprise Site Score:** _____ / 10
+
+## Corporate Site Indicators
+- [ ] Is the site focused on business administration and departmental operations?
+- [ ] Does the site operate primarily during standard business hours?
+- [ ] Does the site have primarily IT systems with limited OT connectivity?
+- [ ] Does the site implement standard enterprise security controls?
+- [ ] Is the site subject to standard business compliance requirements?
+- [ ] Does the site serve regional or departmental functions?
+- [ ] Does the site house mid-level management and administrative staff?
+- [ ] Is the site in a commercial office setting?
+- [ ] Would site disruption impact specific business functions but not critical operations?
+- [ ] Can most site functions be temporarily relocated if needed?
+
+**Corporate Site Score:** _____ / 10
+
+## Branch Site Indicators
+- [ ] Is the site focused on local operations, customer service, or field support?
+- [ ] Does the site have a limited operational scope with standard hours?
+- [ ] Does the site have basic IT infrastructure with centralized management?
+- [ ] Does the site implement standardized security with central management?
+- [ ] Is the site subject to minimal local compliance requirements?
+- [ ] Does the site primarily serve local customers or support local operations?
+- [ ] Does the site have a small staff footprint?
+- [ ] Can the site function with minimal local IT support?
+- [ ] Would site disruption have limited impact on overall business operations?
+- [ ] Is the site in a retail, service center, or small office setting?
+
+**Branch Site Score:** _____ / 10
+
+## Recommendation
+- Highest score indicates the recommended site type classification
+- If scores are tied, consider the site's primary purpose and operational impact as tiebreakers
+- For mixed-use sites, consider classifying different areas separately

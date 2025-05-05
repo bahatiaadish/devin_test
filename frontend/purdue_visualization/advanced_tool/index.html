@@ -519,6 +519,18 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                             <button class="btn btn-outline-primary" onclick="scrollToSection('app-details')">Start Manual Classification</button>
                         </div>
                     </div>
+                    
+                    <div class="card mt-4">
+                        <div class="card-header bg-success text-white">
+                            Download Tool
+                        </div>
+                        <div class="card-body">
+                            <p>Download this tool for local hosting:</p>
+                            <button id="download-tool-btn" class="btn btn-success">
+                                <i class="bi bi-download"></i> Download Classification Tool
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="app-details" class="mb-5">
@@ -581,6 +593,83 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                                     <option value="field">Field Technicians</option>
                                 </select>
                             </div>
+                            
+                            <!-- Additional Input Fields -->
+                            <h4 class="mt-4">Additional Classification Criteria</h4>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Security Requirements</label>
+                                <select class="form-select" id="security-requirements">
+                                    <option value="">Select security level...</option>
+                                    <option value="low">Low - Basic security controls</option>
+                                    <option value="medium">Medium - Enhanced security controls</option>
+                                    <option value="high">High - Strict security controls</option>
+                                    <option value="critical">Critical - Maximum security controls</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Compliance Needs</label>
+                                <select class="form-select" id="compliance-needs" multiple>
+                                    <option value="none">None</option>
+                                    <option value="nerc-cip">NERC CIP</option>
+                                    <option value="iec-62443">IEC 62443</option>
+                                    <option value="nist">NIST Cybersecurity Framework</option>
+                                    <option value="gdpr">GDPR</option>
+                                    <option value="hipaa">HIPAA</option>
+                                    <option value="pci">PCI DSS</option>
+                                    <option value="sox">Sarbanes-Oxley</option>
+                                </select>
+                                <div class="form-text">Hold Ctrl/Cmd to select multiple</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Data Sensitivity Classification</label>
+                                <select class="form-select" id="data-sensitivity">
+                                    <option value="">Select data sensitivity...</option>
+                                    <option value="public">Public - No restrictions</option>
+                                    <option value="internal">Internal - Organization use only</option>
+                                    <option value="confidential">Confidential - Limited access</option>
+                                    <option value="restricted">Restricted - Strictly controlled</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Integration Requirements</label>
+                                <select class="form-select" id="integration-requirements" multiple>
+                                    <option value="none">None</option>
+                                    <option value="erp">ERP Systems</option>
+                                    <option value="mes">Manufacturing Execution Systems</option>
+                                    <option value="scada">SCADA/Control Systems</option>
+                                    <option value="historian">Historian/Data Collection</option>
+                                    <option value="cloud">Cloud Services</option>
+                                    <option value="third-party">Third-party Applications</option>
+                                </select>
+                                <div class="form-text">Hold Ctrl/Cmd to select multiple</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Performance Requirements</label>
+                                <select class="form-select" id="performance-requirements">
+                                    <option value="">Select performance level...</option>
+                                    <option value="low">Low - Non-time-sensitive operations</option>
+                                    <option value="medium">Medium - Standard business operations</option>
+                                    <option value="high">High - Time-sensitive operations</option>
+                                    <option value="real-time">Real-time - Millisecond response required</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Availability Requirements</label>
+                                <select class="form-select" id="availability-requirements">
+                                    <option value="">Select availability level...</option>
+                                    <option value="low">Low - 99% (87.6 hours downtime/year)</option>
+                                    <option value="medium">Medium - 99.9% (8.8 hours downtime/year)</option>
+                                    <option value="high">High - 99.99% (52.6 minutes downtime/year)</option>
+                                    <option value="critical">Critical - 99.999% (5.3 minutes downtime/year)</option>
+                                </select>
+                            </div>
+                            
                             <button class="btn btn-primary" id="generate-suggestions-btn">Generate Smart Suggestions</button>
                         </div>
                     </div>
@@ -1679,6 +1768,10 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="js/data-loader.js"></script>
+    <script src="js/smart-recommendations.js"></script>
+    <script src="js/download-tool.js"></script>
     <script>
         // Application type templates
         const appTemplates = {
@@ -1748,7 +1841,7 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
             },
             'dms': {
                 name: 'Distribution Management System (DMS)',
-sible                 interface: 'Distribution Network Interface',
+                interface: 'Distribution Network Interface',
                 description: 'System for monitoring and managing power distribution networks',
                 function: 'operations',
                 users: 'supervisors',
@@ -1950,11 +2043,11 @@ sible                 interface: 'Distribution Network Interface',
 
         // Function to generate smart suggestions based on application details
         function generateSmartSuggestions() {
-            alert('Generate Smart Suggestions function called');
-            const appName = document.querySelector('input[devinid="109"]').value;
-            const interfaceName = document.querySelector('input[devinid="110"]').value;
-            const primaryFunction = document.querySelector('select[devinid="112"]').value;
-            const primaryUsers = document.querySelector('select[devinid="113"]').value;
+            // Original function - will be enhanced by smart-recommendations.js
+            const appName = document.getElementById('app-name').value;
+            const interfaceName = document.getElementById('interface-name').value;
+            const primaryFunction = document.getElementById('primary-function').value;
+            const primaryUsers = document.getElementById('primary-users').value;
 
             if (!appName || !interfaceName) {
                 alert('Please enter application and interface names');
