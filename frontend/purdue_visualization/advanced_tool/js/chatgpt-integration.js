@@ -82,13 +82,29 @@ Integration Requirements: ${integrationRequirements}
 Performance Requirements: ${performanceRequirements}
 Availability Requirements: ${availabilityRequirements}
 
-Classification Results:
-Purdue Level: ${purdueResult}
-Network Zone: ${zoneResult}
-Datacenter Type: ${datacenterResult}
-Site Type: ${siteResult}
+Now based on above inputs, we seek your recommendations for below points in the format mentioned below:
 
-Based on the above information, please provide your validation and make best practice recommendations.
+About Application:
+General comments about interface name "${interfaceName}" of application "${appName}" and what are the general common use cases?
+
+Zoning recommendations:
+As per above inputs, what is your recommendations about what zone this type of application should typically reside in and why? The zones we have identified for design are below:
+Management Zone
+Enterprise Zone
+OT Zone
+Operations Zone
+Security Zone
+App DMZ Zone
+Field Zone
+
+Purdue Level recommendations:
+As per above inputs, what is your recommendations about what purdue level of security should be applied to this type of application and why?
+
+Security recommendations:
+What would be the general security and hardening best practices for deploying this application with the recommended zone and purdue levels.
+
+Implementation guidance:
+Suggest some architectural implementation guidance.
 `;
         
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
