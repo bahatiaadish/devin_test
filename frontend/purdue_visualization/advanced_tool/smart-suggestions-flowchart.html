@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Suggestions Function Flowchart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .section-header {
+            background-color: #0d6efd;
+            color: white;
+            padding: 10px 15px;
+            font-weight: bold;
+        }
+        .section-content {
+            padding: 15px;
+        }
+        .explanation {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+        }
+        .mermaid {
+            background-color: white;
+        }
+        .legend-item {
+            display: inline-block;
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+        .color-box {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        .start-color {
+            background-color: #d1e7dd;
+            border: 1px solid #198754;
+        }
+        .process-color {
+            background-color: #cfe2ff;
+            border: 1px solid #0d6efd;
+        }
+        .decision-color {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+        }
+        .end-color {
+            background-color: #f8d7da;
+            border: 1px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Smart Suggestions Function Flowchart</h1>
+        
+        <!-- Legend -->
+        <div class="mb-4">
+            <h5>Flowchart Legend:</h5>
+            <div class="legend-item"><div class="color-box start-color"></div> Start</div>
+            <div class="legend-item"><div class="color-box process-color"></div> Process</div>
+            <div class="legend-item"><div class="color-box decision-color"></div> Decision</div>
+            <div class="legend-item"><div class="color-box end-color"></div> End</div>
+        </div>
+
+        <!-- Main Function Flow -->
+        <div class="section">
+            <div class="section-header">
+                Main Function Flow: generateSmartSuggestions
+            </div>
+            <div class="section-content">
+                <pre class="mermaid">
+flowchart TD
+    A[Start] --> B[Collect Input Values]
+    B --> C[Validate Inputs]
+    C --> D{Required fields provided?}
+    D -->|No| E[Show Alert]
+    E --> Z[End Function]
+    D -->|Yes| F[Find Similar Applications]
+    F --> G{Similar apps found?}
+    G -->|Yes| H[Use Data-Driven Suggestions]
+    G -->|No| I[Use Original Algorithm]
+    H --> Z
+    I --> Z
+                </pre>
+                
+                <div class="explanation mt-4">
+                    <h5>Key Decision Points:</h5>
+                    <ul>
+                        <li>Validates that application name and interface name are provided</li>
+                        <li>Searches for similar applications in the dataset</li>
+                        <li>Uses data-driven approach if similar applications are found</li>
+                        <li>Falls back to original algorithm if no similar applications are found</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Input Collection Process -->
+        <div class="section">
+            <div class="section-header">
+                Input Collection Process
+            </div>
+            <div class="section-content">
+                <pre class="mermaid">
+flowchart TD
+    A[Start Input Collection] --> B[Get Application Name]
+    B --> C[Get Interface Name]
+    C --> D[Get Application Description]
+    D --> E[Get Primary Function]
+    E --> F[Get Primary Users]
+    F --> G[Get Security Requirements]
+    G --> H[Get Compliance Needs]
+    H --> I[Get Data Sensitivity]
+    I --> J[Get Integration Requirements]
+    J --> K[Get Performance Requirements]
+    K --> L[Get Availability Requirements]
+    L --> M[Return All Input Values]
+                </pre>
+                
+                <div class="explanation mt-4">
+                    <h5>Input Fields Collected:</h5>
+                    <ul>
+                        <li>Basic Details: Application Name, Interface Name, Description, Primary Function, Primary Users</li>
+                        <li>Security Requirements: Low, Medium, High, Critical</li>
+                        <li>Compliance Needs: NERC CIP, IEC 62443, NIST, GDPR, HIPAA, PCI DSS, SOX</li>
+                        <li>Data Sensitivity: Public, Internal, Confidential, Restricted</li>
+                        <li>Integration Requirements: ERP, MES, SCADA, Historian, Cloud, Third-party</li>
+                        <li>Performance Requirements: Low, Medium, High, Real-time</li>
+                        <li>Availability Requirements: Low (99%), Medium (99.9%), High (99.99%), Critical (99.999%)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Data-Driven Suggestions Process -->
+        <div class="section">
+            <div class="section-header">
+                Data-Driven Suggestions Process
+            </div>
+            <div class="section-content">
+                <pre class="mermaid">
+flowchart TD
+    A[Start Data-Driven Suggestions] --> B[Calculate Purdue Level Scores]
+    B --> C[Calculate Network Zone Scores]
+    C --> D[Determine Highest Scoring Purdue Level]
+    D --> E[Determine Highest Scoring Network Zones]
+    E --> F[Generate Security Considerations]
+    F --> G[Generate Datacenter Recommendations]
+    G --> H[Generate Site Type Recommendations]
+    H --> I[Return All Recommendations]
+                </pre>
+                
+                <div class="explanation mt-4">
+                    <h5>Recommendation Generation Process:</h5>
+                    <ul>
+                        <li>Purdue Level Determination:
+                            <ul>
+                                <li>Analyzes similar applications to find common Purdue levels</li>
+                                <li>Considers primary function for fallback logic:
+                                    <ul>
+                                        <li>Control functions → Levels 0-1</li>
+                                        <li>Monitoring functions → Level 2</li>
+                                        <li>Operations management → Level 3</li>
+                                        <li>Business functions → Level 4</li>
+                                        <li>Security functions → Levels 3-3.5</li>
+                                        <li>External connectivity → Level 5</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>Network Zone Determination:
+                            <ul>
+                                <li>Similar to Purdue levels, first tries to determine zones based on similar applications</li>
+                                <li>Uses primary function and users for fallback logic:
+                                    <ul>
+                                        <li>Control function → OT Zone</li>
+                                        <li>Business function → Enterprise Zone</li>
+                                        <li>Security function → Security Zone</li>
+                                        <li>Operations function → Operations Zone</li>
+                                        <li>IT administrators → Management Zone</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Considerations Process -->
+        <div class="section">
+            <div class="section-header">
+                Security Considerations Process
+            </div>
+            <div class="section-content">
+                <pre class="mermaid">
+flowchart TD
+    A[Start Security Considerations] --> B{Check Security Requirements}
+    B -->|Critical/High| C[Add High Security Controls Message]
+    B -->|Medium/Low/None| D[Add Basic Security Message]
+    C --> E{Check Zone Type}
+    D --> E
+    E -->|OT/Field| F[Add OT Security Recommendations]
+    E -->|Enterprise/DMZ| G[Add External Threat Recommendations]
+    E -->|Security| H[Add Authentication Recommendations]
+    E -->|Other| I[Add General Recommendations]
+    F --> J{Check Compliance Needs}
+    G --> J
+    H --> J
+    I --> J
+    J -->|NERC CIP| K[Add NERC CIP Compliance Message]
+    J -->|IEC 62443| L[Add IEC 62443 Standards Message]
+    K --> M{Check Data Sensitivity}
+    L --> M
+    J -->|None/Other| M
+    M -->|Restricted/Confidential| N[Add Data Protection Message]
+    N --> O{Check Performance Requirements}
+    M -->|Public/Internal| O
+    O -->|Real-time/High| P[Add Performance Support Message]
+    P --> Q{Check Availability Requirements}
+    O -->|Low/Medium| Q
+    Q -->|Critical/High| R[Add Redundancy Message]
+    Q -->|Low/Medium| S[End Security Considerations]
+    R --> S
+                </pre>
+                
+                <div class="explanation mt-4">
+                    <h5>Security Recommendation Logic:</h5>
+                    <ul>
+                        <li>Considers security requirements level (Critical to Low)</li>
+                        <li>Provides zone-specific security recommendations</li>
+                        <li>Adds compliance-specific guidance for regulated industries</li>
+                        <li>Includes data protection measures based on sensitivity</li>
+                        <li>Addresses performance and availability requirements</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Function Initialization Process -->
+        <div class="section">
+            <div class="section-header">
+                Function Initialization Process
+            </div>
+            <div class="section-content">
+                <pre class="mermaid">
+flowchart TD
+    A[Page Load] --> B{Check if dataLoader exists}
+    B -->|Yes| C[Initialize Recommendation Engine]
+    B -->|No| D[Set up interval to check for dataLoader]
+    D --> E{dataLoader available?}
+    E -->|Yes| F[Clear interval and initialize]
+    E -->|No| G[Continue checking]
+    G --> E
+    F --> H[Load all data]
+    C --> H
+    H --> I{Data loaded successfully?}
+    I -->|Yes| J[Enhance recommendation engine]
+    I -->|No| K[Use fallback engine]
+    J --> L[Override generateSmartSuggestions]
+    K --> M[End initialization]
+    L --> M
+                </pre>
+                
+                <div class="explanation mt-4">
+                    <h5>Initialization Process:</h5>
+                    <ul>
+                        <li>Checks for data loader availability on page load</li>
+                        <li>Loads application data, Purdue levels, and network zones</li>
+                        <li>Enhances the recommendation engine with data-driven capabilities</li>
+                        <li>Falls back to basic algorithm if data loading fails</li>
+                        <li>Overrides the original generateSmartSuggestions function with enhanced version</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Summary -->
+        <div class="section">
+            <div class="section-header">
+                Summary
+            </div>
+            <div class="section-content">
+                <p>The Smart Suggestions function uses a sophisticated algorithm to recommend appropriate Purdue levels, network zones, datacenter types, and site classifications for applications based on their characteristics.</p>
+                
+                <p>The function follows these key steps:</p>
+                <ol>
+                    <li><strong>Input Collection:</strong> Gathers application details including name, function, users, security requirements, compliance needs, and more.</li>
+                    <li><strong>Similar Application Search:</strong> Looks for applications with similar characteristics in the dataset.</li>
+                    <li><strong>Data-Driven Recommendations:</strong> If similar applications are found, uses their classifications to generate recommendations.</li>
+                    <li><strong>Fallback Logic:</strong> If no similar applications are found, uses predefined rules based on application function and users.</li>
+                    <li><strong>Security Considerations:</strong> Generates security recommendations based on the application's characteristics and recommended zones.</li>
+                </ol>
+                
+                <p>The enhanced version of the function considers six additional classification criteria (security, compliance, data sensitivity, integration, performance, and availability) to provide more accurate and comprehensive recommendations.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                flowchart: {
+                    useMaxWidth: false,
+                    htmlLabels: true,
+                    curve: 'basis'
+                }
+            });
+        });
+    </script>
+</body>
+</html>
