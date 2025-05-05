@@ -197,6 +197,29 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
     </style>
 </head>
 <body>
+    <!-- API Key Modal -->
+    <div class="modal fade" id="apiKeyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="apiKeyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="apiKeyModalLabel">Enter Your OpenAI API Key</h5>
+                </div>
+                <div class="modal-body">
+                    <p>This tool uses OpenAI's API for smart analysis. Please enter your API key to enable this feature.</p>
+                    <div class="mb-3">
+                        <label for="openai-api-key" class="form-label">OpenAI API Key</label>
+                        <input type="password" class="form-control" id="openai-api-key" placeholder="sk-...">
+                        <div class="form-text">Your API key is stored locally and never sent to our servers.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="save-api-key-btn">Save API Key</button>
+                    <button type="button" class="btn btn-secondary" id="skip-api-key-btn">Skip (Disable Smart Analysis)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="header">
         <div class="container">
             <h1 class="display-5 fw-bold">Advanced Network Zone &amp; Purdue Level Classification Tool</h1>
@@ -941,6 +964,57 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
                                 <div id="implementation-guidance">
                                     <p class="text-muted">Complete the assessment to see implementation guidance</p>
                                 </div>
+                            </div>
+                            
+                            <div class="mt-4 text-center">
+                                <button id="perform-smart-analysis-btn" class="btn btn-success" style="display: none;">
+                                    <i class="bi bi-robot"></i> Perform Smart Analysis with AI
+                                </button>
+                            </div>
+                            
+                            <!-- ChatGPT Analysis Results -->
+                            <div class="card mt-4" id="chatgpt-analysis-card" style="display: none;">
+                                <div class="card-header bg-success text-white">
+                                    AI-Powered Analysis & Recommendations
+                                </div>
+                                <div class="card-body">
+                                    <div id="chatgpt-analysis-loading" style="display: none;">
+                                        <div class="d-flex justify-content-center">
+                                            <div class="spinner-border text-success" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                        <p class="text-center mt-2">Analyzing your application details...</p>
+                                    </div>
+                                    <div id="chatgpt-analysis-content">
+                                        <!-- AI analysis will be displayed here -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <button id="perform-smart-analysis-btn" class="btn btn-success btn-lg mt-3" style="display: none;">
+                                    <i class="bi bi-robot"></i> Perform Smart Analysis
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ChatGPT Analysis Results -->
+                    <div class="card result-card mt-4" id="chatgpt-analysis-card" style="display: none;">
+                        <div class="card-header bg-success text-white">
+                            AI-Powered Analysis
+                        </div>
+                        <div class="card-body">
+                            <div id="chatgpt-analysis-content">
+                                <p class="text-muted">Click "Perform Smart Analysis" to get detailed AI recommendations</p>
+                            </div>
+                            <div id="chatgpt-analysis-loading" style="display: none;">
+                                <div class="d-flex justify-content-center">
+                                    <div class="spinner-border text-success" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                <p class="text-center mt-2">Analyzing your application details...</p>
                             </div>
                         </div>
                     </div>
@@ -1980,6 +2054,7 @@ use    <title>Advanced Network Zone and Purdue Level Classification Tool</title>
     <script src="js/data-loader.js"></script>
     <script src="js/smart-recommendations.js"></script>
     <script src="js/download-tool.js"></script>
+    <script src="js/chatgpt-integration.js"></script>
     <script>
         // Application type templates
         const appTemplates = {
