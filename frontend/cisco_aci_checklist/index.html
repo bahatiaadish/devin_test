@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Cisco ACI Fabric Deployment Checklist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #0D6EFD;
+            text-align: center;
+            border-bottom: 2px solid #0D6EFD;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #0D6EFD;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            cursor: pointer;
+        }
+        h3 {
+            color: #0D6EFD;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            background-color: #0D6EFD;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #0b5ed7;
+        }
+        .search-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        #searchInput {
+            padding: 8px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .task-item {
+            margin-bottom: 5px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .task-item input[type="checkbox"] {
+            margin-top: 3px;
+            margin-right: 10px;
+        }
+        .task-item label {
+            flex: 1;
+        }
+        .add-to-subchecklist-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .add-to-subchecklist-btn:hover {
+            background-color: #218838;
+        }
+        .subchecklist-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 100%;
+            background-color: #f8f9fa;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .subchecklist-panel h3 {
+            margin-top: 0;
+        }
+        .subchecklist-panel ul {
+            padding-left: 20px;
+        }
+        .subchecklist-panel li {
+            margin-bottom: 10px;
+        }
+        .close-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+        .close-panel:hover {
+            color: #333;
+        }
+        .saved-subchecklists {
+            background-color: #e9f7fe;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .saved-subchecklists h3 {
+            margin-top: 0;
+            color: #0D6EFD;
+        }
+        .saved-subchecklists ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .saved-subchecklists li {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .saved-subchecklists a {
+            color: #0D6EFD;
+            text-decoration: none;
+        }
+        .saved-subchecklists a:hover {
+            text-decoration: underline;
+        }
+        .delete-subchecklist {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .delete-subchecklist:hover {
+            background-color: #c82333;
+        }
+        .delete-all-subchecklists {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .delete-all-subchecklists:hover {
+            background-color: #c82333;
+        }
+        .section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .section-header h2 {
+            margin: 0;
+            border-bottom: none;
+        }
+        .section-content {
+            display: none;
+            margin-top: 15px;
+        }
+        .section-content.active {
+            display: block;
+        }
+        .toggle-icon {
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+        .toggle-icon.active {
+            transform: rotate(180deg);
+        }
+        .downloaded-subchecklists {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        .downloaded-subchecklists h3 {
+            margin-top: 0;
+            color: #0D6EFD;
+        }
+        .downloaded-subchecklists ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .downloaded-subchecklists li {
+            margin-bottom: 10px;
+        }
+        .downloaded-subchecklists a {
+            color: #0D6EFD;
+            text-decoration: none;
+        }
+        .downloaded-subchecklists a:hover {
+            text-decoration: underline;
+        }
+        .about-section {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        @media print {
+            .button-container, .search-container, .add-to-subchecklist-btn, .subchecklist-panel, .saved-subchecklists, .downloaded-subchecklists {
+                display: none !important;
+            }
+            .section-content {
+                display: block !important;
+            }
+            .toggle-icon {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Comprehensive Cisco ACI Fabric Deployment Checklist</h1>
+    
+    <div class="button-container">
+        <button id="printBtn">Print Checklist</button>
+        <button id="createSubChecklistBtn">Create Sub-Checklist</button>
+        <button id="saveAllDataBtn">Save All Data</button>
+        <button id="loadDataBtn">Load Saved Data</button>
+        <button id="resetAllBtn">Reset All</button>
+    </div>
+    
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search tasks...">
+    </div>
+    
+    <div class="saved-subchecklists">
+        <h3>Saved Sub-Checklists</h3>
+        <ul id="savedSubchecklistsList">
+            <!-- Saved sub-checklists will be listed here -->
+        </ul>
+        <button id="deleteAllSubchecklistsBtn" class="delete-all-subchecklists">Delete All Sub-Checklists</button>
+    </div>
+
+    <div class="about-section">
+        <h2>About This Checklist</h2>
+        <p>This comprehensive checklist for Cisco ACI Fabric Deployment has been created for Aadish Bahati. It provides detailed guidance for setting up a multi-site ACI fabric deployment, including low-level device setup tasks and configuration details.</p>
+        <p>The checklist covers all aspects of ACI deployment, from pre-deployment planning to documentation and handover, with a focus on Nexus Dashboard Orchestrator (NDO) for multi-site management.</p>
+        <p><strong>Key Features:</strong></p>
+        <ul>
+            <li><strong>Comprehensive Coverage:</strong> Includes detailed tasks for every phase of deployment</li>
+            <li><strong>Sub-Checklist Creation:</strong> Create custom sub-checklists for specific phases or team members</li>
+            <li><strong>Progress Tracking:</strong> Save your progress as you complete tasks</li>
+            <li><strong>Search Functionality:</strong> Quickly find specific tasks</li>
+            <li><strong>Print-Friendly:</strong> Print the entire checklist or specific sub-checklists</li>
+        </ul>
+    </div>
+    
+    <div class="downloaded-subchecklists">
+        <h3>Downloaded Sub-Checklists</h3>
+        <p>These sub-checklists have been downloaded as HTML files and are available in the same directory:</p>
+        <ul id="localSubchecklistsList">
+            <!-- Downloaded sub-checklists will be listed here -->
+        </ul>
+    </div>
+    
+    <!-- Hidden file input for importing data -->
+    <input type="file" id="importSubchecklistHiddenInput" accept=".json" style="display: none;">
+    
+    <!-- Subchecklist Panel -->
+    <div id="subchecklistPanel" class="subchecklist-panel">
+        <button class="close-panel">&times;</button>
+        <h3>Create Sub-Checklist</h3>
+        <div>
+            <label for="subchecklistName">Sub-Checklist Name:</label>
+            <input type="text" id="subchecklistName" placeholder="Enter a name for your sub-checklist">
+        </div>
+        <h4>Selected Tasks:</h4>
+        <ul id="selectedTasksList">
+            <!-- Selected tasks will be listed here -->
+        </ul>
+        <button id="downloadSubchecklistBtn">Download as HTML</button>
+        <p style="font-size: 0.8em; color: #666; margin-top: 5px;">When prompted, save the file to the same folder as this checklist for proper linking.</p>
+        <button id="exportSubchecklistBtn">Export as JSON</button>
+        <button id="clearSubchecklistBtn">Clear All</button>
+        <div style="margin-top: 20px;">
+            <h4>Import Sub-Checklist:</h4>
+            <input type="file" id="importSubchecklistInput" accept=".json">
+            <button id="importSubchecklistBtn">Import</button>
+        </div>
+    </div>
+    
+    <!-- Load the sections data first -->
+    <script src="sections_data.js"></script>
+    <!-- Then load the main script -->
+    <script src="comprehensive_final.js"></script>
+</body>
+</html>
