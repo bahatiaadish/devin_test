@@ -116,6 +116,9 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="snmp-tab" data-bs-toggle="tab" data-bs-target="#snmp-form" type="button" role="tab">SNMP Location</button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary-view" type="button" role="tab">Summary</button>
+                            </li>
                         </ul>
 
                         <div class="tab-content mt-3" id="namingTabContent">
@@ -179,6 +182,12 @@
                                         <div class="form-text">1-100</div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="host-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="host-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                </div>
                                 <button id="generate-host-btn" class="btn btn-custom">Generate Host Name(s)</button>
                             </div>
 
@@ -236,6 +245,17 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="vlan-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="vlan-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="vlan-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="vlan-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
+                                    </div>
+                                </div>
                                 <button id="generate-vlan-btn" class="btn btn-custom">Generate VLAN Name</button>
                             </div>
 
@@ -284,6 +304,17 @@
                                         <input type="text" class="form-control" id="wan-description" placeholder="e.g., WAN" value="WAN">
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="wan-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="wan-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="wan-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="wan-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
+                                    </div>
+                                </div>
                                 <button id="generate-wan-btn" class="btn btn-custom">Generate WAN Interface Description</button>
                             </div>
 
@@ -320,6 +351,17 @@
                                         <input type="text" class="form-control" id="physical-description" placeholder="Optional">
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="physical-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="physical-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="physical-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="physical-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
+                                    </div>
+                                </div>
                                 <button id="generate-physical-btn" class="btn btn-custom">Generate Physical Interface Description</button>
                             </div>
 
@@ -340,6 +382,17 @@
                                     <div class="col-md-8 mb-3">
                                         <label for="logical-remote-hostname" class="form-label">Remote End Hostname</label>
                                         <input type="text" class="form-control" id="logical-remote-hostname" placeholder="e.g., NKWSKSSRTRW0001">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="logical-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="logical-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="logical-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="logical-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
                                     </div>
                                 </div>
                                 <button id="generate-logical-btn" class="btn btn-custom">Generate Logical Interface Description</button>
@@ -399,6 +452,17 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="l3-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="l3-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="l3-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="l3-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
+                                    </div>
+                                </div>
                                 <button id="generate-l3-btn" class="btn btn-custom">Generate L3 Interface Description</button>
                             </div>
 
@@ -427,6 +491,17 @@
                                             <option value="Multicast RP">Multicast RP</option>
                                             <option value="Multicast MSDP">Multicast MSDP</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="virtual-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="virtual-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="virtual-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="virtual-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
                                     </div>
                                 </div>
                                 <button id="generate-virtual-btn" class="btn btn-custom">Generate Virtual Interface Description</button>
@@ -502,7 +577,41 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="snmp-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="snmp-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="snmp-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="snmp-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
+                                    </div>
+                                </div>
                                 <button id="generate-snmp-btn" class="btn btn-custom">Generate SNMP Location Field</button>
+                            </div>
+                            
+                            <!-- Summary View -->
+                            <div class="tab-pane fade" id="summary-view" role="tabpanel">
+                                <h5>All Generated Names</h5>
+                                <p class="text-muted">View, edit descriptions, and manage all your generated names in one place</p>
+                                
+                                <div class="table-container">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Convention Type</th>
+                                                <th>Description</th>
+                                                <th>Date Created</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="summary-table-body">
+                                            <!-- Summary items will be populated here -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -534,6 +643,7 @@
                                     <tr>
                                         <th>Name</th>
                                         <th>Convention Type</th>
+                                        <th>Description</th>
                                         <th>Date Created</th>
                                         <th>Actions</th>
                                     </tr>
@@ -554,7 +664,7 @@
         // IndexedDB setup
         let db;
         const DB_NAME = 'EssentialEnergyNamingDB';
-        const DB_VERSION = 1;
+        const DB_VERSION = 2; // Updated version
         const STORE_NAME = 'generatedNames';
 
         // Initialize IndexedDB
@@ -575,20 +685,35 @@
                 
                 request.onupgradeneeded = (event) => {
                     const db = event.target.result;
+                    const oldVersion = event.oldVersion;
                     
-                    // Create object store for generated names
-                    if (!db.objectStoreNames.contains(STORE_NAME)) {
-                        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-                        store.createIndex('conventionType', 'conventionType', { unique: false });
-                        store.createIndex('dateCreated', 'dateCreated', { unique: false });
-                        console.log("Object store created");
+                    if (oldVersion < 1) {
+                        // Create initial object store if it doesn't exist
+                        if (!db.objectStoreNames.contains(STORE_NAME)) {
+                            const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                            store.createIndex('conventionType', 'conventionType', { unique: false });
+                            store.createIndex('dateCreated', 'dateCreated', { unique: false });
+                            console.log("Object store created");
+                        }
+                    }
+                    
+                    if (oldVersion < 2) {
+                        // Upgrade to version 2 (add userDescription field)
+                        const transaction = event.target.transaction;
+                        const store = transaction.objectStore(STORE_NAME);
+                        
+                        // Add userDescription index if it doesn't exist
+                        if (!store.indexNames.contains('userDescription')) {
+                            store.createIndex('userDescription', 'userDescription', { unique: false });
+                            console.log("User description index added");
+                        }
                     }
                 };
             });
         }
 
         // Save generated name to IndexedDB
-        function saveGeneratedName(name, conventionType, details) {
+        function saveGeneratedName(name, conventionType, details, userDescription = '') {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction([STORE_NAME], 'readwrite');
                 const store = transaction.objectStore(STORE_NAME);
@@ -597,6 +722,7 @@
                     name: name,
                     conventionType: conventionType,
                     details: details,
+                    userDescription: userDescription,
                     dateCreated: new Date().toISOString()
                 };
                 
@@ -610,6 +736,44 @@
                 request.onerror = (event) => {
                     console.error("Error saving name:", event.target.error);
                     reject("Error saving name");
+                };
+            });
+        }
+        
+        // Update a generated name in IndexedDB
+        function updateGeneratedName(id, updates) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+                
+                // Get the record first
+                const getRequest = store.get(id);
+                
+                getRequest.onsuccess = () => {
+                    const record = getRequest.result;
+                    
+                    // Apply updates to the record
+                    for (const key in updates) {
+                        record[key] = updates[key];
+                    }
+                    
+                    // Put the updated record back
+                    const updateRequest = store.put(record);
+                    
+                    updateRequest.onsuccess = () => {
+                        console.log("Name updated successfully");
+                        resolve();
+                    };
+                    
+                    updateRequest.onerror = (event) => {
+                        console.error("Error updating name:", event.target.error);
+                        reject("Error updating name");
+                    };
+                };
+                
+                getRequest.onerror = (event) => {
+                    console.error("Error getting name for update:", event.target.error);
+                    reject("Error getting name for update");
                 };
             });
         }
@@ -672,6 +836,7 @@
                     row.innerHTML = `
                         <td>${item.name}</td>
                         <td>${item.conventionType}</td>
+                        <td>${item.userDescription || ''}</td>
                         <td>${new Date(item.dateCreated).toLocaleString()}</td>
                         <td>
                             <button class="btn btn-sm btn-outline-primary copy-name" data-name="${item.name}">
@@ -701,8 +866,81 @@
                         if (confirm('Are you sure you want to delete this name?')) {
                             deleteGeneratedName(id).then(() => {
                                 renderHistory();
+                                renderSummary(); // Also update summary
                             });
                         }
+                    });
+                });
+            });
+        }
+        
+        // Render summary table
+        function renderSummary() {
+            loadGeneratedNames().then(names => {
+                const summaryTableBody = document.getElementById('summary-table-body');
+                summaryTableBody.innerHTML = '';
+                
+                names.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.name}</td>
+                        <td>${item.conventionType}</td>
+                        <td>
+                            <div class="d-flex">
+                                <input type="text" class="form-control form-control-sm me-2 description-field" 
+                                    value="${item.userDescription || ''}" data-id="${item.id}">
+                                <button class="btn btn-sm btn-outline-success save-description" data-id="${item.id}">
+                                    <i class="bi bi-check"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>${new Date(item.dateCreated).toLocaleString()}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary copy-name" data-name="${item.name}">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger delete-name" data-id="${item.id}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    summaryTableBody.appendChild(row);
+                });
+                
+                // Add event listeners for copy and delete buttons
+                document.querySelectorAll('#summary-table-body .copy-name').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const name = this.getAttribute('data-name');
+                        navigator.clipboard.writeText(name).then(() => {
+                            alert('Name copied to clipboard!');
+                        });
+                    });
+                });
+                
+                document.querySelectorAll('#summary-table-body .delete-name').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        if (confirm('Are you sure you want to delete this name?')) {
+                            deleteGeneratedName(id).then(() => {
+                                renderHistory();
+                                renderSummary();
+                            });
+                        }
+                    });
+                });
+                
+                // Add event listeners for save description buttons
+                document.querySelectorAll('#summary-table-body .save-description').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        const descriptionField = document.querySelector(`.description-field[data-id="${id}"]`);
+                        const newDescription = descriptionField.value;
+                        
+                        updateGeneratedName(id, { userDescription: newDescription }).then(() => {
+                            alert('Description updated successfully!');
+                            renderHistory();
+                            renderSummary();
+                        });
                     });
                 });
             });
@@ -817,34 +1055,84 @@
             const siteLocation = document.getElementById('vlan-site-location').value;
             const siteType = document.getElementById('vlan-site-type').value;
             const description = document.getElementById('vlan-description').value;
+            const quantity = parseInt(document.getElementById('vlan-quantity').value) || 1;
+            const userDescription = document.getElementById('vlan-user-description').value;
             
             if (!vlanType || !siteLocation || !siteType || !description) {
                 alert('Please fill in all required fields');
                 return;
             }
             
-            // Generate VLAN name
-            let vlanName;
-            if (vlanType === 'BYOD_GUEST') {
-                vlanName = `BYOD_GUEST_${siteLocation}${siteType}_${description}`;
+            // Generate multiple VLAN names if quantity > 1
+            if (quantity > 1) {
+                const vlanNames = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate VLAN name with sequence number
+                    let vlanName;
+                    const sequenceDescription = `${description}${i+1}`;
+                    
+                    if (vlanType === 'BYOD_GUEST') {
+                        vlanName = `BYOD_GUEST_${siteLocation}${siteType}_${sequenceDescription}`;
+                    } else {
+                        vlanName = `${vlanType}_${siteLocation}${siteType}_${sequenceDescription}`;
+                    }
+                    
+                    vlanNames.push(vlanName);
+                    
+                    // Save to database
+                    const details = {
+                        vlanType,
+                        siteLocation,
+                        siteType,
+                        description: sequenceDescription,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(vlanName, "VLAN Naming", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(vlanNames.join('<br>'), `Generated ${quantity} VLAN Names`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
             } else {
-                vlanName = `${vlanType}_${siteLocation}${siteType}_${description}`;
+                // Generate single VLAN name
+                let vlanName;
+                if (vlanType === 'BYOD_GUEST') {
+                    vlanName = `BYOD_GUEST_${siteLocation}${siteType}_${description}`;
+                } else {
+                    vlanName = `${vlanType}_${siteLocation}${siteType}_${description}`;
+                }
+                
+                // Display result
+                displayResult(vlanName, "VLAN Name");
+                
+                // Save to database
+                const details = {
+                    vlanType,
+                    siteLocation,
+                    siteType,
+                    description
+                };
+                
+                saveGeneratedName(vlanName, "VLAN Naming", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
             }
-            
-            // Display result
-            displayResult(vlanName, "VLAN Name");
-            
-            // Save to database
-            const details = {
-                vlanType,
-                siteLocation,
-                siteType,
-                description
-            };
-            
-            saveGeneratedName(vlanName, "VLAN Naming", details).then(() => {
-                renderHistory();
-            });
         });
 
         // WAN Interface Description Generator
@@ -854,30 +1142,75 @@
             const serviceId = document.getElementById('wan-service-id').value;
             const bandwidth = document.getElementById('wan-bandwidth').value;
             const description = document.getElementById('wan-description').value;
+            const quantity = parseInt(document.getElementById('wan-quantity').value) || 1;
+            const userDescription = document.getElementById('wan-user-description').value;
             
             if (!carrier || !tech || !serviceId || !bandwidth) {
                 alert('Please fill in all required fields');
                 return;
             }
             
-            // Generate WAN interface description
-            const wanDescription = `${carrier}, ${tech}, ${serviceId}, ${bandwidth}, ${description || 'WAN'}`;
-            
-            // Display result
-            displayResult(wanDescription, "WAN Interface Description");
-            
-            // Save to database
-            const details = {
-                carrier,
-                tech,
-                serviceId,
-                bandwidth,
-                description
-            };
-            
-            saveGeneratedName(wanDescription, "WAN Interface", details).then(() => {
-                renderHistory();
-            });
+            // Generate multiple WAN interface descriptions if quantity > 1
+            if (quantity > 1) {
+                const wanDescriptions = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate WAN interface description with sequence number
+                    const sequenceServiceId = `${serviceId}-${i+1}`;
+                    const wanDescription = `${carrier}, ${tech}, ${sequenceServiceId}, ${bandwidth}, ${description || 'WAN'}`;
+                    
+                    wanDescriptions.push(wanDescription);
+                    
+                    // Save to database
+                    const details = {
+                        carrier,
+                        tech,
+                        serviceId: sequenceServiceId,
+                        bandwidth,
+                        description,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(wanDescription, "WAN Interface", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(wanDescriptions.join('<br>'), `Generated ${quantity} WAN Interface Descriptions`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            } else {
+                // Generate single WAN interface description
+                const wanDescription = `${carrier}, ${tech}, ${serviceId}, ${bandwidth}, ${description || 'WAN'}`;
+                
+                // Display result
+                displayResult(wanDescription, "WAN Interface Description");
+                
+                // Save to database
+                const details = {
+                    carrier,
+                    tech,
+                    serviceId,
+                    bandwidth,
+                    description
+                };
+                
+                saveGeneratedName(wanDescription, "WAN Interface", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            }
         });
 
         // Physical Interface Description Generator
@@ -886,64 +1219,158 @@
             const hostname = document.getElementById('physical-hostname').value;
             const interfaceName = document.getElementById('physical-interface').value;
             const description = document.getElementById('physical-description').value;
+            const quantity = parseInt(document.getElementById('physical-quantity').value) || 1;
+            const userDescription = document.getElementById('physical-user-description').value;
             
             if (!deviceType || !hostname || !interfaceName) {
                 alert('Please fill in all required fields');
                 return;
             }
             
-            // Generate physical interface description
-            let physicalDescription = `${deviceType}, ${hostname}_${interfaceName}`;
-            if (description) {
-                physicalDescription += `, ${description}`;
+            // Generate multiple physical interface descriptions if quantity > 1
+            if (quantity > 1) {
+                const physicalDescriptions = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate physical interface description with sequence number
+                    const sequenceInterface = `${interfaceName}${i+1}`;
+                    let physicalDescription = `${deviceType}, ${hostname}_${sequenceInterface}`;
+                    if (description) {
+                        physicalDescription += `, ${description}`;
+                    }
+                    
+                    physicalDescriptions.push(physicalDescription);
+                    
+                    // Save to database
+                    const details = {
+                        deviceType,
+                        hostname,
+                        interfaceName: sequenceInterface,
+                        description,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(physicalDescription, "Physical Interface", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(physicalDescriptions.join('<br>'), `Generated ${quantity} Physical Interface Descriptions`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            } else {
+                // Generate single physical interface description
+                let physicalDescription = `${deviceType}, ${hostname}_${interfaceName}`;
+                if (description) {
+                    physicalDescription += `, ${description}`;
+                }
+                
+                // Display result
+                displayResult(physicalDescription, "Physical Interface Description");
+                
+                // Save to database
+                const details = {
+                    deviceType,
+                    hostname,
+                    interfaceName,
+                    description
+                };
+                
+                saveGeneratedName(physicalDescription, "Physical Interface", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
             }
-            
-            // Display result
-            displayResult(physicalDescription, "Physical Interface Description");
-            
-            // Save to database
-            const details = {
-                deviceType,
-                hostname,
-                interfaceName,
-                description
-            };
-            
-            saveGeneratedName(physicalDescription, "Physical Interface", details).then(() => {
-                renderHistory();
-            });
         });
 
         // Logical Interface Description Generator
         document.getElementById('generate-logical-btn').addEventListener('click', function() {
             const logicalType = document.getElementById('logical-type').value;
             const remoteHostname = document.getElementById('logical-remote-hostname').value;
+            const quantity = parseInt(document.getElementById('logical-quantity').value) || 1;
+            const userDescription = document.getElementById('logical-user-description').value;
             
             if (!logicalType || !remoteHostname) {
                 alert('Please fill in all required fields');
                 return;
             }
             
-            // Generate logical interface description
-            let logicalDescription;
-            if (logicalType === 'CORP') {
-                logicalDescription = `CORP_Interconnect_to_${remoteHostname}`;
+            // Generate multiple logical interface descriptions if quantity > 1
+            if (quantity > 1) {
+                const logicalDescriptions = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate logical interface description with sequence number
+                    const sequenceHostname = `${remoteHostname}${i+1}`;
+                    let logicalDescription;
+                    if (logicalType === 'CORP') {
+                        logicalDescription = `CORP_Interconnect_to_${sequenceHostname}`;
+                    } else {
+                        logicalDescription = `${logicalType}, Interconnect to ${sequenceHostname}`;
+                    }
+                    
+                    logicalDescriptions.push(logicalDescription);
+                    
+                    // Save to database
+                    const details = {
+                        logicalType,
+                        remoteHostname: sequenceHostname,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(logicalDescription, "Logical Interface", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(logicalDescriptions.join('<br>'), `Generated ${quantity} Logical Interface Descriptions`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
             } else {
-                logicalDescription = `${logicalType}, Interconnect to ${remoteHostname}`;
+                // Generate single logical interface description
+                let logicalDescription;
+                if (logicalType === 'CORP') {
+                    logicalDescription = `CORP_Interconnect_to_${remoteHostname}`;
+                } else {
+                    logicalDescription = `${logicalType}, Interconnect to ${remoteHostname}`;
+                }
+                
+                // Display result
+                displayResult(logicalDescription, "Logical Interface Description");
+                
+                // Save to database
+                const details = {
+                    logicalType,
+                    remoteHostname
+                };
+                
+                saveGeneratedName(logicalDescription, "Logical Interface", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
             }
-            
-            // Display result
-            displayResult(logicalDescription, "Logical Interface Description");
-            
-            // Save to database
-            const details = {
-                logicalType,
-                remoteHostname
-            };
-            
-            saveGeneratedName(logicalDescription, "Logical Interface", details).then(() => {
-                renderHistory();
-            });
         });
 
         // L3 Interface Description Generator
@@ -952,56 +1379,142 @@
             const siteLocation = document.getElementById('l3-site-location').value;
             const siteType = document.getElementById('l3-site-type').value;
             const description = document.getElementById('l3-description').value;
+            const quantity = parseInt(document.getElementById('l3-quantity').value) || 1;
+            const userDescription = document.getElementById('l3-user-description').value;
             
             if (!l3Type || !siteLocation || !siteType || !description) {
                 alert('Please fill in all required fields');
                 return;
             }
             
-            // Generate L3 interface description
-            const l3Description = `${l3Type}_${siteLocation}${siteType}_${description}`;
-            
-            // Display result
-            displayResult(l3Description, "L3 Interface Description");
-            
-            // Save to database
-            const details = {
-                l3Type,
-                siteLocation,
-                siteType,
-                description
-            };
-            
-            saveGeneratedName(l3Description, "L3 Interface", details).then(() => {
-                renderHistory();
-            });
+            // Generate multiple L3 interface descriptions if quantity > 1
+            if (quantity > 1) {
+                const l3Descriptions = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate L3 interface description with sequence number
+                    const sequenceDescription = `${description}${i+1}`;
+                    const l3Description = `${l3Type}_${siteLocation}${siteType}_${sequenceDescription}`;
+                    
+                    l3Descriptions.push(l3Description);
+                    
+                    // Save to database
+                    const details = {
+                        l3Type,
+                        siteLocation,
+                        siteType,
+                        description: sequenceDescription,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(l3Description, "L3 Interface", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(l3Descriptions.join('<br>'), `Generated ${quantity} L3 Interface Descriptions`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            } else {
+                // Generate single L3 interface description
+                const l3Description = `${l3Type}_${siteLocation}${siteType}_${description}`;
+                
+                // Display result
+                displayResult(l3Description, "L3 Interface Description");
+                
+                // Save to database
+                const details = {
+                    l3Type,
+                    siteLocation,
+                    siteType,
+                    description
+                };
+                
+                saveGeneratedName(l3Description, "L3 Interface", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            }
         });
 
         // Virtual/Loopback Interface Description Generator
         document.getElementById('generate-virtual-btn').addEventListener('click', function() {
             const virtualType = document.getElementById('virtual-type').value;
             const description = document.getElementById('virtual-description').value;
+            const quantity = parseInt(document.getElementById('virtual-quantity').value) || 1;
+            const userDescription = document.getElementById('virtual-user-description').value;
             
             if (!virtualType || !description) {
                 alert('Please fill in all required fields');
                 return;
             }
             
-            // Generate virtual interface description
-            const virtualDescription = `Virtual, ${virtualType}, ${description}`;
-            
-            // Display result
-            displayResult(virtualDescription, "Virtual Interface Description");
-            
-            // Save to database
-            const details = {
-                virtualType,
-                description
-            };
-            
-            saveGeneratedName(virtualDescription, "Virtual Interface", details).then(() => {
-                renderHistory();
-            });
+            // Generate multiple virtual interface descriptions if quantity > 1
+            if (quantity > 1) {
+                const virtualDescriptions = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate virtual interface description with sequence number
+                    const sequenceDescription = `${description}${i+1}`;
+                    const virtualDescription = `Virtual, ${virtualType}, ${sequenceDescription}`;
+                    
+                    virtualDescriptions.push(virtualDescription);
+                    
+                    // Save to database
+                    const details = {
+                        virtualType,
+                        description: sequenceDescription,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(virtualDescription, "Virtual Interface", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(virtualDescriptions.join('<br>'), `Generated ${quantity} Virtual Interface Descriptions`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            } else {
+                // Generate single virtual interface description
+                const virtualDescription = `Virtual, ${virtualType}, ${description}`;
+                
+                // Display result
+                displayResult(virtualDescription, "Virtual Interface Description");
+                
+                // Save to database
+                const details = {
+                    virtualType,
+                    description
+                };
+                
+                saveGeneratedName(virtualDescription, "Virtual Interface", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            }
         });
 
         // SNMP Location Field Generator
@@ -1013,38 +1526,86 @@
             const ru = document.getElementById('snmp-ru').value;
             const deviceClass = document.getElementById('snmp-class').value;
             const category = document.getElementById('snmp-category').value;
+            const quantity = parseInt(document.getElementById('snmp-quantity').value) || 1;
+            const userDescription = document.getElementById('snmp-user-description').value;
             
             if (!site || !siteType || !room || !rack || !ru || !deviceClass || !category) {
                 alert('Please fill in all required fields');
                 return;
             }
             
-            // Generate SNMP location field
-            const snmpLocation = `${site}${siteType}, ${room}, ${rack}, ${ru}, ${deviceClass}, ${category}`;
-            
-            // Display result
-            displayResult(snmpLocation, "SNMP Location Field");
-            
-            // Save to database
-            const details = {
-                site,
-                siteType,
-                room,
-                rack,
-                ru,
-                deviceClass,
-                category
-            };
-            
-            saveGeneratedName(snmpLocation, "SNMP Location", details).then(() => {
-                renderHistory();
-            });
+            // Generate multiple SNMP location fields if quantity > 1
+            if (quantity > 1) {
+                const snmpLocations = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate SNMP location field with sequence number
+                    const sequenceRU = `${ru}-${i+1}`;
+                    const snmpLocation = `${site}${siteType}, ${room}, ${rack}, ${sequenceRU}, ${deviceClass}, ${category}`;
+                    
+                    snmpLocations.push(snmpLocation);
+                    
+                    // Save to database
+                    const details = {
+                        site,
+                        siteType,
+                        room,
+                        rack,
+                        ru: sequenceRU,
+                        deviceClass,
+                        category,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(snmpLocation, "SNMP Location", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(snmpLocations.join('<br>'), `Generated ${quantity} SNMP Location Fields`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            } else {
+                // Generate single SNMP location field
+                const snmpLocation = `${site}${siteType}, ${room}, ${rack}, ${ru}, ${deviceClass}, ${category}`;
+                
+                // Display result
+                displayResult(snmpLocation, "SNMP Location Field");
+                
+                // Save to database
+                const details = {
+                    site,
+                    siteType,
+                    room,
+                    rack,
+                    ru,
+                    deviceClass,
+                    category
+                };
+                
+                saveGeneratedName(snmpLocation, "SNMP Location", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            }
         });
 
         // Initialize database and render history when page loads
         window.addEventListener('DOMContentLoaded', () => {
             initDB().then(() => {
                 renderHistory();
+                renderSummary();
             }).catch(error => {
                 console.error("Failed to initialize database:", error);
                 alert("Failed to initialize database. Some features may not work correctly.");
