@@ -471,34 +471,58 @@
         function saveInventoryItems(items) {
             // First, clear existing records for this tool
             // This is a simplification - in a real implementation, we would use a bulk update API
-            // For now, we'll just save each item individually
+            
+            // Track hostnames to prevent duplicates
+            const uniqueHostnames = new Set();
             
             // Initialize the database for this tool
             initDatabase(TOOL_ID)
                 .then(() => {
+                    // Load existing records to clear them
+                    return loadRecords(TOOL_ID);
+                })
+                .then(existingRecords => {
+                    // Delete all existing records
+                    const deletePromises = [];
+                    
+                    if (existingRecords && existingRecords.length > 0) {
+                        existingRecords.forEach(record => {
+                            deletePromises.push(deleteRecord(TOOL_ID, record.id));
+                        });
+                    }
+                    
+                    // Wait for all delete operations to complete
+                    return Promise.all(deletePromises);
+                })
+                .then(() => {
                     // Save each item as a record
                     items.forEach(item => {
-                        const record = {
-                            name: item.hostname,
-                            conventionType: 'Inventory Item',
-                            details: {
-                                siteLocation: item.siteLocation,
-                                siteType: item.siteType,
-                                deviceType: item.deviceType,
-                                deviceId: item.deviceId,
-                                productId: item.productId,
-                                description: item.description,
-                                portSummary: item.portSummary,
-                                role: item.role,
-                                roleType: item.roleType
-                            },
-                            userDescription: `${item.siteLocation} ${item.deviceType} ${item.deviceId}`
-                        };
-                        
-                        saveRecord(TOOL_ID, record)
-                            .catch(error => {
-                                console.error(`Error saving inventory item ${item.hostname}:`, error);
-                            });
+                        // Only save if this hostname hasn't been seen already
+                        if (!uniqueHostnames.has(item.hostname)) {
+                            uniqueHostnames.add(item.hostname);
+                            
+                            const record = {
+                                name: item.hostname,
+                                conventionType: 'Inventory Item',
+                                details: {
+                                    siteLocation: item.siteLocation,
+                                    siteType: item.siteType,
+                                    deviceType: item.deviceType,
+                                    deviceId: item.deviceId,
+                                    productId: item.productId,
+                                    description: item.description,
+                                    portSummary: item.portSummary,
+                                    role: item.role,
+                                    roleType: item.roleType
+                                },
+                                userDescription: `${item.siteLocation} ${item.deviceType} ${item.deviceId}`
+                            };
+                            
+                            saveRecord(TOOL_ID, record)
+                                .catch(error => {
+                                    console.error(`Error saving inventory item ${item.hostname}:`, error);
+                                });
+                        }
                     });
                 })
                 .catch(error => {
