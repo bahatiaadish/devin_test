@@ -1727,31 +1727,46 @@
 
         // Function to update the node ID dropdown based on selections
         function updateNodeIdDropdown() {
+            console.log("updateNodeIdDropdown called");
             const siteLocation = document.getElementById('host-site-location').value;
             const deviceType = document.getElementById('host-device-type').value;
             const nodeIdDropdown = document.getElementById('host-device-id');
+            
+            console.log("Selected values:", { siteLocation, deviceType });
             
             // Clear existing options
             nodeIdDropdown.innerHTML = '<option value="">Select ID number...</option>';
             
             // If either selection is empty, don't proceed
-            if (!siteLocation || !deviceType) return;
+            if (!siteLocation || !deviceType) {
+                console.log("Missing selection, not updating dropdown");
+                return;
+            }
             
             // Get the environment (IT/OT) based on device type
             const environment = getEnvironment(deviceType);
+            console.log("Determined environment:", environment);
             
             // Get the node ID options based on data center and device type
             let nodeIdOptions = NODE_ID_MAPPING.default;
             
             if (NODE_ID_MAPPING[siteLocation]) {
+                console.log(`Found mapping for site location: ${siteLocation}`);
                 if (NODE_ID_MAPPING[siteLocation][environment] && NODE_ID_MAPPING[siteLocation][environment][deviceType]) {
+                    console.log(`Found specific mapping for ${siteLocation}/${environment}/${deviceType}`);
                     nodeIdOptions = NODE_ID_MAPPING[siteLocation][environment][deviceType];
                 } else if (NODE_ID_MAPPING[siteLocation][environment]) {
+                    console.log(`Using default mapping for ${siteLocation}/${environment}`);
                     nodeIdOptions = NODE_ID_MAPPING[siteLocation][environment].default;
                 } else {
+                    console.log(`Using site default mapping for ${siteLocation}`);
                     nodeIdOptions = NODE_ID_MAPPING[siteLocation].default;
                 }
+            } else {
+                console.log(`No mapping found for ${siteLocation}, using global default`);
             }
+            
+            console.log("Node ID options to add:", nodeIdOptions);
             
             // Add options to the dropdown
             nodeIdOptions.forEach(nodeId => {
@@ -1769,16 +1784,34 @@
 
         // Initialize database and render history when page loads
         window.addEventListener('DOMContentLoaded', () => {
+            // Add event listeners for dynamic node ID dropdown immediately
+            document.getElementById('host-site-location').addEventListener('change', function() {
+                console.log("Site location changed");
+                updateNodeIdDropdown();
+            });
+            
+            document.getElementById('host-device-type').addEventListener('change', function() {
+                console.log("Device type changed");
+                updateNodeIdDropdown();
+            });
+            
+            // Add special handler for data center selections
+            const siteLocationDropdown = document.getElementById('host-site-location');
+            siteLocationDropdown.addEventListener('change', function() {
+                const selectedValue = this.value;
+                if(['AUNTH', 'AUSTH', 'AUTER'].includes(selectedValue)) {
+                    console.log(`Data center selected: ${selectedValue}, updating dropdown`);
+                    setTimeout(updateNodeIdDropdown, 50); // Small delay to ensure other handlers run first
+                }
+            });
+            
+            // Initialize the dropdown if values are already selected
+            console.log("Initializing dropdown on page load");
+            updateNodeIdDropdown();
+            
             initSharedDatabase().then(() => {
                 renderHistory();
                 renderSummary();
-                
-                // Add event listeners for dynamic node ID dropdown
-                document.getElementById('host-site-location').addEventListener('change', updateNodeIdDropdown);
-                document.getElementById('host-device-type').addEventListener('change', updateNodeIdDropdown);
-                
-                // Initialize the node ID dropdown if site location and device type are already selected
-                updateNodeIdDropdown();
             }).catch(error => {
                 console.error("Failed to initialize database:", error);
                 alert("Failed to initialize database. Some features may not work correctly.");
@@ -1807,6 +1840,12 @@
                     .catch(error => {
                         alert(`Failed to upload database: ${error}`);
                     });
+            });
+            
+            // Add tab change event listener to update dropdown when host tab is shown
+            document.getElementById('host-tab').addEventListener('shown.bs.tab', function() {
+                console.log("Host tab shown, updating node ID dropdown");
+                updateNodeIdDropdown();
             });
         });
     </script>
