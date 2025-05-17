@@ -382,113 +382,128 @@
         // Check for database changes
         function checkForDatabaseChanges() {
             // Check the comprehensive generator database for changes
-            const compGenDbKey = `${DB_CONFIG.KEY_PREFIX}${DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR}`;
-            try {
-                const db = JSON.parse(localStorage.getItem(compGenDbKey));
-                if (db && db.lastUpdated && db.lastUpdated !== lastUpdatedTimestamp) {
-                    lastUpdatedTimestamp = db.lastUpdated;
-                    loadInventoryData();
-                }
-            } catch (error) {
-                console.error("Error checking for database changes:", error);
-            }
+            getLastUpdatedTimestamp(DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR)
+                .then(timestamp => {
+                    if (timestamp && timestamp !== lastUpdatedTimestamp) {
+                        lastUpdatedTimestamp = timestamp;
+                        loadInventoryData();
+                    }
+                })
+                .catch(error => {
+                    console.error("Error checking for database changes:", error);
+                });
         }
         
         // Load inventory data from the comprehensive generator database
         function loadInventoryData() {
             // We need to load data from the comprehensive generator database
-            const compGenDbKey = `${DB_CONFIG.KEY_PREFIX}${DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR}`;
-            
-            try {
-                const db = JSON.parse(localStorage.getItem(compGenDbKey));
-                if (!db || !db.records) {
+            loadRecords(DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR)
+                .then(records => {
+                    if (!records || records.length === 0) {
+                        showNoDataMessage();
+                        updateStatistics([]);
+                        return;
+                    }
+                    
+                    // Update the last updated timestamp
+                    getLastUpdatedTimestamp(DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR)
+                        .then(timestamp => {
+                            lastUpdatedTimestamp = timestamp;
+                        })
+                        .catch(error => {
+                            console.error("Error getting last updated timestamp:", error);
+                        });
+                    
+                    // Filter for host names with site codes AUNTH, AUSTH, and AUTER
+                    const hostRecords = records.filter(record => {
+                        if (record.conventionType !== 'Host Naming') return false;
+                        
+                        // Check if the hostname starts with one of the target site codes
+                        const hostname = record.name;
+                        return hostname.startsWith('AUNTH') || hostname.startsWith('AUSTH') || hostname.startsWith('AUTER');
+                    });
+                
+                    // Process the host records and map them to hardware details
+                    const inventoryItems = hostRecords.map(record => {
+                        const hostname = record.name;
+                        const siteLocation = hostname.substring(0, 5); // AUNTH, AUSTH, AUTER
+                        const siteType = hostname.substring(5, 7); // e.g., DC
+                        const deviceType = hostname.substring(7, 11); // e.g., OSPI, OLFS
+                        const deviceId = hostname.substring(11, 15); // e.g., 0001
+                        
+                        // Determine the role and hardware details based on device type and node ID
+                        const role = determineRole(siteLocation, deviceType, deviceId);
+                        const hardwareDetails = determineHardwareDetails(deviceType, role);
+                        
+                        return {
+                            id: record.id,
+                            hostname: hostname,
+                            siteLocation: siteLocation,
+                            siteType: siteType,
+                            deviceType: deviceType,
+                            deviceId: deviceId,
+                            productId: hardwareDetails.productId,
+                            description: hardwareDetails.description,
+                            portSummary: hardwareDetails.portSummary,
+                            role: hardwareDetails.role,
+                            roleType: role,
+                            dateCreated: record.dateCreated
+                        };
+                    });
+                    
+                    // Save the inventory items to our own database
+                    saveInventoryItems(inventoryItems);
+                    
+                    // Apply filters and render the inventory table
+                    applyFilters();
+                    
+                    // Update statistics
+                    updateStatistics(inventoryItems);
+                })
+                .catch(error => {
+                    console.error("Error loading inventory data:", error);
                     showNoDataMessage();
                     updateStatistics([]);
-                    return;
-                }
-                
-                // Update the last updated timestamp
-                lastUpdatedTimestamp = db.lastUpdated;
-                
-                // Filter for host names with site codes AUNTH, AUSTH, and AUTER
-                const hostRecords = db.records.filter(record => {
-                    if (record.conventionType !== 'Host Naming') return false;
-                    
-                    // Check if the hostname starts with one of the target site codes
-                    const hostname = record.name;
-                    return hostname.startsWith('AUNTH') || hostname.startsWith('AUSTH') || hostname.startsWith('AUTER');
                 });
-                
-                // Process the host records and map them to hardware details
-                const inventoryItems = hostRecords.map(record => {
-                    const hostname = record.name;
-                    const siteLocation = hostname.substring(0, 5); // AUNTH, AUSTH, AUTER
-                    const siteType = hostname.substring(5, 7); // e.g., DC
-                    const deviceType = hostname.substring(7, 11); // e.g., OSPI, OLFS
-                    const deviceId = hostname.substring(11, 15); // e.g., 0001
-                    
-                    // Determine the role and hardware details based on device type and node ID
-                    const role = determineRole(siteLocation, deviceType, deviceId);
-                    const hardwareDetails = determineHardwareDetails(deviceType, role);
-                    
-                    return {
-                        id: record.id,
-                        hostname: hostname,
-                        siteLocation: siteLocation,
-                        siteType: siteType,
-                        deviceType: deviceType,
-                        deviceId: deviceId,
-                        productId: hardwareDetails.productId,
-                        description: hardwareDetails.description,
-                        portSummary: hardwareDetails.portSummary,
-                        role: hardwareDetails.role,
-                        roleType: role,
-                        dateCreated: record.dateCreated
-                    };
-                });
-                
-                // Save the inventory items to our own database
-                saveInventoryItems(inventoryItems);
-                
-                // Apply filters and render the inventory table
-                applyFilters();
-                
-                // Update statistics
-                updateStatistics(inventoryItems);
-                
-            } catch (error) {
-                console.error("Error loading inventory data:", error);
-                showNoDataMessage();
-                updateStatistics([]);
-            }
         }
         
         // Save inventory items to our own database
         function saveInventoryItems(items) {
-            const toolDbKey = `${DB_CONFIG.KEY_PREFIX}${TOOL_ID}`;
+            // First, clear existing records for this tool
+            // This is a simplification - in a real implementation, we would use a bulk update API
+            // For now, we'll just save each item individually
             
-            try {
-                // Get existing database or create a new one
-                let db;
-                if (localStorage.getItem(toolDbKey)) {
-                    db = JSON.parse(localStorage.getItem(toolDbKey));
-                } else {
-                    db = {
-                        version: DB_CONFIG.VERSION,
-                        records: [],
-                        lastUpdated: new Date().toISOString()
-                    };
-                }
-                
-                // Clear existing records and add new ones
-                db.records = items;
-                db.lastUpdated = new Date().toISOString();
-                
-                localStorage.setItem(toolDbKey, JSON.stringify(db));
-                
-            } catch (error) {
-                console.error("Error saving inventory items:", error);
-            }
+            // Initialize the database for this tool
+            initDatabase(TOOL_ID)
+                .then(() => {
+                    // Save each item as a record
+                    items.forEach(item => {
+                        const record = {
+                            name: item.hostname,
+                            conventionType: 'Inventory Item',
+                            details: {
+                                siteLocation: item.siteLocation,
+                                siteType: item.siteType,
+                                deviceType: item.deviceType,
+                                deviceId: item.deviceId,
+                                productId: item.productId,
+                                description: item.description,
+                                portSummary: item.portSummary,
+                                role: item.role,
+                                roleType: item.roleType
+                            },
+                            userDescription: `${item.siteLocation} ${item.deviceType} ${item.deviceId}`
+                        };
+                        
+                        saveRecord(TOOL_ID, record)
+                            .catch(error => {
+                                console.error(`Error saving inventory item ${item.hostname}:`, error);
+                            });
+                    });
+                })
+                .catch(error => {
+                    console.error("Error initializing inventory database:", error);
+                });
         }
         
         // Determine the role based on device type and node ID
@@ -549,43 +564,64 @@
             const searchFilter = document.getElementById('search-filter').value.toLowerCase();
             
             // Load data from our database
-            const toolDbKey = `${DB_CONFIG.KEY_PREFIX}${TOOL_ID}`;
-            
-            try {
-                const db = JSON.parse(localStorage.getItem(toolDbKey));
-                if (!db || !db.records || db.records.length === 0) {
+            loadRecords(TOOL_ID)
+                .then(records => {
+                    if (!records || records.length === 0) {
+                        showNoDataMessage();
+                        return;
+                    }
+                    
+                    // Apply filters
+                    const filteredItems = records.filter(item => {
+                        // For records saved with the new format
+                        if (item.conventionType === 'Inventory Item' && item.details) {
+                            // Site filter
+                            if (siteFilter !== 'all' && item.details.siteLocation !== siteFilter) {
+                                return false;
+                            }
+                            
+                            // Role filter
+                            if (roleFilter !== 'all' && item.details.roleType !== roleFilter) {
+                                return false;
+                            }
+                            
+                            // Search filter
+                            if (searchFilter && !item.name.toLowerCase().includes(searchFilter) && 
+                                !item.details.productId.toLowerCase().includes(searchFilter)) {
+                                return false;
+                            }
+                            
+                            return true;
+                        }
+                        // For records saved with the old format (direct properties)
+                        else {
+                            // Site filter
+                            if (siteFilter !== 'all' && item.siteLocation !== siteFilter) {
+                                return false;
+                            }
+                            
+                            // Role filter
+                            if (roleFilter !== 'all' && item.roleType !== roleFilter) {
+                                return false;
+                            }
+                            
+                            // Search filter
+                            if (searchFilter && !item.hostname.toLowerCase().includes(searchFilter) && 
+                                !item.productId.toLowerCase().includes(searchFilter)) {
+                                return false;
+                            }
+                            
+                            return true;
+                        }
+                    });
+                    
+                    // Render the filtered items
+                    renderInventoryTable(filteredItems);
+                })
+                .catch(error => {
+                    console.error("Error applying filters:", error);
                     showNoDataMessage();
-                    return;
-                }
-                
-                // Apply filters
-                const filteredItems = db.records.filter(item => {
-                    // Site filter
-                    if (siteFilter !== 'all' && item.siteLocation !== siteFilter) {
-                        return false;
-                    }
-                    
-                    // Role filter
-                    if (roleFilter !== 'all' && item.roleType !== roleFilter) {
-                        return false;
-                    }
-                    
-                    // Search filter
-                    if (searchFilter && !item.hostname.toLowerCase().includes(searchFilter) && 
-                        !item.productId.toLowerCase().includes(searchFilter)) {
-                        return false;
-                    }
-                    
-                    return true;
                 });
-                
-                // Render the filtered items
-                renderInventoryTable(filteredItems);
-                
-            } catch (error) {
-                console.error("Error applying filters:", error);
-                showNoDataMessage();
-            }
         }
         
         // Render the inventory table
@@ -603,29 +639,56 @@
             
             noDataMessage.classList.add('d-none');
             
-            // Sort items by hostname
-            items.sort((a, b) => a.hostname.localeCompare(b.hostname));
+            // Sort items by hostname (handle both new and old format)
+            items.sort((a, b) => {
+                const hostnameA = a.conventionType === 'Inventory Item' ? a.name : a.hostname;
+                const hostnameB = b.conventionType === 'Inventory Item' ? b.name : b.hostname;
+                return hostnameA.localeCompare(hostnameB);
+            });
             
             // Add items to the table
             items.forEach(item => {
                 const row = document.createElement('tr');
                 
+                // Handle both new and old format
+                let hostname, productId, description, portSummary, roleType, deviceId, dateCreated;
+                
+                if (item.conventionType === 'Inventory Item' && item.details) {
+                    // New format (from API)
+                    hostname = item.name;
+                    productId = item.details.productId;
+                    description = item.details.description;
+                    portSummary = item.details.portSummary;
+                    roleType = item.details.roleType;
+                    deviceId = item.details.deviceId;
+                    dateCreated = item.dateCreated;
+                } else {
+                    // Old format (from localStorage)
+                    hostname = item.hostname;
+                    productId = item.productId;
+                    description = item.description;
+                    portSummary = item.portSummary;
+                    roleType = item.roleType;
+                    deviceId = item.deviceId;
+                    dateCreated = item.dateCreated;
+                }
+                
                 // Determine badge class based on role
                 let badgeClass = 'badge-secondary';
-                if (item.roleType === 'spine') badgeClass = 'badge-spine';
-                if (item.roleType === 'leaf') badgeClass = 'badge-leaf';
-                if (item.roleType === 'border-leaf') badgeClass = 'badge-border-leaf';
-                if (item.roleType === 'apic') badgeClass = 'badge-apic';
-                if (item.roleType === 'ndo') badgeClass = 'badge-ndo';
+                if (roleType === 'spine') badgeClass = 'badge-spine';
+                if (roleType === 'leaf') badgeClass = 'badge-leaf';
+                if (roleType === 'border-leaf') badgeClass = 'badge-border-leaf';
+                if (roleType === 'apic') badgeClass = 'badge-apic';
+                if (roleType === 'ndo') badgeClass = 'badge-ndo';
                 
                 row.innerHTML = `
-                    <td><strong>${item.hostname}</strong></td>
-                    <td>${item.productId}</td>
-                    <td>${item.description}</td>
-                    <td>${item.portSummary}</td>
-                    <td><span class="badge rounded-pill ${badgeClass}">${item.roleType.replace('-', ' ')}</span></td>
-                    <td>${item.deviceId}</td>
-                    <td>${new Date(item.dateCreated).toLocaleString()}</td>
+                    <td><strong>${hostname}</strong></td>
+                    <td>${productId}</td>
+                    <td>${description}</td>
+                    <td>${portSummary}</td>
+                    <td><span class="badge rounded-pill ${badgeClass}">${roleType.replace('-', ' ')}</span></td>
+                    <td>${deviceId}</td>
+                    <td>${new Date(dateCreated).toLocaleString()}</td>
                 `;
                 
                 tableBody.appendChild(row);
