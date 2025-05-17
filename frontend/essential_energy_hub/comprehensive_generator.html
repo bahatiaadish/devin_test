@@ -245,6 +245,11 @@
                                         </select>
                                         <div class="form-text">Select a Node ID based on your selections</div>
                                     </div>
+                                    <div class="col-md-2 mb-3" id="custom-device-id-container" style="display: none;">
+                                        <label for="custom-device-id" class="form-label">Custom ID Number</label>
+                                        <input type="text" class="form-control" id="custom-device-id" placeholder="e.g., 0123" maxlength="4" pattern="\d{4}">
+                                        <div class="form-text">Enter a 4-digit number</div>
+                                    </div>
                                     <div class="col-md-1 mb-3">
                                         <label for="host-quantity" class="form-label">Quantity</label>
                                         <input type="number" class="form-control" id="host-quantity" placeholder="1" min="1" max="100" value="1">
@@ -1080,17 +1085,25 @@
             const siteLocation = document.getElementById('host-site-location').value;
             const siteType = document.getElementById('host-site-type').value;
             const deviceType = document.getElementById('host-device-type').value;
-            const deviceId = document.getElementById('host-device-id').value;
+            const deviceIdDropdown = document.getElementById('host-device-id').value;
             const quantity = parseInt(document.getElementById('host-quantity').value) || 1;
+            
+            // Get device ID based on dropdown selection (regular or custom)
+            let deviceId;
+            if (deviceIdDropdown === 'custom') {
+                deviceId = document.getElementById('custom-device-id').value;
+            } else {
+                deviceId = deviceIdDropdown;
+            }
             
             if (!siteLocation || !siteType || !deviceType || !deviceId) {
                 alert('Please fill in all required fields');
                 return;
             }
             
-            // Validate device ID format (4 digits) - redundant check since dropdown only provides valid options
+            // Validate device ID format (4 digits)
             if (!/^\d{4}$/.test(deviceId)) {
-                alert('Please select a valid 4-digit ID number');
+                alert('Please enter a valid 4-digit ID number');
                 return;
             }
             
@@ -1816,10 +1829,19 @@
                 nodeIdDropdown.appendChild(option);
             });
             
+            // Add "Custom" option at the end
+            const customOption = document.createElement('option');
+            customOption.value = "custom";
+            customOption.textContent = "Custom";
+            nodeIdDropdown.appendChild(customOption);
+            
             // Select the first option if available
             if (nodeIdDropdown.options.length > 1) {
                 nodeIdDropdown.selectedIndex = 1;
             }
+            
+            // Hide the custom input field initially
+            document.getElementById('custom-device-id-container').style.display = 'none';
         }
 
         // Initialize database and render history when page loads
@@ -1843,6 +1865,16 @@
             document.getElementById('host-device-type').addEventListener('change', function() {
                 console.log("Device type changed");
                 updateNodeIdDropdown();
+            });
+            
+            // Add event listener for the node ID dropdown to show/hide custom input field
+            document.getElementById('host-device-id').addEventListener('change', function() {
+                const customContainer = document.getElementById('custom-device-id-container');
+                if (this.value === 'custom') {
+                    customContainer.style.display = 'block';
+                } else {
+                    customContainer.style.display = 'none';
+                }
             });
             
             // Add special handler for data center selections
