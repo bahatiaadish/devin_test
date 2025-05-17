@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datacenter Inventory Mapping - Essential Energy Automation Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-bottom: 50px;
+        }
+        .header {
+            background: linear-gradient(135deg, #05386B, #379683);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: 600;
+            background-color: #379683;
+            color: white;
+        }
+        .btn-custom {
+            background-color: #379683;
+            border-color: #379683;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #05386B;
+            border-color: #05386B;
+            color: white;
+        }
+        .info-box {
+            background-color: #e7f3ef;
+            border-left: 4px solid #379683;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .badge-spine {
+            background-color: #6f42c1;
+            color: white;
+        }
+        .badge-leaf {
+            background-color: #20c997;
+            color: white;
+        }
+        .badge-border-leaf {
+            background-color: #fd7e14;
+            color: white;
+        }
+        .badge-apic {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .badge-ndo {
+            background-color: #dc3545;
+            color: white;
+        }
+        .refresh-btn {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+        .filter-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1 class="display-5 fw-bold">Datacenter Inventory Mapping</h1>
+            <p class="lead">Track and map hostnames to hardware details for Essential Energy datacenters</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="home-link">
+            <a href="index.html" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Hub
+            </a>
+        </div>
+
+        <!-- Info section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                About This Tool
+            </div>
+            <div class="card-body">
+                <div class="info-box">
+                    <h5><i class="bi bi-info-circle"></i> What is this?</h5>
+                    <p>This tool automatically tracks hostnames generated in the Essential Energy Automation Hub and maps them to hardware details from the ACI Core Components inventory.</p>
+                    <p>It monitors the shared database for hostnames with site codes <strong>AUNTH</strong> (Northern DC), <strong>AUSTH</strong> (Southern DC), and <strong>AUTER</strong> (Tertiary DC) and displays their corresponding hardware specifications.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                Filter Options
+                <button id="refresh-btn" class="btn btn-sm btn-outline-light refresh-btn">
+                    <i class="bi bi-arrow-clockwise"></i> Refresh Data
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="filter-section">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="site-filter" class="form-label">Site Location</label>
+                            <select id="site-filter" class="form-select">
+                                <option value="all">All Sites</option>
+                                <option value="AUNTH">Northern DC (AUNTH)</option>
+                                <option value="AUSTH">Southern DC (AUSTH)</option>
+                                <option value="AUTER">Tertiary DC (AUTER)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="role-filter" class="form-label">Component Role</label>
+                            <select id="role-filter" class="form-select">
+                                <option value="all">All Roles</option>
+                                <option value="spine">Spine Switches</option>
+                                <option value="leaf">Leaf Switches</option>
+                                <option value="border-leaf">Border Leaf Switches</option>
+                                <option value="apic">APIC Controllers</option>
+                                <option value="ndo">Nexus Dashboard</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="search-filter" class="form-label">Search</label>
+                            <input type="text" id="search-filter" class="form-control" placeholder="Search by hostname or product ID">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Inventory table section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                Datacenter Inventory
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Hostname</th>
+                                <th>Product ID</th>
+                                <th>Description</th>
+                                <th>Port Summary</th>
+                                <th>Role</th>
+                                <th>Node ID</th>
+                                <th>Date Created</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table-body">
+                            <!-- Inventory items will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="no-data-message" class="alert alert-info d-none">
+                    No matching inventory items found. Try adjusting your filters or generate more hostnames using the Comprehensive Name Generator.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Statistics section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                Inventory Statistics
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Total Devices</h5>
+                                <h2 id="total-devices">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Device Distribution</h5>
+                                <div class="row">
+                                    <div class="col-md-4 text-center mb-3">
+                                        <span class="badge rounded-pill badge-spine px-3 py-2 mb-2">Spine</span>
+                                        <h4 id="spine-count">0</h4>
+                                    </div>
+                                    <div class="col-md-4 text-center mb-3">
+                                        <span class="badge rounded-pill badge-leaf px-3 py-2 mb-2">Leaf</span>
+                                        <h4 id="leaf-count">0</h4>
+                                    </div>
+                                    <div class="col-md-4 text-center mb-3">
+                                        <span class="badge rounded-pill badge-border-leaf px-3 py-2 mb-2">Border Leaf</span>
+                                        <h4 id="border-leaf-count">0</h4>
+                                    </div>
+                                    <div class="col-md-4 text-center mb-3">
+                                        <span class="badge rounded-pill badge-apic px-3 py-2 mb-2">APIC</span>
+                                        <h4 id="apic-count">0</h4>
+                                    </div>
+                                    <div class="col-md-4 text-center mb-3">
+                                        <span class="badge rounded-pill badge-ndo px-3 py-2 mb-2">NDO</span>
+                                        <h4 id="ndo-count">0</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Database management section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                Database Management
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button id="download-db-btn" class="btn btn-custom">
+                            <i class="bi bi-download"></i> Download Database
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <input class="form-control" type="file" id="db-file-input" accept=".json">
+                        </div>
+                        <button id="upload-db-btn" class="btn btn-custom">
+                            <i class="bi bi-upload"></i> Upload Database
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="shared_database.js"></script>
+    <script>
+        // Define a new tool ID for the datacenter inventory mapping
+        if (!DB_CONFIG.TOOLS.DATACENTER_INVENTORY) {
+            DB_CONFIG.TOOLS.DATACENTER_INVENTORY = 'datacenter_inventory';
+        }
+        
+        // Set the tool ID for this tool
+        const TOOL_ID = DB_CONFIG.TOOLS.DATACENTER_INVENTORY;
+        
+        // ACI Core Components data for mapping
+        const ACI_COMPONENTS = {
+            // APIC Controllers
+            'APIC': [
+                { productId: 'APIC-CLUSTER-L4', description: 'APIC Cluster - Large Configurations (> 1200 Edge Ports)', portSummary: 'N/A', role: 'Primary APIC clusters for IT and OT domains' },
+                { productId: 'APIC-CLUSTER-M4', description: 'APIC Cluster - Medium Configurations (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'Additional APIC clusters' },
+                { productId: 'APIC-SERVER-L4', description: 'APIC Appliance - Large Config. (> 1200 Edge Ports)', portSummary: 'N/A', role: 'Individual APIC servers for large clusters' },
+                { productId: 'APIC-SERVER-M4', description: 'APIC Appliance - Medium Configuration (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'Individual APIC servers for medium clusters' }
+            ],
+            // Spine Switches
+            'OSPI': [
+                { productId: 'N9K-C9316D-GX', description: 'Nexus 9300 Series, 16p 400G QSFP-DD', portSummary: '16x 400G QSFP-DD', role: 'High-performance spine switches' }
+            ],
+            // Leaf Switches
+            'OLFS': [
+                { productId: 'N9K-C93180YC-FX3', description: 'Nexus 9300 48p 1/10/25G, 6p 40/100G, MACsec, SyncE', portSummary: '48x 1/10/25G + 6x 40/100G', role: 'High-density leaf switches' }
+            ],
+            'OLFB': [
+                { productId: 'N9K-C93180YC-FX3', description: 'Nexus 9300 48p 1/10/25G, 6p 40/100G, MACsec, SyncE', portSummary: '48x 1/10/25G + 6x 40/100G', role: 'Border leaf switches' }
+            ],
+            'OLFA': [
+                { productId: 'N9K-C9348GC-FX3', description: 'Nexus 9300 with 48p 100M/1GT, 4p 10/25G & 2p 40/100G QSFP28', portSummary: '48x 100M/1G + 4x 10/25G + 2x 40/100G', role: 'Access leaf switches' }
+            ],
+            // Nexus Dashboard Orchestrator
+            'ONDO': [
+                { productId: 'ND-CLUSTER-L4', description: 'Nexus Dashboard Cluster - Performance', portSummary: 'N/A', role: 'Management platform clusters' },
+                { productId: 'ND-NODE-L4', description: 'Nexus Dashboard Node', portSummary: 'N/A', role: 'Individual nodes for ND clusters' }
+            ]
+        };
+        
+        // Node ID allocation mapping
+        const NODE_ID_MAPPING = {
+            // APIC Controllers (1-29)
+            'APIC': { min: 1, max: 29, role: 'apic' },
+            
+            // Data Center Identifiers
+            // 1: Northern DC IT
+            // 2: Northern DC OT
+            // 3: Southern DC IT
+            // 4: Southern DC OT
+            // 5: Tertiary DC IT
+            // 6: Tertiary DC OT
+            
+            // Spine Switches (X96-X99)
+            'OSPI': { 
+                'AUNTH': { prefix: '1', min: 96, max: 99, role: 'spine' },
+                'AUSTH': { prefix: '3', min: 96, max: 99, role: 'spine' },
+                'AUTER': { prefix: '5', min: 96, max: 99, role: 'spine' }
+            },
+            
+            // Compute Leaf Switches (X01-X89)
+            'OLFS': { 
+                'AUNTH': { prefix: '1', min: 1, max: 89, role: 'leaf' },
+                'AUSTH': { prefix: '3', min: 1, max: 89, role: 'leaf' },
+                'AUTER': { prefix: '5', min: 1, max: 89, role: 'leaf' }
+            },
+            
+            // Border Leaf Switches (X90-X95)
+            'OLFB': { 
+                'AUNTH': { prefix: '1', min: 90, max: 95, role: 'border-leaf' },
+                'AUSTH': { prefix: '3', min: 90, max: 95, role: 'border-leaf' },
+                'AUTER': { prefix: '5', min: 90, max: 95, role: 'border-leaf' }
+            }
+        };
+        
+        // Initialize database when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            initDatabase(TOOL_ID).then(() => {
+                loadInventoryData();
+            }).catch(error => {
+                console.error("Failed to initialize database:", error);
+                alert("Failed to initialize database. Some features may not work correctly.");
+            });
+            
+            // Database management event listeners
+            document.getElementById('download-db-btn').addEventListener('click', function() {
+                downloadDatabase();
+            });
+            
+            document.getElementById('upload-db-btn').addEventListener('click', function() {
+                const fileInput = document.getElementById('db-file-input');
+                if (fileInput.files.length === 0) {
+                    alert('Please select a file to upload');
+                    return;
+                }
+                
+                const file = fileInput.files[0];
+                
+                uploadDatabase(file)
+                    .then(() => {
+                        alert('Database uploaded successfully');
+                        loadInventoryData();
+                    })
+                    .catch(error => {
+                        alert(`Failed to upload database: ${error}`);
+                    });
+            });
+            
+            // Filter event listeners
+            document.getElementById('site-filter').addEventListener('change', applyFilters);
+            document.getElementById('role-filter').addEventListener('change', applyFilters);
+            document.getElementById('search-filter').addEventListener('input', applyFilters);
+            
+            // Refresh button event listener
+            document.getElementById('refresh-btn').addEventListener('click', loadInventoryData);
+            
+            // Set up polling to check for database changes
+            setInterval(checkForDatabaseChanges, 5000);
+        });
+        
+        // Last updated timestamp to track changes
+        let lastUpdatedTimestamp = null;
+        
+        // Check for database changes
+        function checkForDatabaseChanges() {
+            // Check the comprehensive generator database for changes
+            const compGenDbKey = `${DB_CONFIG.KEY_PREFIX}${DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR}`;
+            try {
+                const db = JSON.parse(localStorage.getItem(compGenDbKey));
+                if (db && db.lastUpdated && db.lastUpdated !== lastUpdatedTimestamp) {
+                    lastUpdatedTimestamp = db.lastUpdated;
+                    loadInventoryData();
+                }
+            } catch (error) {
+                console.error("Error checking for database changes:", error);
+            }
+        }
+        
+        // Load inventory data from the comprehensive generator database
+        function loadInventoryData() {
+            // We need to load data from the comprehensive generator database
+            const compGenDbKey = `${DB_CONFIG.KEY_PREFIX}${DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR}`;
+            
+            try {
+                const db = JSON.parse(localStorage.getItem(compGenDbKey));
+                if (!db || !db.records) {
+                    showNoDataMessage();
+                    updateStatistics([]);
+                    return;
+                }
+                
+                // Update the last updated timestamp
+                lastUpdatedTimestamp = db.lastUpdated;
+                
+                // Filter for host names with site codes AUNTH, AUSTH, and AUTER
+                const hostRecords = db.records.filter(record => {
+                    if (record.type !== 'Host Naming') return false;
+                    
+                    // Check if the hostname starts with one of the target site codes
+                    const hostname = record.name;
+                    return hostname.startsWith('AUNTH') || hostname.startsWith('AUSTH') || hostname.startsWith('AUTER');
+                });
+                
+                // Process the host records and map them to hardware details
+                const inventoryItems = hostRecords.map(record => {
+                    const hostname = record.name;
+                    const siteLocation = hostname.substring(0, 5); // AUNTH, AUSTH, AUTER
+                    const siteType = hostname.substring(5, 7); // e.g., DC
+                    const deviceType = hostname.substring(7, 11); // e.g., OSPI, OLFS
+                    const deviceId = hostname.substring(11, 15); // e.g., 0001
+                    
+                    // Determine the role and hardware details based on device type and node ID
+                    const role = determineRole(siteLocation, deviceType, deviceId);
+                    const hardwareDetails = determineHardwareDetails(deviceType, role);
+                    
+                    return {
+                        id: record.id,
+                        hostname: hostname,
+                        siteLocation: siteLocation,
+                        siteType: siteType,
+                        deviceType: deviceType,
+                        deviceId: deviceId,
+                        productId: hardwareDetails.productId,
+                        description: hardwareDetails.description,
+                        portSummary: hardwareDetails.portSummary,
+                        role: hardwareDetails.role,
+                        roleType: role,
+                        dateCreated: record.dateCreated
+                    };
+                });
+                
+                // Save the inventory items to our own database
+                saveInventoryItems(inventoryItems);
+                
+                // Apply filters and render the inventory table
+                applyFilters();
+                
+                // Update statistics
+                updateStatistics(inventoryItems);
+                
+            } catch (error) {
+                console.error("Error loading inventory data:", error);
+                showNoDataMessage();
+                updateStatistics([]);
+            }
+        }
+        
+        // Save inventory items to our own database
+        function saveInventoryItems(items) {
+            const toolDbKey = `${DB_CONFIG.KEY_PREFIX}${TOOL_ID}`;
+            
+            try {
+                // Get existing database or create a new one
+                let db;
+                if (localStorage.getItem(toolDbKey)) {
+                    db = JSON.parse(localStorage.getItem(toolDbKey));
+                } else {
+                    db = {
+                        version: DB_CONFIG.VERSION,
+                        records: [],
+                        lastUpdated: new Date().toISOString()
+                    };
+                }
+                
+                // Clear existing records and add new ones
+                db.records = items;
+                db.lastUpdated = new Date().toISOString();
+                
+                localStorage.setItem(toolDbKey, JSON.stringify(db));
+                
+            } catch (error) {
+                console.error("Error saving inventory items:", error);
+            }
+        }
+        
+        // Determine the role based on device type and node ID
+        function determineRole(siteLocation, deviceType, deviceId) {
+            // For APIC controllers
+            if (deviceType === 'APIC') {
+                return 'apic';
+            }
+            
+            // For NDO
+            if (deviceType === 'ONDO') {
+                return 'ndo';
+            }
+            
+            // For spine and leaf switches
+            if (NODE_ID_MAPPING[deviceType] && NODE_ID_MAPPING[deviceType][siteLocation]) {
+                const mapping = NODE_ID_MAPPING[deviceType][siteLocation];
+                const nodeId = parseInt(deviceId);
+                
+                // Check if the node ID falls within the range for this device type
+                if (nodeId >= mapping.min && nodeId <= mapping.max) {
+                    return mapping.role;
+                }
+            }
+            
+            // Default role based on device type
+            if (deviceType === 'OSPI') return 'spine';
+            if (deviceType === 'OLFS') return 'leaf';
+            if (deviceType === 'OLFB') return 'border-leaf';
+            
+            return 'unknown';
+        }
+        
+        // Determine hardware details based on device type and role
+        function determineHardwareDetails(deviceType, role) {
+            // Default values
+            let details = {
+                productId: 'Unknown',
+                description: 'Unknown device',
+                portSummary: 'N/A',
+                role: 'Unknown role'
+            };
+            
+            // Check if we have hardware details for this device type
+            if (ACI_COMPONENTS[deviceType] && ACI_COMPONENTS[deviceType].length > 0) {
+                // For simplicity, use the first matching hardware details
+                // In a real application, you might want to use more sophisticated matching logic
+                details = ACI_COMPONENTS[deviceType][0];
+            }
+            
+            return details;
+        }
+        
+        // Apply filters to the inventory data
+        function applyFilters() {
+            const siteFilter = document.getElementById('site-filter').value;
+            const roleFilter = document.getElementById('role-filter').value;
+            const searchFilter = document.getElementById('search-filter').value.toLowerCase();
+            
+            // Load data from our database
+            const toolDbKey = `${DB_CONFIG.KEY_PREFIX}${TOOL_ID}`;
+            
+            try {
+                const db = JSON.parse(localStorage.getItem(toolDbKey));
+                if (!db || !db.records || db.records.length === 0) {
+                    showNoDataMessage();
+                    return;
+                }
+                
+                // Apply filters
+                const filteredItems = db.records.filter(item => {
+                    // Site filter
+                    if (siteFilter !== 'all' && item.siteLocation !== siteFilter) {
+                        return false;
+                    }
+                    
+                    // Role filter
+                    if (roleFilter !== 'all' && item.roleType !== roleFilter) {
+                        return false;
+                    }
+                    
+                    // Search filter
+                    if (searchFilter && !item.hostname.toLowerCase().includes(searchFilter) && 
+                        !item.productId.toLowerCase().includes(searchFilter)) {
+                        return false;
+                    }
+                    
+                    return true;
+                });
+                
+                // Render the filtered items
+                renderInventoryTable(filteredItems);
+                
+            } catch (error) {
+                console.error("Error applying filters:", error);
+                showNoDataMessage();
+            }
+        }
+        
+        // Render the inventory table
+        function renderInventoryTable(items) {
+            const tableBody = document.getElementById('inventory-table-body');
+            const noDataMessage = document.getElementById('no-data-message');
+            
+            // Clear the table
+            tableBody.innerHTML = '';
+            
+            if (items.length === 0) {
+                noDataMessage.classList.remove('d-none');
+                return;
+            }
+            
+            noDataMessage.classList.add('d-none');
+            
+            // Sort items by hostname
+            items.sort((a, b) => a.hostname.localeCompare(b.hostname));
+            
+            // Add items to the table
+            items.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Determine badge class based on role
+                let badgeClass = 'badge-secondary';
+                if (item.roleType === 'spine') badgeClass = 'badge-spine';
+                if (item.roleType === 'leaf') badgeClass = 'badge-leaf';
+                if (item.roleType === 'border-leaf') badgeClass = 'badge-border-leaf';
+                if (item.roleType === 'apic') badgeClass = 'badge-apic';
+                if (item.roleType === 'ndo') badgeClass = 'badge-ndo';
+                
+                row.innerHTML = `
+                    <td><strong>${item.hostname}</strong></td>
+                    <td>${item.productId}</td>
+                    <td>${item.description}</td>
+                    <td>${item.portSummary}</td>
+                    <td><span class="badge rounded-pill ${badgeClass}">${item.roleType.replace('-', ' ')}</span></td>
+                    <td>${item.deviceId}</td>
+                    <td>${new Date(item.dateCreated).toLocaleString()}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Show no data message
+        function showNoDataMessage() {
+            const tableBody = document.getElementById('inventory-table-body');
+            const noDataMessage = document.getElementById('no-data-message');
+            
+            tableBody.innerHTML = '';
+            noDataMessage.classList.remove('d-none');
+        }
+        
+        // Update statistics
+        function updateStatistics(items) {
+            // Update total devices count
+            document.getElementById('total-devices').textContent = items.length;
+            
+            // Count devices by role
+            const roleCounts = {
+                'spine': 0,
+                'leaf': 0,
+                'border-leaf': 0,
+                'apic': 0,
+                'ndo': 0
+            };
+            
+            items.forEach(item => {
+                if (roleCounts.hasOwnProperty(item.roleType)) {
+                    roleCounts[item.roleType]++;
+                }
+            });
+            
+            // Update role counts
+            document.getElementById('spine-count').textContent = roleCounts['spine'];
+            document.getElementById('leaf-count').textContent = roleCounts['leaf'];
+            document.getElementById('border-leaf-count').textContent = roleCounts['border-leaf'];
+            document.getElementById('apic-count').textContent = roleCounts['apic'];
+            document.getElementById('ndo-count').textContent = roleCounts['ndo'];
+        }
+    </script>
+</body>
+</html>
