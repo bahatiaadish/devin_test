@@ -1784,6 +1784,16 @@
 
         // Initialize database and render history when page loads
         window.addEventListener('DOMContentLoaded', () => {
+            // Restore active tab if saved in localStorage
+            const activeTabId = localStorage.getItem('active_tab_id');
+            if (activeTabId) {
+                const tabElement = document.getElementById(activeTabId);
+                if (tabElement) {
+                    const tab = new bootstrap.Tab(tabElement);
+                    tab.show();
+                }
+            }
+            
             // Add event listeners for dynamic node ID dropdown immediately
             document.getElementById('host-site-location').addEventListener('change', function() {
                 console.log("Site location changed");
@@ -1846,6 +1856,19 @@
             document.getElementById('host-tab').addEventListener('shown.bs.tab', function() {
                 console.log("Host tab shown, updating node ID dropdown");
                 updateNodeIdDropdown();
+            });
+            
+            // Add tab change event listener for summary tab to ensure data is loaded when tab is selected
+            document.getElementById('summary-tab').addEventListener('shown.bs.tab', function() {
+                console.log("Summary tab shown, updating summary table");
+                renderSummary();
+            });
+            
+            // Save active tab ID to localStorage when any tab is clicked
+            document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tabEl => {
+                tabEl.addEventListener('shown.bs.tab', function() {
+                    localStorage.setItem('active_tab_id', this.id);
+                });
             });
         });
     </script>
