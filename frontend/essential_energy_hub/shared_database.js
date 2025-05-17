@@ -5,7 +5,7 @@
 
 const DB_CONFIG = {
     VERSION: 1,
-    API_URL: 'http://localhost:8000/api',
+    API_URL: 'http://localhost:8001/api',
     KEY_PREFIX: 'essential_energy_db_',
     TOOLS: {
         COMPREHENSIVE_GENERATOR: 'comprehensive_generator',
