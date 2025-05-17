@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Template - Essential Energy Automation Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-bottom: 50px;
+        }
+        .header {
+            background: linear-gradient(135deg, #05386B, #379683);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: 600;
+            background-color: #379683;
+            color: white;
+        }
+        .btn-custom {
+            background-color: #379683;
+            border-color: #379683;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #05386B;
+            border-color: #05386B;
+            color: white;
+        }
+        .table-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1 class="display-5 fw-bold">Generator Template</h1>
+            <p class="lead">Template for creating new generators with shared database</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="home-link">
+            <a href="index.html" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Hub
+            </a>
+        </div>
+
+        <!-- Your generator code here -->
+        <div class="card mt-4">
+            <div class="card-header">
+                Generator Form
+            </div>
+            <div class="card-body">
+                <form id="generator-form">
+                    <!-- Replace these with your own form fields -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="field1" class="form-label">Field 1</label>
+                            <input type="text" class="form-control" id="field1" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="field2" class="form-label">Field 2</label>
+                            <input type="text" class="form-control" id="field2" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="quantity" class="form-label">Quantity</label>
+                            <input type="number" class="form-control" id="quantity" value="1" min="1" max="100">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="description" class="form-label">Description (Optional)</label>
+                            <input type="text" class="form-control" id="description">
+                        </div>
+                    </div>
+                    <button type="button" id="generate-btn" class="btn btn-custom">Generate</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Result section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                Generated Result
+            </div>
+            <div class="card-body">
+                <div id="result-container" class="alert alert-success d-none">
+                    <h5 id="result-title">Generated Name</h5>
+                    <div id="result-content"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- History section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                Generated Items History
+            </div>
+            <div class="card-body">
+                <div class="table-container">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Date Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            <!-- History items will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Database management section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                Database Management
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button id="download-db-btn" class="btn btn-custom">
+                            <i class="bi bi-download"></i> Download Database
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <input class="form-control" type="file" id="db-file-input" accept=".json">
+                        </div>
+                        <button id="upload-db-btn" class="btn btn-custom">
+                            <i class="bi bi-upload"></i> Upload Database
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="shared_database.js"></script>
+    <script>
+        // Set the tool ID for this generator (use one of the predefined IDs from DB_CONFIG.TOOLS)
+        const TOOL_ID = DB_CONFIG.TOOLS.DEVICES_GENERATOR; // Change this to match your generator
+        
+        // Initialize database when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            initDatabase(TOOL_ID).then(() => {
+                renderHistory();
+            }).catch(error => {
+                console.error("Failed to initialize database:", error);
+                alert("Failed to initialize database. Some features may not work correctly.");
+            });
+            
+            // Database management event listeners
+            document.getElementById('download-db-btn').addEventListener('click', function() {
+                downloadDatabase();
+            });
+            
+            document.getElementById('upload-db-btn').addEventListener('click', function() {
+                const fileInput = document.getElementById('db-file-input');
+                if (fileInput.files.length === 0) {
+                    alert('Please select a file to upload');
+                    return;
+                }
+                
+                const file = fileInput.files[0];
+                
+                uploadDatabase(file)
+                    .then(() => {
+                        alert('Database uploaded successfully');
+                        renderHistory();
+                    })
+                    .catch(error => {
+                        alert(`Failed to upload database: ${error}`);
+                    });
+            });
+            
+            // Generate button event listener
+            document.getElementById('generate-btn').addEventListener('click', function() {
+                const field1 = document.getElementById('field1').value;
+                const field2 = document.getElementById('field2').value;
+                const quantity = parseInt(document.getElementById('quantity').value) || 1;
+                const userDescription = document.getElementById('description').value;
+                
+                if (!field1 || !field2) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                // Generate names based on your logic
+                const generatedNames = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Replace this with your own generation logic
+                    const generatedName = `${field1}-${field2}-${i+1}`;
+                    generatedNames.push(generatedName);
+                    
+                    // Save to database
+                    const details = {
+                        field1,
+                        field2,
+                        index: i+1
+                    };
+                    
+                    const sequentialDescription = userDescription ? 
+                        `${userDescription} (${i+1}/${quantity})` : 
+                        `Generated on ${new Date().toLocaleString()} (${i+1}/${quantity})`;
+                    
+                    savePromises.push(saveRecord(TOOL_ID, {
+                        name: generatedName,
+                        type: 'Custom Type', // Replace with your type
+                        details: details,
+                        userDescription: sequentialDescription
+                    }));
+                }
+                
+                // Display result
+                const resultContainer = document.getElementById('result-container');
+                const resultTitle = document.getElementById('result-title');
+                const resultContent = document.getElementById('result-content');
+                
+                resultContainer.classList.remove('d-none');
+                resultTitle.textContent = quantity > 1 ? `Generated ${quantity} Names` : 'Generated Name';
+                resultContent.innerHTML = generatedNames.join('<br>');
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                });
+            });
+        });
+        
+        // Load and render history
+        function renderHistory() {
+            loadRecords(TOOL_ID).then(records => {
+                const historyTableBody = document.getElementById('history-table-body');
+                historyTableBody.innerHTML = '';
+                
+                // Sort by date descending (newest first)
+                records.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated));
+                
+                records.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.name}</td>
+                        <td>${item.type || ''}</td>
+                        <td>${item.userDescription || ''}</td>
+                        <td>${new Date(item.dateCreated).toLocaleString()}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary copy-name" data-name="${item.name}">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger delete-name" data-id="${item.id}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    historyTableBody.appendChild(row);
+                });
+                
+                // Add event listeners for copy buttons
+                document.querySelectorAll('.copy-name').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const name = this.getAttribute('data-name');
+                        navigator.clipboard.writeText(name).then(() => {
+                            alert('Name copied to clipboard');
+                        }).catch(err => {
+                            console.error('Could not copy text: ', err);
+                        });
+                    });
+                });
+                
+                // Add event listeners for delete buttons
+                document.querySelectorAll('.delete-name').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        if (confirm('Are you sure you want to delete this item?')) {
+                            deleteRecord(TOOL_ID, id).then(() => {
+                                renderHistory();
+                            }).catch(error => {
+                                alert(`Failed to delete item: ${error}`);
+                            });
+                        }
+                    });
+                });
+            });
+        }
+        
+        // Add your generator-specific functions here
+    </script>
+</body>
+</html>

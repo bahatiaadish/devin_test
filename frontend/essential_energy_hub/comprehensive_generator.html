@@ -119,6 +119,9 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary-view" type="button" role="tab">Summary</button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="database-tab" data-bs-toggle="tab" data-bs-target="#database-view" type="button" role="tab">Database</button>
+                            </li>
                         </ul>
 
                         <div class="tab-content mt-3" id="namingTabContent">
@@ -613,6 +616,46 @@
                                     </table>
                                 </div>
                             </div>
+                            
+                            <!-- Database Management Tab -->
+                            <div class="tab-pane fade" id="database-view" role="tabpanel">
+                                <div class="p-3">
+                                    <h4>Database Management</h4>
+                                    <p class="text-muted">Download or upload the shared database used by all Essential Energy Automation Hub tools.</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card mb-4">
+                                                <div class="card-header">
+                                                    Download Database
+                                                </div>
+                                                <div class="card-body">
+                                                    <p>Download the current database as a JSON file for backup or sharing.</p>
+                                                    <button id="download-db-btn" class="btn btn-custom">
+                                                        <i class="bi bi-download"></i> Download Database
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card mb-4">
+                                                <div class="card-header">
+                                                    Upload Database
+                                                </div>
+                                                <div class="card-body">
+                                                    <p>Upload a database JSON file to restore or import data.</p>
+                                                    <div class="mb-3">
+                                                        <input class="form-control" type="file" id="db-file-input" accept=".json">
+                                                    </div>
+                                                    <button id="upload-db-btn" class="btn btn-custom">
+                                                        <i class="bi bi-upload"></i> Upload Database
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -660,169 +703,126 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="shared_database.js"></script>
     <script>
-        // IndexedDB setup
+        // Tool ID for database operations
+        const TOOL_ID = DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR;
+        
+        // Legacy IndexedDB migration
         let db;
         const DB_NAME = 'EssentialEnergyNamingDB';
-        const DB_VERSION = 2; // Updated version
+        const DB_VERSION = 2;
         const STORE_NAME = 'generatedNames';
-
-        // Initialize IndexedDB
-        function initDB() {
+        let migrationCompleted = false;
+        
+        // Initialize shared database and migrate existing data
+        function initSharedDatabase() {
             return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
-                
-                request.onerror = (event) => {
-                    console.error("IndexedDB error:", event.target.error);
-                    reject("Error opening database");
-                };
-                
-                request.onsuccess = (event) => {
-                    db = event.target.result;
-                    console.log("Database opened successfully");
-                    resolve(db);
-                };
-                
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    const oldVersion = event.oldVersion;
-                    
-                    if (oldVersion < 1) {
-                        // Create initial object store if it doesn't exist
-                        if (!db.objectStoreNames.contains(STORE_NAME)) {
-                            const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-                            store.createIndex('conventionType', 'conventionType', { unique: false });
-                            store.createIndex('dateCreated', 'dateCreated', { unique: false });
-                            console.log("Object store created");
+                // Initialize shared database
+                initDatabase(TOOL_ID)
+                    .then(() => {
+                        // Check if migration is needed
+                        if (localStorage.getItem('migration_completed')) {
+                            console.log("Migration already completed");
+                            migrationCompleted = true;
+                            resolve();
+                            return;
                         }
-                    }
-                    
-                    if (oldVersion < 2) {
-                        // Upgrade to version 2 (add userDescription field)
-                        const transaction = event.target.transaction;
-                        const store = transaction.objectStore(STORE_NAME);
                         
-                        // Add userDescription index if it doesn't exist
-                        if (!store.indexNames.contains('userDescription')) {
-                            store.createIndex('userDescription', 'userDescription', { unique: false });
-                            console.log("User description index added");
-                        }
-                    }
-                };
+                        // Try to open the old IndexedDB database
+                        const request = indexedDB.open(DB_NAME, DB_VERSION);
+                        
+                        request.onerror = (event) => {
+                            console.log("No IndexedDB to migrate, starting fresh");
+                            localStorage.setItem('migration_completed', 'true');
+                            migrationCompleted = true;
+                            resolve();
+                        };
+                        
+                        request.onsuccess = (event) => {
+                            db = event.target.result;
+                            
+                            // Migrate data from IndexedDB to shared database
+                            const transaction = db.transaction([STORE_NAME], 'readonly');
+                            const store = transaction.objectStore(STORE_NAME);
+                            const getAllRequest = store.getAll();
+                            
+                            getAllRequest.onsuccess = () => {
+                                const names = getAllRequest.result;
+                                
+                                // If no names to migrate, mark as completed
+                                if (names.length === 0) {
+                                    localStorage.setItem('migration_completed', 'true');
+                                    migrationCompleted = true;
+                                    resolve();
+                                    return;
+                                }
+                                
+                                // Migrate each name
+                                const migratePromises = names.map(item => {
+                                    return saveRecord(TOOL_ID, {
+                                        name: item.name,
+                                        conventionType: item.conventionType,
+                                        details: item.details,
+                                        userDescription: item.userDescription || '',
+                                        dateCreated: item.dateCreated
+                                    });
+                                });
+                                
+                                Promise.all(migratePromises)
+                                    .then(() => {
+                                        localStorage.setItem('migration_completed', 'true');
+                                        migrationCompleted = true;
+                                        resolve();
+                                    })
+                                    .catch(error => {
+                                        console.error("Error migrating data:", error);
+                                        reject(error);
+                                    });
+                            };
+                            
+                            getAllRequest.onerror = (event) => {
+                                console.error("Error getting names for migration:", event.target.error);
+                                reject("Error getting names for migration");
+                            };
+                        };
+                    })
+                    .catch(error => {
+                        console.error("Error initializing shared database:", error);
+                        reject(error);
+                    });
             });
         }
 
-        // Save generated name to IndexedDB
+        // Save generated name to shared database
         function saveGeneratedName(name, conventionType, details, userDescription = '') {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                
-                const record = {
-                    name: name,
-                    conventionType: conventionType,
-                    details: details,
-                    userDescription: userDescription,
-                    dateCreated: new Date().toISOString()
-                };
-                
-                const request = store.add(record);
-                
-                request.onsuccess = () => {
-                    console.log("Name saved successfully");
-                    resolve(request.result);
-                };
-                
-                request.onerror = (event) => {
-                    console.error("Error saving name:", event.target.error);
-                    reject("Error saving name");
-                };
+            return saveRecord(TOOL_ID, {
+                name: name,
+                conventionType: conventionType,
+                details: details,
+                userDescription: userDescription
             });
         }
         
-        // Update a generated name in IndexedDB
+        // Update a generated name in the shared database
         function updateGeneratedName(id, updates) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                
-                // Get the record first
-                const getRequest = store.get(id);
-                
-                getRequest.onsuccess = () => {
-                    const record = getRequest.result;
-                    
-                    // Apply updates to the record
-                    for (const key in updates) {
-                        record[key] = updates[key];
-                    }
-                    
-                    // Put the updated record back
-                    const updateRequest = store.put(record);
-                    
-                    updateRequest.onsuccess = () => {
-                        console.log("Name updated successfully");
-                        resolve();
-                    };
-                    
-                    updateRequest.onerror = (event) => {
-                        console.error("Error updating name:", event.target.error);
-                        reject("Error updating name");
-                    };
-                };
-                
-                getRequest.onerror = (event) => {
-                    console.error("Error getting name for update:", event.target.error);
-                    reject("Error getting name for update");
-                };
-            });
+            return updateRecord(TOOL_ID, id, updates);
         }
 
-        // Load generated names from IndexedDB
+        // Load generated names from shared database
         function loadGeneratedNames() {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readonly');
-                const store = transaction.objectStore(STORE_NAME);
-                const index = store.index('dateCreated');
-                
-                const request = index.openCursor(null, 'prev'); // Sort by date descending
-                const names = [];
-                
-                request.onsuccess = (event) => {
-                    const cursor = event.target.result;
-                    if (cursor) {
-                        names.push(cursor.value);
-                        cursor.continue();
-                    } else {
-                        resolve(names);
-                    }
-                };
-                
-                request.onerror = (event) => {
-                    console.error("Error loading names:", event.target.error);
-                    reject("Error loading names");
-                };
-            });
+            return loadRecords(TOOL_ID)
+                .then(records => {
+                    // Sort by date descending (newest first)
+                    return records.sort((a, b) => 
+                        new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
+                    );
+                });
         }
 
-        // Delete a generated name from IndexedDB
+        // Delete a generated name from shared database
         function deleteGeneratedName(id) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                
-                const request = store.delete(id);
-                
-                request.onsuccess = () => {
-                    console.log("Name deleted successfully");
-                    resolve();
-                };
-                
-                request.onerror = (event) => {
-                    console.error("Error deleting name:", event.target.error);
-                    reject("Error deleting name");
-                };
-            });
+            return deleteRecord(TOOL_ID, id);
         }
 
         // Render history table
@@ -1603,12 +1603,37 @@
 
         // Initialize database and render history when page loads
         window.addEventListener('DOMContentLoaded', () => {
-            initDB().then(() => {
+            initSharedDatabase().then(() => {
                 renderHistory();
                 renderSummary();
             }).catch(error => {
                 console.error("Failed to initialize database:", error);
                 alert("Failed to initialize database. Some features may not work correctly.");
+            });
+            
+            // Database management event listeners
+            document.getElementById('download-db-btn').addEventListener('click', function() {
+                downloadDatabase();
+            });
+            
+            document.getElementById('upload-db-btn').addEventListener('click', function() {
+                const fileInput = document.getElementById('db-file-input');
+                if (fileInput.files.length === 0) {
+                    alert('Please select a file to upload');
+                    return;
+                }
+                
+                const file = fileInput.files[0];
+                
+                uploadDatabase(file)
+                    .then(() => {
+                        alert('Database uploaded successfully');
+                        renderHistory();
+                        renderSummary();
+                    })
+                    .catch(error => {
+                        alert(`Failed to upload database: ${error}`);
+                    });
             });
         });
     </script>
