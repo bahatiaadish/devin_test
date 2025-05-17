@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Name Generator - Essential Energy Automation Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-bottom: 50px;
+        }
+        h1, h2, h3, h4, h5, h6, .card-title, .display-5 {
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 600;
+        }
+        .header {
+            background: linear-gradient(135deg, #05386B, #379683);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card-header {
+            border-radius: 12px 12px 0 0 !important;
+            font-weight: 600;
+            background-color: #379683;
+            color: white;
+        }
+        .btn-custom {
+            background-color: #379683;
+            border-color: #379683;
+            color: white;
+            font-weight: 500;
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .btn-custom:hover {
+            background-color: #05386B;
+            border-color: #05386B;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .result-card {
+            border-left: 5px solid #379683;
+        }
+        .home-link {
+            margin-bottom: 20px;
+        }
+        .table-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .nav-tabs .nav-link {
+            color: #379683;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .nav-tabs .nav-link.active {
+            color: #05386B;
+            font-weight: bold;
+            border-bottom: 3px solid #05386B;
+        }
+        .copy-btn {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .copy-btn:hover {
+            color: #05386B;
+            transform: scale(1.1);
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #cfd8dc;
+            padding: 0.6rem 1rem;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #379683;
+            box-shadow: 0 0 0 0.25rem rgba(55, 150, 131, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1 class="display-5 fw-bold">Comprehensive Name Generator</h1>
+            <p class="lead">Generate standardized names using all Essential Energy naming conventions</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="home-link">
+            <a href="index.html" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Hub
+            </a>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Select Naming Convention
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="namingTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="host-tab" data-bs-toggle="tab" data-bs-target="#host-form" type="button" role="tab">Host Naming</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="vlan-tab" data-bs-toggle="tab" data-bs-target="#vlan-form" type="button" role="tab">VLAN Naming</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="wan-tab" data-bs-toggle="tab" data-bs-target="#wan-form" type="button" role="tab">WAN Interface</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="physical-tab" data-bs-toggle="tab" data-bs-target="#physical-form" type="button" role="tab">Physical Interface</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="logical-tab" data-bs-toggle="tab" data-bs-target="#logical-form" type="button" role="tab">Logical Interface</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="l3-tab" data-bs-toggle="tab" data-bs-target="#l3-form" type="button" role="tab">L3 Interface</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="virtual-tab" data-bs-toggle="tab" data-bs-target="#virtual-form" type="button" role="tab">Virtual/Loopback</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="snmp-tab" data-bs-toggle="tab" data-bs-target="#snmp-form" type="button" role="tab">SNMP Location</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary-view" type="button" role="tab">Summary</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="database-tab" data-bs-toggle="tab" data-bs-target="#database-view" type="button" role="tab">Database</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content mt-3" id="namingTabContent">
+                            <!-- Host Naming Form -->
+                            <div class="tab-pane fade show active" id="host-form" role="tabpanel">
+                                <h5>Host Naming Convention</h5>
+                                <p class="text-muted">Format: LLLLLSSDDDD####</p>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized names for network devices like routers, switches, and firewalls. Select your site location, site type, and device type, then specify how many device names you need. The system will automatically suggest appropriate ID numbers based on your selections.
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="host-site-location" class="form-label">Site Location Code (LLLLL)</label>
+                                        <select class="form-select" id="host-site-location">
+                                            <option value="">Select site location...</option>
+                                            <option value="BALLI">BALLI - Ballina</option>
+                                            <option value="PORTM">PORTM - Port Macquarie</option>
+                                            <option value="TWEED">TWEED - Tweed Heads</option>
+                                            <option value="EQSY2">EQSY2 - Equinix Sydney SY2</option>
+                                            <option value="EQSY3">EQSY3 - Equinix Sydney SY3</option>
+                                            <option value="AUNTH">AUNTH - DPR North DC</option>
+                                            <option value="AUSTH">AUSTH - DPR South DC</option>
+                                            <option value="AUTER">AUTER - DPR Tertiary DC</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="host-site-type" class="form-label">Site Type Code (SS)</label>
+                                        <select class="form-select" id="host-site-type">
+                                            <option value="">Select site type...</option>
+                                            <option value="DC">DC - Data Centre</option>
+                                            <option value="FS">FS - Field Service Centre</option>
+                                            <option value="OF">OF - Corporate Office</option>
+                                            <option value="SS">SS - Substation</option>
+                                            <option value="FI">FI - FI Plant</option>
+                                            <option value="ST">ST - Store</option>
+                                            <option value="RS">RS - Radio Site</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="host-device-type" class="form-label">Device Type Code (DDDD)</label>
+                                        <select class="form-select" id="host-device-type">
+                                            <option value="">Select device type...</option>
+                                            <option value="RTRW">RTRW - Router WAN Edge</option>
+                                            <option value="RTRI">RTRI - Router Internet Edge</option>
+                                            <option value="RTRP">RTRP - Router Provider Aggregation Router</option>
+                                            <option value="RTRV">RTRV - Router VPN Aggregation Router</option>
+                                            <option value="RTRC">RTRC - Router Cloud Edge</option>
+                                            <option value="SWIC">SWIC - Switch Core</option>
+                                            <option value="SWIA">SWIA - Switch Access</option>
+                                            <option value="SWID">SWID - Switch Distribution</option>
+                                            <option value="SWIP">SWIP - Switch Provider Aggregation Switch</option>
+                                            <option value="SWDM">SWDM - Switch DMZ</option>
+                                            <option value="SWXC">SWXC - Switch Cross Connect</option>
+                                            <option value="SWFX">SWFX - Switch Fex (Nexus family)</option>
+                                            <option value="SWMG">SWMG - Switch Management</option>
+                                            <option value="SECF">SECF - Security Firewall External</option>
+                                            <option value="SECM">SECM - Security Firewall Interzone</option>
+                                            <option value="SECP">SECP - Security Policy Smart 1</option>
+                                            <option value="AAAS">AAAS - AAA Server/Appliance</option>
+                                            <option value="WLAP">WLAP - Wireless LAN Access Point</option>
+                                            <option value="OSPI">OSPI - OT Spine Switch</option>
+                                            <option value="ESPI">ESPI - Enterprise Spine Switch</option>
+                                            <option value="OLFS">OLFS - OT Server Leaf Switch</option>
+                                            <option value="ELFS">ELFS - Enterprise Server Leaf Switch</option>
+                                            <option value="OLFB">OLFB - OT Border Leaf Switch</option>
+                                            <option value="ELFB">ELFB - Enterprise Border Leaf Switch</option>
+                                            <option value="EISR">EISR - Enterprise Intersite Router</option>
+                                            <option value="OPIC">OPIC - OT APIC</option>
+                                            <option value="EPIC">EPIC - Enterprise APIC</option>
+                                            <option value="ONDO">ONDO - OT Nexus Orchestrator</option>
+                                            <option value="ENDO">ENDO - Enterprise Nexus Orchestrator</option>
+                                            <option value="RADN">RADN - Narrowband Digital Radio</option>
+                                            <option value="RADB">RADB - Broadband Digital Radio</option>
+                                            <option value="RADA">RADA - Analog Data Radio</option>
+                                            <option value="RADP">RADP - Analog Voice/PMR Radio</option>
+                                            <option value="TERM">TERM - Terminal Server</option>
+                                            <option value="DMUX">DMUX - Digital Multiplexer</option>
+                                            <option value="ESBC">ESBC - Enhanced Session Border Controller</option>
+                                            <option value="MEGW">MEGW - Media Gateway</option>
+                                            <option value="PR">PR - Power Rail</option>
+                                            <option value="U">U - Uninterruptable Power Supply</option>
+                                            <option value="ICT">ICT - ICT</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="host-device-id" class="form-label">Start ID Number (####)</label>
+                                        <select class="form-select" id="host-device-id">
+                                            <option value="">Select ID number...</option>
+                                        </select>
+                                        <div class="form-text">Select a Node ID based on your selections</div>
+                                    </div>
+                                    <div class="col-md-2 mb-3" id="custom-device-id-container" style="display: none;">
+                                        <label for="custom-device-id" class="form-label">Custom ID Number</label>
+                                        <input type="text" class="form-control" id="custom-device-id" placeholder="e.g., 0123" maxlength="4" pattern="\d{4}">
+                                        <div class="form-text">Enter a 4-digit number</div>
+                                    </div>
+                                    <div class="col-md-1 mb-3">
+                                        <label for="host-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="host-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">1-100</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="host-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="host-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                </div>
+                                <button id="generate-host-btn" class="btn btn-custom">Generate Host Name(s)</button>
+                            </div>
+
+                            <!-- VLAN Naming Form -->
+                            <div class="tab-pane fade" id="vlan-form" role="tabpanel">
+                                <h5>VLAN Naming Convention</h5>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized names for VLANs (Virtual Local Area Networks). Select the VLAN type, site location, site type, and description to generate a properly formatted VLAN name. VLANs are used to separate different types of network traffic for better organization and security.
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="vlan-type" class="form-label">VLAN Type</label>
+                                        <select class="form-select" id="vlan-type">
+                                            <option value="">Select VLAN type...</option>
+                                            <option value="CORP">Corporate VLAN</option>
+                                            <option value="SCADA">SCADA VLAN</option>
+                                            <option value="BYOD_GUEST">BYOD Guest VLAN</option>
+                                            <option value="MPLS">MPLS VLAN</option>
+                                            <option value="NMS">NMS VLAN</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="vlan-site-location" class="form-label">Site Location Code</label>
+                                        <select class="form-select" id="vlan-site-location">
+                                            <option value="">Select site location...</option>
+                                            <option value="BALLI">BALLI - Ballina</option>
+                                            <option value="PORTM">PORTM - Port Macquarie</option>
+                                            <option value="TWEED">TWEED - Tweed Heads</option>
+                                            <option value="EQSY2">EQSY2 - Equinix Sydney SY2</option>
+                                            <option value="EQSY3">EQSY3 - Equinix Sydney SY3</option>
+                                            <option value="AUNTH">AUNTH - DPR North DC</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="vlan-site-type" class="form-label">Site Type Code</label>
+                                        <select class="form-select" id="vlan-site-type">
+                                            <option value="">Select site type...</option>
+                                            <option value="DC">DC - Data Centre</option>
+                                            <option value="FS">FS - Field Service Centre</option>
+                                            <option value="OF">OF - Corporate Office</option>
+                                            <option value="SS">SS - Substation</option>
+                                            <option value="FI">FI - FI Plant</option>
+                                            <option value="ST">ST - Store</option>
+                                            <option value="RS">RS - Radio Site</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="vlan-description" class="form-label">Description</label>
+                                        <select class="form-select" id="vlan-description">
+                                            <option value="">Select description...</option>
+                                            <option value="LAN">LAN - General Purpose LAN</option>
+                                            <option value="UC">UC - Telephony Endpoints</option>
+                                            <option value="WIFI">WIFI - Wireless LAN Access</option>
+                                            <option value="MGMT">MGMT - Management LAN</option>
+                                            <option value="LMR">LMR - WAVE Radio LAN</option>
+                                            <option value="TEST">TEST - Test VLAN</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="vlan-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="vlan-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="vlan-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="vlan-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
+                                    </div>
+                                </div>
+                                <button id="generate-vlan-btn" class="btn btn-custom">Generate VLAN Name</button>
+                            </div>
+
+                            <!-- WAN Interface Form -->
+                            <div class="tab-pane fade" id="wan-form" role="tabpanel">
+                                <h5>WAN Physical Interface Description</h5>
+                                <p class="text-muted">Format: &lt;CARRIER&gt;, &lt;TECH&gt;, &lt;SERVICE_ID&gt;, &lt;BANDWIDTH&gt;, &lt;DESCRIPTION&gt;</p>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized descriptions for WAN (Wide Area Network) connections. Select the carrier (like Telstra), technology type, and enter details like service ID and bandwidth. These descriptions help identify external network connections and their specifications at a glance.
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="wan-carrier" class="form-label">Carrier</label>
+                                        <select class="form-select" id="wan-carrier">
+                                            <option value="">Select carrier...</option>
+                                            <option value="Telstra">Telstra</option>
+                                            <option value="Transgrid">Transgrid</option>
+                                            <option value="Virtutel">Virtutel</option>
+                                            <option value="Equinix">Equinix</option>
+                                            <option value="TPG">TPG</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="wan-tech" class="form-label">Technology</label>
+                                        <select class="form-select" id="wan-tech">
+                                            <option value="">Select technology...</option>
+                                            <option value="NE">NE</option>
+                                            <option value="EP-LAN">EP-LAN</option>
+                                            <option value="VPLS">VPLS</option>
+                                            <option value="BIP-E">BIP-E</option>
+                                            <option value="3G/4G">3G/4G</option>
+                                            <option value="Sat">Sat</option>
+                                            <option value="EC">EC</option>
+                                            <option value="Internet">Internet</option>
+                                            <option value="FIBRE">FIBRE</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="wan-service-id" class="form-label">Service ID</label>
+                                        <input type="text" class="form-control" id="wan-service-id" placeholder="e.g., N6027701R">
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="wan-bandwidth" class="form-label">Bandwidth</label>
+                                        <input type="text" class="form-control" id="wan-bandwidth" placeholder="e.g., 100M">
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="wan-description" class="form-label">Description</label>
+                                        <input type="text" class="form-control" id="wan-description" placeholder="e.g., WAN" value="WAN">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="wan-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="wan-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="wan-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="wan-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
+                                    </div>
+                                </div>
+                                <button id="generate-wan-btn" class="btn btn-custom">Generate WAN Interface Description</button>
+                            </div>
+
+                            <!-- Physical Interface Form -->
+                            <div class="tab-pane fade" id="physical-form" role="tabpanel">
+                                <h5>General Physical Interface Description</h5>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized descriptions for physical network ports. Select the type of device connected to the port, enter the device hostname and interface details. These descriptions make it easy to identify what's connected to each physical port on your network equipment.
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="physical-device-type" class="form-label">Connected Device Type</label>
+                                        <select class="form-select" id="physical-device-type">
+                                            <option value="">Select device type...</option>
+                                            <option value="Switch">Switch</option>
+                                            <option value="Router">Router</option>
+                                            <option value="Bridge">Bridge</option>
+                                            <option value="Radio">Radio</option>
+                                            <option value="Security">Security</option>
+                                            <option value="WLAP">WLAP</option>
+                                            <option value="Facilities">Facilities</option>
+                                            <option value="Server">Server</option>
+                                            <option value="LMR">LMR</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="physical-hostname" class="form-label">Device Hostname</label>
+                                        <input type="text" class="form-control" id="physical-hostname" placeholder="e.g., TWEEDFSSWIA0001">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="physical-interface" class="form-label">Interface</label>
+                                        <input type="text" class="form-control" id="physical-interface" placeholder="e.g., Fa0/1">
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="physical-description" class="form-label">Description (Optional)</label>
+                                        <input type="text" class="form-control" id="physical-description" placeholder="Optional">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="physical-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="physical-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="physical-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="physical-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
+                                    </div>
+                                </div>
+                                <button id="generate-physical-btn" class="btn btn-custom">Generate Physical Interface Description</button>
+                            </div>
+
+                            <!-- Logical Interface Form -->
+                            <div class="tab-pane fade" id="logical-form" role="tabpanel">
+                                <h5>Logical Interconnect Interface Description</h5>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized descriptions for logical connections between network devices. Select the interconnect type (Corporate, SCADA, or MPLS) and enter the remote device hostname. These descriptions help identify virtual connections between devices that may be physically separated.
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="logical-type" class="form-label">Interconnect Type</label>
+                                        <select class="form-select" id="logical-type">
+                                            <option value="">Select interconnect type...</option>
+                                            <option value="CORP">Corporate Interconnect</option>
+                                            <option value="SCADA">SCADA Interconnect</option>
+                                            <option value="MPLS">MPLS Interconnect</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <label for="logical-remote-hostname" class="form-label">Remote End Hostname</label>
+                                        <input type="text" class="form-control" id="logical-remote-hostname" placeholder="e.g., NKWSKSSRTRW0001">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="logical-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="logical-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="logical-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="logical-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
+                                    </div>
+                                </div>
+                                <button id="generate-logical-btn" class="btn btn-custom">Generate Logical Interface Description</button>
+                            </div>
+
+                            <!-- L3 Interface Form -->
+                            <div class="tab-pane fade" id="l3-form" role="tabpanel">
+                                <h5>Customer Facing L3 Interface Description</h5>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized descriptions for Layer 3 network interfaces that connect to end users or services. Select the interface type, site location, site type, and description. These descriptions help identify the purpose and location of each network segment that serves users or applications.
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="l3-type" class="form-label">Interface Type</label>
+                                        <select class="form-select" id="l3-type">
+                                            <option value="">Select interface type...</option>
+                                            <option value="CORP">Corporate L3 Interface</option>
+                                            <option value="SCADA">SCADA L3 Interface</option>
+                                            <option value="NMS">NMS Interface</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="l3-site-location" class="form-label">Site Location Code</label>
+                                        <select class="form-select" id="l3-site-location">
+                                            <option value="">Select site location...</option>
+                                            <option value="BALLI">BALLI - Ballina</option>
+                                            <option value="PORTM">PORTM - Port Macquarie</option>
+                                            <option value="TWEED">TWEED - Tweed Heads</option>
+                                            <option value="EQSY2">EQSY2 - Equinix Sydney SY2</option>
+                                            <option value="EQSY3">EQSY3 - Equinix Sydney SY3</option>
+                                            <option value="AUNTH">AUNTH - DPR North DC</option>
+                                            <option value="AUSTH">AUSTH - DPR South DC</option>
+                                            <option value="AUTER">AUTER - DPR Tertiary DC</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="l3-site-type" class="form-label">Site Type Code</label>
+                                        <select class="form-select" id="l3-site-type">
+                                            <option value="">Select site type...</option>
+                                            <option value="DC">DC - Data Centre</option>
+                                            <option value="FS">FS - Field Service Centre</option>
+                                            <option value="OF">OF - Corporate Office</option>
+                                            <option value="SS">SS - Substation</option>
+                                            <option value="FI">FI - FI Plant</option>
+                                            <option value="ST">ST - Store</option>
+                                            <option value="RS">RS - Radio Site</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="l3-description" class="form-label">Description</label>
+                                        <select class="form-select" id="l3-description">
+                                            <option value="">Select description...</option>
+                                            <option value="LAN">LAN - General Purpose LAN</option>
+                                            <option value="UC">UC - Telephony Endpoints</option>
+                                            <option value="WIFI">WIFI - Wireless LAN Access</option>
+                                            <option value="MGMT">MGMT - Management LAN</option>
+                                            <option value="LMR">LMR - WAVE Radio LAN</option>
+                                            <option value="1stWindows">1stWindows - First Windows</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="l3-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="l3-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="l3-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="l3-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
+                                    </div>
+                                </div>
+                                <button id="generate-l3-btn" class="btn btn-custom">Generate L3 Interface Description</button>
+                            </div>
+
+                            <!-- Virtual/Loopback Form -->
+                            <div class="tab-pane fade" id="virtual-form" role="tabpanel">
+                                <h5>Virtual/Loopback Interface Description</h5>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized descriptions for virtual interfaces that don't connect to physical cables. Select the loopback type and purpose. These virtual interfaces are used for management, routing, and other internal network functions that don't require physical connections.
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="virtual-type" class="form-label">Loopback Type</label>
+                                        <select class="form-select" id="virtual-type">
+                                            <option value="">Select loopback type...</option>
+                                            <option value="CORP">Corporate Loopback</option>
+                                            <option value="SCADA">SCADA Loopback</option>
+                                            <option value="MPLS">MPLS Loopback</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <label for="virtual-description" class="form-label">Description</label>
+                                        <select class="form-select" id="virtual-description">
+                                            <option value="">Select description...</option>
+                                            <option value="Router Management">Router Management</option>
+                                            <option value="Stream Server Access">Stream Server Access</option>
+                                            <option value="ISDN Backup Tracking">ISDN Backup Tracking</option>
+                                            <option value="LMR Multicast VIF">LMR Multicast VIF</option>
+                                            <option value="Multicast RP">Multicast RP</option>
+                                            <option value="Multicast MSDP">Multicast MSDP</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="virtual-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="virtual-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="virtual-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="virtual-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
+                                    </div>
+                                </div>
+                                <button id="generate-virtual-btn" class="btn btn-custom">Generate Virtual Interface Description</button>
+                            </div>
+
+                            <!-- SNMP Location Form -->
+                            <div class="tab-pane fade" id="snmp-form" role="tabpanel">
+                                <h5>SNMP Location Field</h5>
+                                <p class="text-muted">Format: &lt;SITE&gt;&lt;SITE_TYPE&gt;, &lt;ROOM&gt;, &lt;RACK&gt;, &lt;RU&gt;, &lt;CLASS&gt;, &lt;CATEGORY&gt;</p>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized location descriptions for network equipment. Enter details about where the device is physically located, including site, room, rack position, and device classification. This information helps technicians quickly locate equipment when maintenance is needed.
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="snmp-site" class="form-label">Site Code</label>
+                                        <select class="form-select" id="snmp-site">
+                                            <option value="">Select site...</option>
+                                            <option value="BALLI">BALLI - Ballina</option>
+                                            <option value="PORTM">PORTM - Port Macquarie</option>
+                                            <option value="TWEED">TWEED - Tweed Heads</option>
+                                            <option value="EQSY2">EQSY2 - Equinix Sydney SY2</option>
+                                            <option value="EQSY3">EQSY3 - Equinix Sydney SY3</option>
+                                            <option value="AUNTH">AUNTH - DPR North DC</option>
+                                            <option value="AUSTH">AUSTH - DPR South DC</option>
+                                            <option value="AUTER">AUTER - DPR Tertiary DC</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="snmp-site-type" class="form-label">Site Type</label>
+                                        <select class="form-select" id="snmp-site-type">
+                                            <option value="">Select site type...</option>
+                                            <option value="DC">DC - Data Centre</option>
+                                            <option value="FS">FS - Field Service Centre</option>
+                                            <option value="OF">OF - Corporate Office</option>
+                                            <option value="SS">SS - Substation</option>
+                                            <option value="FI">FI - FI Plant</option>
+                                            <option value="ST">ST - Store</option>
+                                            <option value="RS">RS - Radio Site</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="snmp-room" class="form-label">Room</label>
+                                        <input type="text" class="form-control" id="snmp-room" placeholder="e.g., Comms Room">
+                                    </div>
+                                    <div class="col-md-1 mb-3">
+                                        <label for="snmp-rack" class="form-label">Rack</label>
+                                        <input type="text" class="form-control" id="snmp-rack" placeholder="e.g., R1">
+                                    </div>
+                                    <div class="col-md-1 mb-3">
+                                        <label for="snmp-ru" class="form-label">RU</label>
+                                        <input type="text" class="form-control" id="snmp-ru" placeholder="e.g., 42-44">
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="snmp-class" class="form-label">Class</label>
+                                        <select class="form-select" id="snmp-class">
+                                            <option value="">Select class...</option>
+                                            <option value="WAN-Router">WAN-Router</option>
+                                            <option value="WAN-Switch">WAN-Switch</option>
+                                            <option value="WAN-Firewall">WAN-Firewall</option>
+                                            <option value="LAN-Router">LAN-Router</option>
+                                            <option value="LAN-Switch">LAN-Switch</option>
+                                            <option value="LAN-Firewall">LAN-Firewall</option>
+                                            <option value="LAN-WLAP">LAN-WLAP</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1 mb-3">
+                                        <label for="snmp-category" class="form-label">Category</label>
+                                        <select class="form-select" id="snmp-category">
+                                            <option value="">Select...</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-9 mb-3">
+                                        <label for="snmp-user-description" class="form-label">Optional Description</label>
+                                        <input type="text" class="form-control" id="snmp-user-description" placeholder="Add a description for this name (optional)">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="snmp-quantity" class="form-label">Quantity</label>
+                                        <input type="number" class="form-control" id="snmp-quantity" placeholder="1" min="1" max="100" value="1">
+                                        <div class="form-text">Number of sequential names</div>
+                                    </div>
+                                </div>
+                                <button id="generate-snmp-btn" class="btn btn-custom">Generate SNMP Location Field</button>
+                            </div>
+                            
+                            <!-- Summary View -->
+                            <div class="tab-pane fade" id="summary-view" role="tabpanel">
+                                <h5>All Generated Names</h5>
+                                <p class="text-muted">View, edit descriptions, and manage all your generated names in one place</p>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab shows all the names you've generated across all naming conventions. You can edit descriptions, copy names to clipboard, or delete names you no longer need. This provides a central place to manage all your generated names without having to switch between different tabs.
+                                </div>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Convention Type</th>
+                                                <th>Description</th>
+                                                <th>Date Created</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="summary-table-body">
+                                            <!-- Summary items will be populated here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Database Management Tab -->
+                            <div class="tab-pane fade" id="database-view" role="tabpanel">
+                                <div class="p-3">
+                                    <h4>Database Management</h4>
+                                    <p class="text-muted">Download or upload the shared database used by all Essential Energy Automation Hub tools.</p>
+                                    <div class="alert alert-info mb-3">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        <strong>What is this?</strong> This tab allows you to save all your generated names to a file or restore them from a previous backup. Use the download button to save your current database as a backup file. Use the upload button to restore a previously saved database. This is useful for transferring your data between computers or creating backups.
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card mb-4">
+                                                <div class="card-header">
+                                                    Download Database
+                                                </div>
+                                                <div class="card-body">
+                                                    <p>Download the current database as a JSON file for backup or sharing.</p>
+                                                    <button id="download-db-btn" class="btn btn-custom">
+                                                        <i class="bi bi-download"></i> Download Database
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card mb-4">
+                                                <div class="card-header">
+                                                    Upload Database
+                                                </div>
+                                                <div class="card-body">
+                                                    <p>Upload a database JSON file to restore or import data.</p>
+                                                    <div class="mb-3">
+                                                        <input class="form-control" type="file" id="db-file-input" accept=".json">
+                                                    </div>
+                                                    <button id="upload-db-btn" class="btn btn-custom">
+                                                        <i class="bi bi-upload"></i> Upload Database
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Generated Result</span>
+                        <i class="bi bi-clipboard copy-btn" id="copy-result" title="Copy to clipboard"></i>
+                    </div>
+                    <div class="card-body">
+                        <div id="result" class="alert alert-success d-none">
+                            <h4 id="generated-name" class="alert-heading"></h4>
+                            <p class="mb-0" id="result-description">Generated according to naming convention</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        Previously Generated Names
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Convention Type</th>
+                                        <th>Description</th>
+                                        <th>Date Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-table-body">
+                                    <!-- History items will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="shared_database.js"></script>
+    <script>
+        // Tool ID for database operations
+        const TOOL_ID = DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR;
+        
+        // Legacy IndexedDB migration
+        let db;
+        const DB_NAME = 'EssentialEnergyNamingDB';
+        const DB_VERSION = 2;
+        const STORE_NAME = 'generatedNames';
+        let migrationCompleted = false;
+        
+        // Initialize shared database and migrate existing data
+        function initSharedDatabase() {
+            return new Promise((resolve, reject) => {
+                // Initialize shared database
+                initDatabase(TOOL_ID)
+                    .then(() => {
+                        // Check if migration is needed
+                        if (localStorage.getItem('migration_completed')) {
+                            console.log("Migration already completed");
+                            migrationCompleted = true;
+                            resolve();
+                            return;
+                        }
+                        
+                        // Try to open the old IndexedDB database
+                        const request = indexedDB.open(DB_NAME, DB_VERSION);
+                        
+                        request.onerror = (event) => {
+                            console.log("No IndexedDB to migrate, starting fresh");
+                            localStorage.setItem('migration_completed', 'true');
+                            migrationCompleted = true;
+                            resolve();
+                        };
+                        
+                        request.onsuccess = (event) => {
+                            db = event.target.result;
+                            
+                            // Migrate data from IndexedDB to shared database
+                            const transaction = db.transaction([STORE_NAME], 'readonly');
+                            const store = transaction.objectStore(STORE_NAME);
+                            const getAllRequest = store.getAll();
+                            
+                            getAllRequest.onsuccess = () => {
+                                const names = getAllRequest.result;
+                                
+                                // If no names to migrate, mark as completed
+                                if (names.length === 0) {
+                                    localStorage.setItem('migration_completed', 'true');
+                                    migrationCompleted = true;
+                                    resolve();
+                                    return;
+                                }
+                                
+                                // Migrate each name
+                                const migratePromises = names.map(item => {
+                                    return saveRecord(TOOL_ID, {
+                                        name: item.name,
+                                        conventionType: item.conventionType,
+                                        details: item.details,
+                                        userDescription: item.userDescription || '',
+                                        dateCreated: item.dateCreated
+                                    });
+                                });
+                                
+                                Promise.all(migratePromises)
+                                    .then(() => {
+                                        localStorage.setItem('migration_completed', 'true');
+                                        migrationCompleted = true;
+                                        resolve();
+                                    })
+                                    .catch(error => {
+                                        console.error("Error migrating data:", error);
+                                        reject(error);
+                                    });
+                            };
+                            
+                            getAllRequest.onerror = (event) => {
+                                console.error("Error getting names for migration:", event.target.error);
+                                reject("Error getting names for migration");
+                            };
+                        };
+                    })
+                    .catch(error => {
+                        console.error("Error initializing shared database:", error);
+                        reject(error);
+                    });
+            });
+        }
+
+        // Save generated name to shared database
+        function saveGeneratedName(name, conventionType, details, userDescription = '') {
+            return saveRecord(TOOL_ID, {
+                name: name,
+                conventionType: conventionType,
+                details: details,
+                userDescription: userDescription
+            });
+        }
+        
+        // Update a generated name in the shared database
+        function updateGeneratedName(id, updates) {
+            return updateRecord(TOOL_ID, id, updates);
+        }
+
+        // Load generated names from shared database
+        function loadGeneratedNames() {
+            return loadRecords(TOOL_ID)
+                .then(records => {
+                    // Sort by date descending (newest first)
+                    return records.sort((a, b) => 
+                        new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
+                    );
+                });
+        }
+
+        // Delete a generated name from shared database
+        function deleteGeneratedName(id) {
+            return deleteRecord(TOOL_ID, id);
+        }
+
+        // Render history table
+        function renderHistory() {
+            loadGeneratedNames().then(names => {
+                const historyTableBody = document.getElementById('history-table-body');
+                historyTableBody.innerHTML = '';
+                
+                names.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.name}</td>
+                        <td>${item.conventionType}</td>
+                        <td>${item.userDescription || ''}</td>
+                        <td>${new Date(item.dateCreated).toLocaleString()}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary copy-name" data-name="${item.name}">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger delete-name" data-id="${item.id}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    historyTableBody.appendChild(row);
+                });
+                
+                // Add event listeners for copy and delete buttons
+                document.querySelectorAll('.copy-name').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const name = this.getAttribute('data-name');
+                        navigator.clipboard.writeText(name).then(() => {
+                            alert('Name copied to clipboard!');
+                        });
+                    });
+                });
+                
+                document.querySelectorAll('.delete-name').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        if (confirm('Are you sure you want to delete this name?')) {
+                            deleteGeneratedName(id).then(() => {
+                                renderHistory();
+                                renderSummary(); // Also update summary
+                            });
+                        }
+                    });
+                });
+            });
+        }
+        
+        // Render summary table
+        function renderSummary() {
+            loadGeneratedNames().then(names => {
+                const summaryTableBody = document.getElementById('summary-table-body');
+                summaryTableBody.innerHTML = '';
+                
+                names.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.name}</td>
+                        <td>${item.conventionType}</td>
+                        <td>
+                            <div class="d-flex">
+                                <input type="text" class="form-control form-control-sm me-2 description-field" 
+                                    value="${item.userDescription || ''}" data-id="${item.id}" 
+                                    placeholder="Add a description...">
+                                <button class="btn btn-sm btn-outline-success save-description" data-id="${item.id}">
+                                    <i class="bi bi-check"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>${new Date(item.dateCreated).toLocaleString()}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary copy-name" data-name="${item.name}">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger delete-name" data-id="${item.id}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    summaryTableBody.appendChild(row);
+                });
+                
+                // Add event listeners for copy and delete buttons
+                document.querySelectorAll('#summary-table-body .copy-name').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const name = this.getAttribute('data-name');
+                        navigator.clipboard.writeText(name).then(() => {
+                            alert('Name copied to clipboard!');
+                        });
+                    });
+                });
+                
+                document.querySelectorAll('#summary-table-body .delete-name').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        if (confirm('Are you sure you want to delete this name?')) {
+                            deleteGeneratedName(id).then(() => {
+                                renderHistory();
+                                renderSummary();
+                            });
+                        }
+                    });
+                });
+                
+                // Add event listeners for save description buttons
+                document.querySelectorAll('#summary-table-body .save-description').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        const descriptionField = document.querySelector(`.description-field[data-id="${id}"]`);
+                        const newDescription = descriptionField.value;
+                        
+                        updateGeneratedName(id, { userDescription: newDescription }).then(() => {
+                            alert('Description updated successfully!');
+                            renderHistory();
+                            renderSummary();
+                        });
+                    });
+                });
+            });
+        }
+
+        // Display generated name
+        function displayResult(name, description = "Generated according to naming convention") {
+            const resultDiv = document.getElementById('result');
+            const generatedNameElement = document.getElementById('generated-name');
+            const resultDescriptionElement = document.getElementById('result-description');
+            
+            // Check if the name contains HTML (for multiple names with <br>)
+            if (name.includes('<br>')) {
+                generatedNameElement.innerHTML = name;
+            } else {
+                generatedNameElement.textContent = name;
+            }
+            resultDescriptionElement.textContent = description;
+            resultDiv.classList.remove('d-none');
+        }
+
+        // Copy result to clipboard
+        document.getElementById('copy-result').addEventListener('click', function() {
+            const generatedName = document.getElementById('generated-name').textContent;
+            if (generatedName) {
+                navigator.clipboard.writeText(generatedName).then(() => {
+                    alert('Name copied to clipboard!');
+                });
+            }
+        });
+
+        // Host Name Generator
+        document.getElementById('generate-host-btn').addEventListener('click', function() {
+            const siteLocation = document.getElementById('host-site-location').value;
+            const siteType = document.getElementById('host-site-type').value;
+            const deviceType = document.getElementById('host-device-type').value;
+            const deviceIdDropdown = document.getElementById('host-device-id').value;
+            const quantity = parseInt(document.getElementById('host-quantity').value) || 1;
+            
+            // Get device ID based on dropdown selection (regular or custom)
+            let deviceId;
+            if (deviceIdDropdown === 'custom') {
+                deviceId = document.getElementById('custom-device-id').value;
+            } else {
+                deviceId = deviceIdDropdown;
+            }
+            
+            if (!siteLocation || !siteType || !deviceType || !deviceId) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Validate device ID format (4 digits)
+            if (!/^\d{4}$/.test(deviceId)) {
+                alert('Please enter a valid 4-digit ID number');
+                return;
+            }
+            
+            // Parse the device ID as an integer
+            const startId = parseInt(deviceId);
+            
+            // Generate multiple host names if quantity > 1
+            if (quantity > 1) {
+                const hostNames = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Calculate the current ID (ensuring it's always 4 digits with leading zeros)
+                    const currentId = (startId + i).toString().padStart(4, '0');
+                    
+                    // Generate host name
+                    const hostName = `${siteLocation}${siteType}${deviceType}${currentId}`;
+                    hostNames.push(hostName);
+                    
+                    // Save to database
+                    const details = {
+                        siteLocation,
+                        siteType,
+                        deviceType,
+                        deviceId: currentId,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    savePromises.push(saveGeneratedName(hostName, "Host Naming", details));
+                }
+                
+                // Display result
+                displayResult(hostNames.join('<br>'), `Generated ${quantity} Host Names`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                });
+            } else {
+                // Generate single host name
+                const hostName = `${siteLocation}${siteType}${deviceType}${deviceId}`;
+                
+                // Display result
+                displayResult(hostName, "Host Name");
+                
+                // Save to database
+                const details = {
+                    siteLocation,
+                    siteType,
+                    deviceType,
+                    deviceId
+                };
+                
+                saveGeneratedName(hostName, "Host Naming", details).then(() => {
+                    renderHistory();
+                });
+            }
+        });
+
+        // VLAN Name Generator
+        document.getElementById('generate-vlan-btn').addEventListener('click', function() {
+            const vlanType = document.getElementById('vlan-type').value;
+            const siteLocation = document.getElementById('vlan-site-location').value;
+            const siteType = document.getElementById('vlan-site-type').value;
+            const description = document.getElementById('vlan-description').value;
+            const quantity = parseInt(document.getElementById('vlan-quantity').value) || 1;
+            const userDescription = document.getElementById('vlan-user-description').value;
+            
+            if (!vlanType || !siteLocation || !siteType || !description) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Generate multiple VLAN names if quantity > 1
+            if (quantity > 1) {
+                const vlanNames = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate VLAN name with sequence number
+                    let vlanName;
+                    const sequenceDescription = `${description}${i+1}`;
+                    
+                    if (vlanType === 'BYOD_GUEST') {
+                        vlanName = `BYOD_GUEST_${siteLocation}${siteType}_${sequenceDescription}`;
+                    } else {
+                        vlanName = `${vlanType}_${siteLocation}${siteType}_${sequenceDescription}`;
+                    }
+                    
+                    vlanNames.push(vlanName);
+                    
+                    // Save to database
+                    const details = {
+                        vlanType,
+                        siteLocation,
+                        siteType,
+                        description: sequenceDescription,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(vlanName, "VLAN Naming", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(vlanNames.join('<br>'), `Generated ${quantity} VLAN Names`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            } else {
+                // Generate single VLAN name
+                let vlanName;
+                if (vlanType === 'BYOD_GUEST') {
+                    vlanName = `BYOD_GUEST_${siteLocation}${siteType}_${description}`;
+                } else {
+                    vlanName = `${vlanType}_${siteLocation}${siteType}_${description}`;
+                }
+                
+                // Display result
+                displayResult(vlanName, "VLAN Name");
+                
+                // Save to database
+                const details = {
+                    vlanType,
+                    siteLocation,
+                    siteType,
+                    description
+                };
+                
+                saveGeneratedName(vlanName, "VLAN Naming", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            }
+        });
+
+        // WAN Interface Description Generator
+        document.getElementById('generate-wan-btn').addEventListener('click', function() {
+            const carrier = document.getElementById('wan-carrier').value;
+            const tech = document.getElementById('wan-tech').value;
+            const serviceId = document.getElementById('wan-service-id').value;
+            const bandwidth = document.getElementById('wan-bandwidth').value;
+            const description = document.getElementById('wan-description').value;
+            const quantity = parseInt(document.getElementById('wan-quantity').value) || 1;
+            const userDescription = document.getElementById('wan-user-description').value;
+            
+            if (!carrier || !tech || !serviceId || !bandwidth) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Generate multiple WAN interface descriptions if quantity > 1
+            if (quantity > 1) {
+                const wanDescriptions = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate WAN interface description with sequence number
+                    const sequenceServiceId = `${serviceId}-${i+1}`;
+                    const wanDescription = `${carrier}, ${tech}, ${sequenceServiceId}, ${bandwidth}, ${description || 'WAN'}`;
+                    
+                    wanDescriptions.push(wanDescription);
+                    
+                    // Save to database
+                    const details = {
+                        carrier,
+                        tech,
+                        serviceId: sequenceServiceId,
+                        bandwidth,
+                        description,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(wanDescription, "WAN Interface", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(wanDescriptions.join('<br>'), `Generated ${quantity} WAN Interface Descriptions`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            } else {
+                // Generate single WAN interface description
+                const wanDescription = `${carrier}, ${tech}, ${serviceId}, ${bandwidth}, ${description || 'WAN'}`;
+                
+                // Display result
+                displayResult(wanDescription, "WAN Interface Description");
+                
+                // Save to database
+                const details = {
+                    carrier,
+                    tech,
+                    serviceId,
+                    bandwidth,
+                    description
+                };
+                
+                saveGeneratedName(wanDescription, "WAN Interface", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            }
+        });
+
+        // Physical Interface Description Generator
+        document.getElementById('generate-physical-btn').addEventListener('click', function() {
+            const deviceType = document.getElementById('physical-device-type').value;
+            const hostname = document.getElementById('physical-hostname').value;
+            const interfaceName = document.getElementById('physical-interface').value;
+            const description = document.getElementById('physical-description').value;
+            const quantity = parseInt(document.getElementById('physical-quantity').value) || 1;
+            const userDescription = document.getElementById('physical-user-description').value;
+            
+            if (!deviceType || !hostname || !interfaceName) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Generate multiple physical interface descriptions if quantity > 1
+            if (quantity > 1) {
+                const physicalDescriptions = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate physical interface description with sequence number
+                    const sequenceInterface = `${interfaceName}${i+1}`;
+                    let physicalDescription = `${deviceType}, ${hostname}_${sequenceInterface}`;
+                    if (description) {
+                        physicalDescription += `, ${description}`;
+                    }
+                    
+                    physicalDescriptions.push(physicalDescription);
+                    
+                    // Save to database
+                    const details = {
+                        deviceType,
+                        hostname,
+                        interfaceName: sequenceInterface,
+                        description,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(physicalDescription, "Physical Interface", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(physicalDescriptions.join('<br>'), `Generated ${quantity} Physical Interface Descriptions`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            } else {
+                // Generate single physical interface description
+                let physicalDescription = `${deviceType}, ${hostname}_${interfaceName}`;
+                if (description) {
+                    physicalDescription += `, ${description}`;
+                }
+                
+                // Display result
+                displayResult(physicalDescription, "Physical Interface Description");
+                
+                // Save to database
+                const details = {
+                    deviceType,
+                    hostname,
+                    interfaceName,
+                    description
+                };
+                
+                saveGeneratedName(physicalDescription, "Physical Interface", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            }
+        });
+
+        // Logical Interface Description Generator
+        document.getElementById('generate-logical-btn').addEventListener('click', function() {
+            const logicalType = document.getElementById('logical-type').value;
+            const remoteHostname = document.getElementById('logical-remote-hostname').value;
+            const quantity = parseInt(document.getElementById('logical-quantity').value) || 1;
+            const userDescription = document.getElementById('logical-user-description').value;
+            
+            if (!logicalType || !remoteHostname) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Generate multiple logical interface descriptions if quantity > 1
+            if (quantity > 1) {
+                const logicalDescriptions = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate logical interface description with sequence number
+                    const sequenceHostname = `${remoteHostname}${i+1}`;
+                    let logicalDescription;
+                    if (logicalType === 'CORP') {
+                        logicalDescription = `CORP_Interconnect_to_${sequenceHostname}`;
+                    } else {
+                        logicalDescription = `${logicalType}, Interconnect to ${sequenceHostname}`;
+                    }
+                    
+                    logicalDescriptions.push(logicalDescription);
+                    
+                    // Save to database
+                    const details = {
+                        logicalType,
+                        remoteHostname: sequenceHostname,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(logicalDescription, "Logical Interface", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(logicalDescriptions.join('<br>'), `Generated ${quantity} Logical Interface Descriptions`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            } else {
+                // Generate single logical interface description
+                let logicalDescription;
+                if (logicalType === 'CORP') {
+                    logicalDescription = `CORP_Interconnect_to_${remoteHostname}`;
+                } else {
+                    logicalDescription = `${logicalType}, Interconnect to ${remoteHostname}`;
+                }
+                
+                // Display result
+                displayResult(logicalDescription, "Logical Interface Description");
+                
+                // Save to database
+                const details = {
+                    logicalType,
+                    remoteHostname
+                };
+                
+                saveGeneratedName(logicalDescription, "Logical Interface", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            }
+        });
+
+        // L3 Interface Description Generator
+        document.getElementById('generate-l3-btn').addEventListener('click', function() {
+            const l3Type = document.getElementById('l3-type').value;
+            const siteLocation = document.getElementById('l3-site-location').value;
+            const siteType = document.getElementById('l3-site-type').value;
+            const description = document.getElementById('l3-description').value;
+            const quantity = parseInt(document.getElementById('l3-quantity').value) || 1;
+            const userDescription = document.getElementById('l3-user-description').value;
+            
+            if (!l3Type || !siteLocation || !siteType || !description) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Generate multiple L3 interface descriptions if quantity > 1
+            if (quantity > 1) {
+                const l3Descriptions = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate L3 interface description with sequence number
+                    const sequenceDescription = `${description}${i+1}`;
+                    const l3Description = `${l3Type}_${siteLocation}${siteType}_${sequenceDescription}`;
+                    
+                    l3Descriptions.push(l3Description);
+                    
+                    // Save to database
+                    const details = {
+                        l3Type,
+                        siteLocation,
+                        siteType,
+                        description: sequenceDescription,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(l3Description, "L3 Interface", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(l3Descriptions.join('<br>'), `Generated ${quantity} L3 Interface Descriptions`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            } else {
+                // Generate single L3 interface description
+                const l3Description = `${l3Type}_${siteLocation}${siteType}_${description}`;
+                
+                // Display result
+                displayResult(l3Description, "L3 Interface Description");
+                
+                // Save to database
+                const details = {
+                    l3Type,
+                    siteLocation,
+                    siteType,
+                    description
+                };
+                
+                saveGeneratedName(l3Description, "L3 Interface", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            }
+        });
+
+        // Virtual/Loopback Interface Description Generator
+        document.getElementById('generate-virtual-btn').addEventListener('click', function() {
+            const virtualType = document.getElementById('virtual-type').value;
+            const description = document.getElementById('virtual-description').value;
+            const quantity = parseInt(document.getElementById('virtual-quantity').value) || 1;
+            const userDescription = document.getElementById('virtual-user-description').value;
+            
+            if (!virtualType || !description) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Generate multiple virtual interface descriptions if quantity > 1
+            if (quantity > 1) {
+                const virtualDescriptions = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate virtual interface description with sequence number
+                    const sequenceDescription = `${description}${i+1}`;
+                    const virtualDescription = `Virtual, ${virtualType}, ${sequenceDescription}`;
+                    
+                    virtualDescriptions.push(virtualDescription);
+                    
+                    // Save to database
+                    const details = {
+                        virtualType,
+                        description: sequenceDescription,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(virtualDescription, "Virtual Interface", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(virtualDescriptions.join('<br>'), `Generated ${quantity} Virtual Interface Descriptions`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            } else {
+                // Generate single virtual interface description
+                const virtualDescription = `Virtual, ${virtualType}, ${description}`;
+                
+                // Display result
+                displayResult(virtualDescription, "Virtual Interface Description");
+                
+                // Save to database
+                const details = {
+                    virtualType,
+                    description
+                };
+                
+                saveGeneratedName(virtualDescription, "Virtual Interface", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            }
+        });
+
+        // SNMP Location Field Generator
+        document.getElementById('generate-snmp-btn').addEventListener('click', function() {
+            const site = document.getElementById('snmp-site').value;
+            const siteType = document.getElementById('snmp-site-type').value;
+            const room = document.getElementById('snmp-room').value;
+            const rack = document.getElementById('snmp-rack').value;
+            const ru = document.getElementById('snmp-ru').value;
+            const deviceClass = document.getElementById('snmp-class').value;
+            const category = document.getElementById('snmp-category').value;
+            const quantity = parseInt(document.getElementById('snmp-quantity').value) || 1;
+            const userDescription = document.getElementById('snmp-user-description').value;
+            
+            if (!site || !siteType || !room || !rack || !ru || !deviceClass || !category) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Generate multiple SNMP location fields if quantity > 1
+            if (quantity > 1) {
+                const snmpLocations = [];
+                const savePromises = [];
+                
+                for (let i = 0; i < quantity; i++) {
+                    // Generate SNMP location field with sequence number
+                    const sequenceRU = `${ru}-${i+1}`;
+                    const snmpLocation = `${site}${siteType}, ${room}, ${rack}, ${sequenceRU}, ${deviceClass}, ${category}`;
+                    
+                    snmpLocations.push(snmpLocation);
+                    
+                    // Save to database
+                    const details = {
+                        site,
+                        siteType,
+                        room,
+                        rack,
+                        ru: sequenceRU,
+                        deviceClass,
+                        category,
+                        isPartOfBatch: true,
+                        batchSize: quantity,
+                        batchIndex: i + 1
+                    };
+                    
+                    // Add sequential number to description for multiple items
+                    const sequentialDescription = quantity > 1 
+                        ? (userDescription ? `${userDescription} (${i+1}/${quantity})` : `Batch ${i+1}/${quantity}`)
+                        : userDescription;
+                    
+                    savePromises.push(saveGeneratedName(snmpLocation, "SNMP Location", details, sequentialDescription));
+                }
+                
+                // Display result
+                displayResult(snmpLocations.join('<br>'), `Generated ${quantity} SNMP Location Fields`);
+                
+                // Wait for all saves to complete
+                Promise.all(savePromises).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            } else {
+                // Generate single SNMP location field
+                const snmpLocation = `${site}${siteType}, ${room}, ${rack}, ${ru}, ${deviceClass}, ${category}`;
+                
+                // Display result
+                displayResult(snmpLocation, "SNMP Location Field");
+                
+                // Save to database
+                const details = {
+                    site,
+                    siteType,
+                    room,
+                    rack,
+                    ru,
+                    deviceClass,
+                    category
+                };
+                
+                saveGeneratedName(snmpLocation, "SNMP Location", details, userDescription).then(() => {
+                    renderHistory();
+                    renderSummary();
+                });
+            }
+        });
+
+        // Node ID Allocation mapping based on data center and device type
+        const NODE_ID_MAPPING = {
+            // Data Centers
+            "AUNTH": {
+                "IT": {
+                    "ESPI": ["0196", "0197", "0198", "0199"], // Spine switches (x96-x99)
+                    "ELFS": Array.from({length: 89}, (_, i) => (i + 1).toString().padStart(4, '0')), // Compute leaf (x01-x89)
+                    "ELFB": ["0190", "0191", "0192", "0193", "0194", "0195"], // Border leaf (x90-x95)
+                    "default": ["0001", "0002", "0003", "0004", "0005"]
+                },
+                "OT": {
+                    "OSPI": ["0296", "0297", "0298", "0299"], // Spine switches (x96-x99)
+                    "OLFS": Array.from({length: 89}, (_, i) => (i + 1 + 200).toString().padStart(4, '0')), // Compute leaf (x01-x89)
+                    "OLFB": ["0290", "0291", "0292", "0293", "0294", "0295"], // Border leaf (x90-x95)
+                    "default": ["0201", "0202", "0203", "0204", "0205"]
+                },
+                "default": ["0001", "0002", "0003", "0004", "0005"]
+            },
+            "AUSTH": {
+                "IT": {
+                    "ESPI": ["0396", "0397", "0398", "0399"], // Spine switches (x96-x99)
+                    "ELFS": Array.from({length: 89}, (_, i) => (i + 1 + 300).toString().padStart(4, '0')), // Compute leaf (x01-x89)
+                    "ELFB": ["0390", "0391", "0392", "0393", "0394", "0395"], // Border leaf (x90-x95)
+                    "default": ["0301", "0302", "0303", "0304", "0305"]
+                },
+                "OT": {
+                    "OSPI": ["0496", "0497", "0498", "0499"], // Spine switches (x96-x99)
+                    "OLFS": Array.from({length: 89}, (_, i) => (i + 1 + 400).toString().padStart(4, '0')), // Compute leaf (x01-x89)
+                    "OLFB": ["0490", "0491", "0492", "0493", "0494", "0495"], // Border leaf (x90-x95)
+                    "default": ["0401", "0402", "0403", "0404", "0405"]
+                },
+                "default": ["0301", "0302", "0303", "0304", "0305"]
+            },
+            "AUTER": {
+                "IT": {
+                    "ESPI": ["0596", "0597", "0598", "0599"], // Spine switches (x96-x99)
+                    "ELFS": Array.from({length: 89}, (_, i) => (i + 1 + 500).toString().padStart(4, '0')), // Compute leaf (x01-x89)
+                    "ELFB": ["0590", "0591", "0592", "0593", "0594", "0595"], // Border leaf (x90-x95)
+                    "default": ["0501", "0502", "0503", "0504", "0505"]
+                },
+                "OT": {
+                    "OSPI": ["0696", "0697", "0698", "0699"], // Spine switches (x96-x99)
+                    "OLFS": Array.from({length: 89}, (_, i) => (i + 1 + 600).toString().padStart(4, '0')), // Compute leaf (x01-x89)
+                    "OLFB": ["0690", "0691", "0692", "0693", "0694", "0695"], // Border leaf (x90-x95)
+                    "default": ["0601", "0602", "0603", "0604", "0605"]
+                },
+                "default": ["0501", "0502", "0503", "0504", "0505"]
+            },
+            "default": ["0001", "0002", "0003", "0004", "0005"]
+        };
+
+        // Function to determine environment (IT/OT) based on device type
+        function getEnvironment(deviceType) {
+            const itDevices = ["ESPI", "ELFS", "ELFB", "EPIC", "ENDO"];
+            const otDevices = ["OSPI", "OLFS", "OLFB", "OPIC", "ONDO"];
+            
+            if (itDevices.includes(deviceType)) return "IT";
+            if (otDevices.includes(deviceType)) return "OT";
+            return "default";
+        }
+
+        // Function to update the node ID dropdown based on selections
+        function updateNodeIdDropdown() {
+            console.log("updateNodeIdDropdown called");
+            const siteLocation = document.getElementById('host-site-location').value;
+            const deviceType = document.getElementById('host-device-type').value;
+            const nodeIdDropdown = document.getElementById('host-device-id');
+            
+            console.log("Selected values:", { siteLocation, deviceType });
+            
+            // Clear existing options
+            nodeIdDropdown.innerHTML = '<option value="">Select ID number...</option>';
+            
+            // If either selection is empty, don't proceed
+            if (!siteLocation || !deviceType) {
+                console.log("Missing selection, not updating dropdown");
+                return;
+            }
+            
+            // Get the environment (IT/OT) based on device type
+            const environment = getEnvironment(deviceType);
+            console.log("Determined environment:", environment);
+            
+            // Get the node ID options based on data center and device type
+            let nodeIdOptions = NODE_ID_MAPPING.default;
+            
+            if (NODE_ID_MAPPING[siteLocation]) {
+                console.log(`Found mapping for site location: ${siteLocation}`);
+                if (NODE_ID_MAPPING[siteLocation][environment] && NODE_ID_MAPPING[siteLocation][environment][deviceType]) {
+                    console.log(`Found specific mapping for ${siteLocation}/${environment}/${deviceType}`);
+                    nodeIdOptions = NODE_ID_MAPPING[siteLocation][environment][deviceType];
+                } else if (NODE_ID_MAPPING[siteLocation][environment]) {
+                    console.log(`Using default mapping for ${siteLocation}/${environment}`);
+                    nodeIdOptions = NODE_ID_MAPPING[siteLocation][environment].default;
+                } else {
+                    console.log(`Using site default mapping for ${siteLocation}`);
+                    nodeIdOptions = NODE_ID_MAPPING[siteLocation].default;
+                }
+            } else {
+                console.log(`No mapping found for ${siteLocation}, using global default`);
+            }
+            
+            console.log("Node ID options to add:", nodeIdOptions);
+            
+            // Add options to the dropdown
+            nodeIdOptions.forEach(nodeId => {
+                const option = document.createElement('option');
+                option.value = nodeId;
+                option.textContent = nodeId;
+                nodeIdDropdown.appendChild(option);
+            });
+            
+            // Add "Custom" option at the end
+            const customOption = document.createElement('option');
+            customOption.value = "custom";
+            customOption.textContent = "Custom";
+            nodeIdDropdown.appendChild(customOption);
+            
+            // Select the first option if available
+            if (nodeIdDropdown.options.length > 1) {
+                nodeIdDropdown.selectedIndex = 1;
+            }
+            
+            // Hide the custom input field initially
+            document.getElementById('custom-device-id-container').style.display = 'none';
+        }
+
+        // Initialize database and render history when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            // Restore active tab if saved in localStorage
+            const activeTabId = localStorage.getItem('active_tab_id');
+            if (activeTabId) {
+                const tabElement = document.getElementById(activeTabId);
+                if (tabElement) {
+                    const tab = new bootstrap.Tab(tabElement);
+                    tab.show();
+                }
+            }
+            
+            // Add event listeners for dynamic node ID dropdown immediately
+            document.getElementById('host-site-location').addEventListener('change', function() {
+                console.log("Site location changed");
+                updateNodeIdDropdown();
+            });
+            
+            document.getElementById('host-device-type').addEventListener('change', function() {
+                console.log("Device type changed");
+                updateNodeIdDropdown();
+            });
+            
+            // Add event listener for the node ID dropdown to show/hide custom input field
+            document.getElementById('host-device-id').addEventListener('change', function() {
+                const customContainer = document.getElementById('custom-device-id-container');
+                if (this.value === 'custom') {
+                    customContainer.style.display = 'block';
+                } else {
+                    customContainer.style.display = 'none';
+                }
+            });
+            
+            // Add special handler for data center selections
+            const siteLocationDropdown = document.getElementById('host-site-location');
+            siteLocationDropdown.addEventListener('change', function() {
+                const selectedValue = this.value;
+                if(['AUNTH', 'AUSTH', 'AUTER'].includes(selectedValue)) {
+                    console.log(`Data center selected: ${selectedValue}, updating dropdown`);
+                    setTimeout(updateNodeIdDropdown, 50); // Small delay to ensure other handlers run first
+                }
+            });
+            
+            // Initialize the dropdown if values are already selected
+            console.log("Initializing dropdown on page load");
+            updateNodeIdDropdown();
+            
+            initSharedDatabase().then(() => {
+                renderHistory();
+                renderSummary();
+            }).catch(error => {
+                console.error("Failed to initialize database:", error);
+                alert("Failed to initialize database. Some features may not work correctly.");
+            });
+            
+            // Database management event listeners
+            document.getElementById('download-db-btn').addEventListener('click', function() {
+                downloadDatabase();
+            });
+            
+            document.getElementById('upload-db-btn').addEventListener('click', function() {
+                const fileInput = document.getElementById('db-file-input');
+                if (fileInput.files.length === 0) {
+                    alert('Please select a file to upload');
+                    return;
+                }
+                
+                const file = fileInput.files[0];
+                
+                uploadDatabase(file)
+                    .then(() => {
+                        alert('Database uploaded successfully');
+                        renderHistory();
+                        renderSummary();
+                    })
+                    .catch(error => {
+                        alert(`Failed to upload database: ${error}`);
+                    });
+            });
+            
+            // Add tab change event listener to update dropdown when host tab is shown
+            document.getElementById('host-tab').addEventListener('shown.bs.tab', function() {
+                console.log("Host tab shown, updating node ID dropdown");
+                updateNodeIdDropdown();
+            });
+            
+            // Add tab change event listener for summary tab to ensure data is loaded when tab is selected
+            document.getElementById('summary-tab').addEventListener('shown.bs.tab', function() {
+                console.log("Summary tab shown, updating summary table");
+                renderSummary();
+            });
+            
+            // Save active tab ID to localStorage when any tab is clicked
+            document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tabEl => {
+                tabEl.addEventListener('shown.bs.tab', function() {
+                    localStorage.setItem('active_tab_id', this.id);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
