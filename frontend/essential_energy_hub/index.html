@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Essential Energy Automation Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-bottom: 50px;
+        }
+        .header {
+            background: linear-gradient(135deg, #05386B, #379683);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: 600;
+        }
+        .tool-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #379683;
+        }
+        .btn-custom {
+            background-color: #379683;
+            border-color: #379683;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #05386B;
+            border-color: #05386B;
+            color: white;
+        }
+        .admin-panel {
+            background-color: #EDF5E1;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1 class="display-5 fw-bold">Essential Energy Automation Hub</h1>
+            <p class="lead">Centralized access to all energy automation tools and name generators</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="admin-panel" id="admin-section">
+            <h2 class="mb-3">Admin Panel - Add New Tool</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="tool-name" class="form-label">Tool Name</label>
+                        <input type="text" class="form-control" id="tool-name" placeholder="Enter tool name">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="tool-icon" class="form-label">Icon</label>
+                        <select class="form-select" id="tool-icon">
+                            <option value="bi-lightning">Lightning</option>
+                            <option value="bi-hdd-network">Network</option>
+                            <option value="bi-diagram-3">Diagram</option>
+                            <option value="bi-cpu">CPU</option>
+                            <option value="bi-gear">Gear</option>
+                            <option value="bi-sliders">Sliders</option>
+                            <option value="bi-building">Building</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="tool-url" class="form-label">Tool URL</label>
+                        <input type="text" class="form-control" id="tool-url" placeholder="Enter tool URL">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="tool-description" class="form-label">Description</label>
+                <textarea class="form-control" id="tool-description" rows="2" placeholder="Enter tool description"></textarea>
+            </div>
+            <button class="btn btn-custom" id="add-tool-btn">Add New Tool</button>
+        </div>
+
+        <h2 class="mb-4">Name Generators</h2>
+        <div class="row" id="tools-container">
+            <!-- Example Tool Card (will be dynamically generated) -->
+            <div class="col-md-6 col-lg-3 mb-4 d-none" id="example-card">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="tool-icon">
+                            <i class="bi bi-hdd-network"></i>
+                        </div>
+                        <h5 class="card-title">Tool Name</h5>
+                        <p class="card-text">Tool description goes here</p>
+                        <a href="#" class="btn btn-custom">Open Tool</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Message when no tools are added -->
+            <div class="col-12 text-center py-5" id="no-tools-message">
+                <div class="display-6 text-muted mb-3">
+                    <i class="bi bi-tools"></i>
+                </div>
+                <h3>No tools added yet</h3>
+                <p class="text-muted">Use the admin panel above to add your first tool</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database handling
+        const DB_KEY = 'essential_energy_hub_tools';
+        
+        // Initialize tools from localStorage
+        function initializeTools() {
+            if (!localStorage.getItem(DB_KEY)) {
+                // Initialize with empty array if no tools exist
+                localStorage.setItem(DB_KEY, JSON.stringify([]));
+            }
+            
+            // Render tools
+            renderTools();
+        }
+        
+        // Render tools from localStorage
+        function renderTools() {
+            const toolsContainer = document.getElementById('tools-container');
+            const tools = JSON.parse(localStorage.getItem(DB_KEY));
+            const noToolsMessage = document.getElementById('no-tools-message');
+            
+            // Clear existing tools (except the example card and no tools message)
+            const currentCards = toolsContainer.querySelectorAll('.tool-card');
+            currentCards.forEach(card => card.remove());
+            
+            // Show/hide no tools message based on whether there are tools
+            if (tools.length === 0) {
+                noToolsMessage.classList.remove('d-none');
+            } else {
+                noToolsMessage.classList.add('d-none');
+                
+                // Render each tool
+                tools.forEach(tool => {
+                    const toolCard = document.createElement('div');
+                    toolCard.className = 'col-md-6 col-lg-3 mb-4 tool-card';
+                    toolCard.innerHTML = `
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="tool-icon">
+                                    <i class="bi ${tool.icon}"></i>
+                                </div>
+                                <h5 class="card-title">${tool.name}</h5>
+                                <p class="card-text">${tool.description}</p>
+                                <a href="${tool.url}" class="btn btn-custom">Open Tool</a>
+                            </div>
+                        </div>
+                    `;
+                    toolsContainer.appendChild(toolCard);
+                });
+            }
+        }
+        
+        // Add new tool
+        document.getElementById('add-tool-btn').addEventListener('click', function() {
+            const name = document.getElementById('tool-name').value;
+            const icon = document.getElementById('tool-icon').value;
+            const description = document.getElementById('tool-description').value;
+            const url = document.getElementById('tool-url').value;
+            
+            if (!name || !icon || !description || !url) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            // Get existing tools
+            const tools = JSON.parse(localStorage.getItem(DB_KEY));
+            
+            // Add new tool
+            tools.push({
+                name,
+                icon,
+                description,
+                url
+            });
+            
+            // Save to localStorage
+            localStorage.setItem(DB_KEY, JSON.stringify(tools));
+            
+            // Render updated tools
+            renderTools();
+            
+            // Clear form
+            document.getElementById('tool-name').value = '';
+            document.getElementById('tool-description').value = '';
+            document.getElementById('tool-url').value = '';
+        });
+        
+        // Initialize tools when page loads
+        window.addEventListener('DOMContentLoaded', initializeTools);
+    </script>
+</body>
+</html>
