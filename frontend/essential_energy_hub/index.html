@@ -140,28 +140,8 @@
         // Initialize tools from localStorage
         function initializeTools() {
             if (!localStorage.getItem(DB_KEY)) {
-                // Initialize with default tool if no tools exist
-                const defaultTools = [{
-                    name: "Comprehensive Name Generator",
-                    icon: "bi-gear",
-                    description: "Generate names using all Essential Energy naming conventions",
-                    url: "comprehensive_generator.html"
-                }];
-                localStorage.setItem(DB_KEY, JSON.stringify(defaultTools));
-            } else {
-                // Check if comprehensive generator exists in tools
-                const tools = JSON.parse(localStorage.getItem(DB_KEY));
-                const hasComprehensiveGenerator = tools.some(tool => tool.url === "comprehensive_generator.html");
-                
-                if (!hasComprehensiveGenerator) {
-                    tools.push({
-                        name: "Comprehensive Name Generator",
-                        icon: "bi-gear",
-                        description: "Generate names using all Essential Energy naming conventions",
-                        url: "comprehensive_generator.html"
-                    });
-                    localStorage.setItem(DB_KEY, JSON.stringify(tools));
-                }
+                // Initialize with empty array if no tools exist
+                localStorage.setItem(DB_KEY, JSON.stringify([]));
             }
             
             // Render tools
