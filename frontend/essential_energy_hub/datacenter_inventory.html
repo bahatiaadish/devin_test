@@ -412,7 +412,7 @@
                 
                 // Filter for host names with site codes AUNTH, AUSTH, and AUTER
                 const hostRecords = db.records.filter(record => {
-                    if (record.type !== 'Host Naming') return false;
+                    if (record.conventionType !== 'Host Naming') return false;
                     
                     // Check if the hostname starts with one of the target site codes
                     const hostname = record.name;
