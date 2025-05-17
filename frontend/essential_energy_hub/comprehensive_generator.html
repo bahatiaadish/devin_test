@@ -159,6 +159,10 @@
                             <div class="tab-pane fade show active" id="host-form" role="tabpanel">
                                 <h5>Host Naming Convention</h5>
                                 <p class="text-muted">Format: LLLLLSSDDDD####</p>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized names for network devices like routers, switches, and firewalls. Select your site location, site type, and device type, then specify how many device names you need. The system will automatically suggest appropriate ID numbers based on your selections.
+                                </div>
                                 
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
@@ -259,6 +263,10 @@
                             <!-- VLAN Naming Form -->
                             <div class="tab-pane fade" id="vlan-form" role="tabpanel">
                                 <h5>VLAN Naming Convention</h5>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized names for VLANs (Virtual Local Area Networks). Select the VLAN type, site location, site type, and description to generate a properly formatted VLAN name. VLANs are used to separate different types of network traffic for better organization and security.
+                                </div>
                                 
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
@@ -328,6 +336,10 @@
                             <div class="tab-pane fade" id="wan-form" role="tabpanel">
                                 <h5>WAN Physical Interface Description</h5>
                                 <p class="text-muted">Format: &lt;CARRIER&gt;, &lt;TECH&gt;, &lt;SERVICE_ID&gt;, &lt;BANDWIDTH&gt;, &lt;DESCRIPTION&gt;</p>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized descriptions for WAN (Wide Area Network) connections. Select the carrier (like Telstra), technology type, and enter details like service ID and bandwidth. These descriptions help identify external network connections and their specifications at a glance.
+                                </div>
                                 
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
@@ -386,6 +398,10 @@
                             <!-- Physical Interface Form -->
                             <div class="tab-pane fade" id="physical-form" role="tabpanel">
                                 <h5>General Physical Interface Description</h5>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized descriptions for physical network ports. Select the type of device connected to the port, enter the device hostname and interface details. These descriptions make it easy to identify what's connected to each physical port on your network equipment.
+                                </div>
                                 
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
@@ -433,6 +449,10 @@
                             <!-- Logical Interface Form -->
                             <div class="tab-pane fade" id="logical-form" role="tabpanel">
                                 <h5>Logical Interconnect Interface Description</h5>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized descriptions for logical connections between network devices. Select the interconnect type (Corporate, SCADA, or MPLS) and enter the remote device hostname. These descriptions help identify virtual connections between devices that may be physically separated.
+                                </div>
                                 
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
@@ -466,6 +486,10 @@
                             <!-- L3 Interface Form -->
                             <div class="tab-pane fade" id="l3-form" role="tabpanel">
                                 <h5>Customer Facing L3 Interface Description</h5>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized descriptions for Layer 3 network interfaces that connect to end users or services. Select the interface type, site location, site type, and description. These descriptions help identify the purpose and location of each network segment that serves users or applications.
+                                </div>
                                 
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
@@ -534,6 +558,10 @@
                             <!-- Virtual/Loopback Form -->
                             <div class="tab-pane fade" id="virtual-form" role="tabpanel">
                                 <h5>Virtual/Loopback Interface Description</h5>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized descriptions for virtual interfaces that don't connect to physical cables. Select the loopback type and purpose. These virtual interfaces are used for management, routing, and other internal network functions that don't require physical connections.
+                                </div>
                                 
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
@@ -576,6 +604,10 @@
                             <div class="tab-pane fade" id="snmp-form" role="tabpanel">
                                 <h5>SNMP Location Field</h5>
                                 <p class="text-muted">Format: &lt;SITE&gt;&lt;SITE_TYPE&gt;, &lt;ROOM&gt;, &lt;RACK&gt;, &lt;RU&gt;, &lt;CLASS&gt;, &lt;CATEGORY&gt;</p>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab helps you create standardized location descriptions for network equipment. Enter details about where the device is physically located, including site, room, rack position, and device classification. This information helps technicians quickly locate equipment when maintenance is needed.
+                                </div>
                                 
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
@@ -660,6 +692,10 @@
                             <div class="tab-pane fade" id="summary-view" role="tabpanel">
                                 <h5>All Generated Names</h5>
                                 <p class="text-muted">View, edit descriptions, and manage all your generated names in one place</p>
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>What is this?</strong> This tab shows all the names you've generated across all naming conventions. You can edit descriptions, copy names to clipboard, or delete names you no longer need. This provides a central place to manage all your generated names without having to switch between different tabs.
+                                </div>
                                 
                                 <div class="table-responsive">
                                     <table class="table table-striped">
@@ -684,6 +720,10 @@
                                 <div class="p-3">
                                     <h4>Database Management</h4>
                                     <p class="text-muted">Download or upload the shared database used by all Essential Energy Automation Hub tools.</p>
+                                    <div class="alert alert-info mb-3">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        <strong>What is this?</strong> This tab allows you to save all your generated names to a file or restore them from a previous backup. Use the download button to save your current database as a backup file. Use the upload button to restore a previously saved database. This is useful for transferring your data between computers or creating backups.
+                                    </div>
                                     
                                     <div class="row">
                                         <div class="col-md-6">
