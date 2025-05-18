@@ -22,7 +22,7 @@ const DB_CONFIG = {
  * @param {boolean} autoSync - Whether to start automatic syncing (default: true)
  * @returns {Promise} - Resolves when the database is initialized
  */
-function initDatabase(toolId, autoSync = true) {
+function initDatabase(toolId, autoSync = true, refreshCallback = null) {
     if (!DB_CONFIG.TOOLS[toolId.toUpperCase()]) {
         console.error(`Invalid tool ID: ${toolId}`);
         return Promise.reject(`Invalid tool ID: ${toolId}`);
@@ -47,7 +47,7 @@ function initDatabase(toolId, autoSync = true) {
                 stopAutoSync(window.autoSyncIntervals[toolId]);
             }
             
-            window.autoSyncIntervals[toolId] = startAutoSync(toolId);
+            window.autoSyncIntervals[toolId] = startAutoSync(toolId, refreshCallback);
         }
         
         return data;
@@ -75,7 +75,7 @@ function initDatabase(toolId, autoSync = true) {
                 stopAutoSync(window.autoSyncIntervals[toolId]);
             }
             
-            window.autoSyncIntervals[toolId] = startAutoSync(toolId);
+            window.autoSyncIntervals[toolId] = startAutoSync(toolId, refreshCallback);
         }
         
         return Promise.resolve();
@@ -469,9 +469,10 @@ function getLastUpdatedTimestamp(toolId) {
 /**
  * Sync data with backend server every 5 seconds
  * @param {string} toolId - The ID of the tool
+ * @param {function} [refreshCallback] - Optional callback function to refresh the UI when new data is received
  * @returns {number} - The interval ID for the sync process
  */
-function startAutoSync(toolId) {
+function startAutoSync(toolId, refreshCallback) {
     if (!DB_CONFIG.TOOLS[toolId.toUpperCase()]) {
         console.error(`Invalid tool ID: ${toolId}`);
         return null;
@@ -548,7 +549,10 @@ function startAutoSync(toolId) {
                     localStorage.setItem(toolDbKey, JSON.stringify(localDb));
                     lastKnownTimestamp = serverTimestamp;
                     
-                    if (typeof renderHistory === 'function') {
+                    if (typeof refreshCallback === 'function') {
+                        refreshCallback();
+                    } 
+                    else if (typeof renderHistory === 'function') {
                         renderHistory();
                     }
                     
