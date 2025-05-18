@@ -13,7 +13,8 @@ const DB_CONFIG = {
         TENANT_GENERATOR: 'tenant_generator',
         ACCESS_POLICIES: 'access_policies',
         L3OUT: 'l3out',
-        DATACENTER_INVENTORY: 'datacenter_inventory'
+        DATACENTER_INVENTORY: 'datacenter_inventory',
+        LANDING_PAGE: 'landing_page'
     }
 };
 
