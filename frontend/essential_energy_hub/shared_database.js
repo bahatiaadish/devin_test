@@ -85,12 +85,6 @@ function initDatabase(toolId, autoSync = true, refreshCallback = null) {
 }
 
 /**
- * Save a record to the database for a specific tool
- * @param {string} toolId - The ID of the tool using the database
- * @param {object} record - The record to save
- * @returns {Promise} - Resolves with the ID of the saved record
- */
-/**
  * Save a record to the database
  * @param {string} toolId - The ID of the tool
  * @param {object} record - The record to save
@@ -587,6 +581,8 @@ function startAutoSync(toolId, refreshCallback) {
  * @returns {Promise<string>} - The new timestamp
  */
 function syncServerToLocal(toolId, lastKnownTimestamp, refreshCallback) {
+    const toolDbKey = `${DB_CONFIG.KEY_PREFIX}${toolId}`;
+    
     return fetch(`${DB_CONFIG.API_URL}/last-updated/${toolId}`)
         .then(response => {
             if (!response.ok) {
