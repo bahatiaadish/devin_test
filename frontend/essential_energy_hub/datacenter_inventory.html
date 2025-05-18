@@ -194,10 +194,6 @@
                                     <tr>
                                         <th>Hostname</th>
                                         <th>Product ID</th>
-                                        <th>Description</th>
-                                        <th>Port Summary</th>
-                                        <th>Rack Units</th>
-                                        <th>Power Req.</th>
                                         <th>Role</th>
                                         <th>Node ID</th>
                                         <th>Date Created</th>
@@ -914,10 +910,6 @@
                 row.innerHTML = `
                     <td><strong>${hostname}</strong></td>
                     <td>${productId}</td>
-                    <td>${description}</td>
-                    <td>${portSummary}</td>
-                    <td>${rackUnits}</td>
-                    <td>${powerRequirements}</td>
                     <td><span class="badge rounded-pill ${badgeClass}">${roleType.replace('-', ' ')}</span></td>
                     <td>${deviceId}</td>
                     <td>${new Date(dateCreated).toLocaleString()}</td>
