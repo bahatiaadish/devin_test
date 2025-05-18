@@ -1883,14 +1883,12 @@
                 }
             });
             
-            // Add special handler for data center selections
+            // Add special handler for all site location selections
             const siteLocationDropdown = document.getElementById('host-site-location');
             siteLocationDropdown.addEventListener('change', function() {
                 const selectedValue = this.value;
-                if(['AUNTH', 'AUSTH', 'AUTER'].includes(selectedValue)) {
-                    console.log(`Data center selected: ${selectedValue}, updating dropdown`);
-                    setTimeout(updateNodeIdDropdown, 50); // Small delay to ensure other handlers run first
-                }
+                console.log(`Site location selected: ${selectedValue}, updating dropdown`);
+                setTimeout(updateNodeIdDropdown, 50); // Small delay to ensure other handlers run first
             });
             
             // Initialize the dropdown if values are already selected
