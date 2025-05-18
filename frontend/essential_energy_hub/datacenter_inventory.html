@@ -196,6 +196,8 @@
                                         <th>Product ID</th>
                                         <th>Description</th>
                                         <th>Port Summary</th>
+                                        <th>Rack Units</th>
+                                        <th>Power Req.</th>
                                         <th>Role</th>
                                         <th>Node ID</th>
                                         <th>Date Created</th>
@@ -223,6 +225,9 @@
                                         <th>Hostname</th>
                                         <th>Product ID</th>
                                         <th>Description</th>
+                                        <th>Port Capacity</th>
+                                        <th>Rack Units</th>
+                                        <th>Power Req.</th>
                                         <th>Role</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -329,42 +334,42 @@
         const ACI_COMPONENTS = {
             // APIC Controllers
             'APIC': [
-                { productId: 'APIC-CLUSTER-L4', description: 'APIC Cluster - Large Configurations (> 1200 Edge Ports)', portSummary: 'N/A', role: 'Primary APIC clusters for IT and OT domains' },
-                { productId: 'APIC-CLUSTER-M4', description: 'APIC Cluster - Medium Configurations (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'Additional APIC clusters' },
-                { productId: 'APIC-SERVER-L4', description: 'APIC Appliance - Large Config. (> 1200 Edge Ports)', portSummary: 'N/A', role: 'Individual APIC servers for large clusters' },
-                { productId: 'APIC-SERVER-M4', description: 'APIC Appliance - Medium Configuration (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'Individual APIC servers for medium clusters' }
+                { productId: 'APIC-CLUSTER-L4', description: 'APIC Cluster - Large Configurations (> 1200 Edge Ports)', portSummary: 'N/A', rackUnits: '2U', powerRequirements: '1100W', role: 'Primary APIC clusters for IT and OT domains' },
+                { productId: 'APIC-CLUSTER-M4', description: 'APIC Cluster - Medium Configurations (Up to 1200 Edge Ports)', portSummary: 'N/A', rackUnits: '2U', powerRequirements: '950W', role: 'Additional APIC clusters' },
+                { productId: 'APIC-SERVER-L4', description: 'APIC Appliance - Large Config. (> 1200 Edge Ports)', portSummary: 'N/A', rackUnits: '2U', powerRequirements: '1100W', role: 'Individual APIC servers for large clusters' },
+                { productId: 'APIC-SERVER-M4', description: 'APIC Appliance - Medium Configuration (Up to 1200 Edge Ports)', portSummary: 'N/A', rackUnits: '2U', powerRequirements: '950W', role: 'Individual APIC servers for medium clusters' }
             ],
             // OPIC - APIC controllers with OPIC device type
             'OPIC': [
-                { productId: 'APIC-CLUSTER-M4', description: 'APIC Cluster - Medium Configurations (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'APIC Controller' },
-                { productId: 'APIC-SERVER-M4', description: 'APIC Appliance - Medium Configuration (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'APIC Controller' }
+                { productId: 'APIC-CLUSTER-M4', description: 'APIC Cluster - Medium Configurations (Up to 1200 Edge Ports)', portSummary: 'N/A', rackUnits: '2U', powerRequirements: '950W', role: 'APIC Controller' },
+                { productId: 'APIC-SERVER-M4', description: 'APIC Appliance - Medium Configuration (Up to 1200 Edge Ports)', portSummary: 'N/A', rackUnits: '2U', powerRequirements: '950W', role: 'APIC Controller' }
             ],
             // EPIC - APIC controllers with EPIC device type
             'EPIC': [
-                { productId: 'APIC-CLUSTER-M4', description: 'APIC Cluster - Medium Configurations (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'APIC Controller' },
-                { productId: 'APIC-SERVER-M4', description: 'APIC Appliance - Medium Configuration (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'APIC Controller' }
+                { productId: 'APIC-CLUSTER-M4', description: 'APIC Cluster - Medium Configurations (Up to 1200 Edge Ports)', portSummary: 'N/A', rackUnits: '2U', powerRequirements: '950W', role: 'APIC Controller' },
+                { productId: 'APIC-SERVER-M4', description: 'APIC Appliance - Medium Configuration (Up to 1200 Edge Ports)', portSummary: 'N/A', rackUnits: '2U', powerRequirements: '950W', role: 'APIC Controller' }
             ],
             // Spine Switches
             'OSPI': [
-                { productId: 'N9K-C9316D-GX', description: 'Nexus 9300 Series, 16p 400G QSFP-DD', portSummary: '16x 400G QSFP-DD', role: 'High-performance spine switches' }
+                { productId: 'N9K-C9316D-GX', description: 'Nexus 9300 Series, 16p 400G QSFP-DD', portSummary: '16x 400G QSFP-DD', rackUnits: '1U', powerRequirements: '1050W', role: 'High-performance spine switches' }
             ],
             // Leaf Switches
             'OLFS': [
-                { productId: 'N9K-C93180YC-FX3', description: 'Nexus 9300 48p 1/10/25G, 6p 40/100G, MACsec, SyncE', portSummary: '48x 1/10/25G + 6x 40/100G', role: 'High-density leaf switches' }
+                { productId: 'N9K-C93180YC-FX3', description: 'Nexus 9300 48p 1/10/25G, 6p 40/100G, MACsec, SyncE', portSummary: '48x 1/10/25G + 6x 40/100G', rackUnits: '1U', powerRequirements: '650W', role: 'High-density leaf switches' }
             ],
             'ELFS': [
-                { productId: 'N9K-C93180YC-FX3', description: 'Nexus 9300 48p 1/10/25G, 6p 40/100G, MACsec, SyncE', portSummary: '48x 1/10/25G + 6x 40/100G', role: 'Enterprise Server Leaf Switch' }
+                { productId: 'N9K-C93180YC-FX3', description: 'Nexus 9300 48p 1/10/25G, 6p 40/100G, MACsec, SyncE', portSummary: '48x 1/10/25G + 6x 40/100G', rackUnits: '1U', powerRequirements: '650W', role: 'Enterprise Server Leaf Switch' }
             ],
             'OLFB': [
-                { productId: 'N9K-C93180YC-FX3', description: 'Nexus 9300 48p 1/10/25G, 6p 40/100G, MACsec, SyncE', portSummary: '48x 1/10/25G + 6x 40/100G', role: 'Border leaf switches' }
+                { productId: 'N9K-C93180YC-FX3', description: 'Nexus 9300 48p 1/10/25G, 6p 40/100G, MACsec, SyncE', portSummary: '48x 1/10/25G + 6x 40/100G', rackUnits: '1U', powerRequirements: '650W', role: 'Border leaf switches' }
             ],
             'OLFA': [
-                { productId: 'N9K-C9348GC-FX3', description: 'Nexus 9300 with 48p 100M/1GT, 4p 10/25G & 2p 40/100G QSFP28', portSummary: '48x 100M/1G + 4x 10/25G + 2x 40/100G', role: 'Access leaf switches' }
+                { productId: 'N9K-C9348GC-FX3', description: 'Nexus 9300 with 48p 100M/1GT, 4p 10/25G & 2p 40/100G QSFP28', portSummary: '48x 100M/1G + 4x 10/25G + 2x 40/100G', rackUnits: '1U', powerRequirements: '600W', role: 'Access leaf switches' }
             ],
             // Nexus Dashboard Orchestrator
             'ONDO': [
-                { productId: 'ND-CLUSTER-L4', description: 'Nexus Dashboard Cluster - Performance', portSummary: 'N/A', role: 'Management platform clusters' },
-                { productId: 'ND-NODE-L4', description: 'Nexus Dashboard Node', portSummary: 'N/A', role: 'Individual nodes for ND clusters' }
+                { productId: 'ND-CLUSTER-L4', description: 'Nexus Dashboard Cluster - Performance', portSummary: 'N/A', rackUnits: '4U', powerRequirements: '1500W', role: 'Management platform clusters' },
+                { productId: 'ND-NODE-L4', description: 'Nexus Dashboard Node', portSummary: 'N/A', rackUnits: '1U', powerRequirements: '500W', role: 'Individual nodes for ND clusters' }
             ]
         };
         
@@ -858,7 +863,7 @@
             // Add items to both tables
             items.forEach(item => {
                 // Handle both new and old format
-                let hostname, productId, description, portSummary, roleType, deviceId, dateCreated;
+                let hostname, productId, description, portSummary, rackUnits, powerRequirements, roleType, deviceId, dateCreated;
                 let isEdited = false;
                 let itemId = null;
                 
@@ -867,7 +872,9 @@
                     hostname = item.name;
                     productId = item.details.productId;
                     description = item.details.description;
-                    portSummary = item.details.portSummary;
+                    portSummary = item.details.portSummary || 'N/A';
+                    rackUnits = item.details.rackUnits || 'N/A';
+                    powerRequirements = item.details.powerRequirements || 'N/A';
                     roleType = item.details.roleType;
                     deviceId = item.details.deviceId;
                     dateCreated = item.dateCreated;
@@ -880,7 +887,9 @@
                     hostname = item.hostname;
                     productId = item.productId;
                     description = item.description;
-                    portSummary = item.portSummary;
+                    portSummary = item.portSummary || 'N/A';
+                    rackUnits = item.rackUnits || 'N/A';
+                    powerRequirements = item.powerRequirements || 'N/A';
                     roleType = item.roleType;
                     deviceId = item.deviceId;
                     dateCreated = item.dateCreated;
@@ -907,6 +916,8 @@
                     <td>${productId}</td>
                     <td>${description}</td>
                     <td>${portSummary}</td>
+                    <td>${rackUnits}</td>
+                    <td>${powerRequirements}</td>
                     <td><span class="badge rounded-pill ${badgeClass}">${roleType.replace('-', ' ')}</span></td>
                     <td>${deviceId}</td>
                     <td>${new Date(dateCreated).toLocaleString()}</td>
@@ -921,6 +932,9 @@
                     <td><strong>${hostname}</strong></td>
                     <td data-field="productId">${productId}</td>
                     <td data-field="description">${description}</td>
+                    <td data-field="portSummary">${portSummary}</td>
+                    <td data-field="rackUnits">${rackUnits}</td>
+                    <td data-field="powerRequirements">${powerRequirements}</td>
                     <td data-field="roleType"><span class="badge rounded-pill ${badgeClass}">${roleType.replace('-', ' ')}</span></td>
                     <td>${isEdited ? '<span class="badge bg-warning">Edited</span>' : '<span class="badge bg-secondary">Auto</span>'}</td>
                     <td>
@@ -979,15 +993,24 @@
                 // Make fields editable
                 const productIdCell = row.querySelector('[data-field="productId"]');
                 const descriptionCell = row.querySelector('[data-field="description"]');
+                const portSummaryCell = row.querySelector('[data-field="portSummary"]');
+                const rackUnitsCell = row.querySelector('[data-field="rackUnits"]');
+                const powerRequirementsCell = row.querySelector('[data-field="powerRequirements"]');
                 const roleTypeCell = row.querySelector('[data-field="roleType"]');
                 
                 const productId = productIdCell.textContent;
                 const description = descriptionCell.textContent;
+                const portSummary = portSummaryCell.textContent;
+                const rackUnits = rackUnitsCell.textContent;
+                const powerRequirements = powerRequirementsCell.textContent;
                 const roleType = roleTypeCell.querySelector('.badge').textContent.trim();
                 
                 // Replace with input fields
                 productIdCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${productId}">`;
                 descriptionCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${description}">`;
+                portSummaryCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${portSummary}">`;
+                rackUnitsCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${rackUnits}">`;
+                powerRequirementsCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${powerRequirements}">`;
                 
                 // Create role type dropdown
                 const roleSelect = document.createElement('select');
@@ -1028,6 +1051,9 @@
             // Get the edited values
             const productId = row.querySelector('[data-field="productId"] input').value;
             const description = row.querySelector('[data-field="description"] input').value;
+            const portSummary = row.querySelector('[data-field="portSummary"] input').value;
+            const rackUnits = row.querySelector('[data-field="rackUnits"] input').value;
+            const powerRequirements = row.querySelector('[data-field="powerRequirements"] input').value;
             const roleType = row.querySelector('[data-field="roleType"] select').value;
             
             // Validate inputs
@@ -1043,6 +1069,9 @@
                 details: {
                     productId: productId,
                     description: description,
+                    portSummary: portSummary,
+                    rackUnits: rackUnits,
+                    powerRequirements: powerRequirements,
                     roleType: roleType,
                     // Mark as edited to prevent overwriting during syncs
                     [EDITED_FLAG]: true
@@ -1065,6 +1094,9 @@
                             
                             record.details.productId = productId;
                             record.details.description = description;
+                            record.details.portSummary = portSummary;
+                            record.details.rackUnits = rackUnits;
+                            record.details.powerRequirements = powerRequirements;
                             record.details.roleType = roleType;
                             record.details[EDITED_FLAG] = true;
                             
