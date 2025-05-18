@@ -1,46 +1,72 @@
-# NetSentinel (for ACI)
+# Essential Energy Automation Hub
 
-**NetSentinel (for ACI)** is an enterprise-grade, AI-powered analytics and observability module for Cisco ACI environments.  
-It is part of the broader NetSentinel platform, which will include future modules for enterprise, firewall, wireless (WLC), and corporate network observability.
+A centralized platform for Essential Energy's automation tools and name generators with persistent cross-browser storage.
 
----
+## Overview
 
-## 🔍 Key Features (Phase 1)
-- 🌐 Online + Offline Cisco ACI support
-- 🏢 Per-site snapshot structure for multi-fabric environments
-- 🔍 Global search (by fault code, IP, MAC, etc.)
-- 🧠 Modular logic engine (faults, EPGs, endpoints, compliance)
-- 📊 Drill-down views: Fault → EPG → Contract → Tenant
-- 📋 Audit logging and detailed event traces
-- 🧱 Clean architecture, future-ready design
+The Essential Energy Automation Hub provides a unified interface for accessing various network automation tools and name generators. It features a professional design with a blue-green gradient header, dynamic tool management, and persistent storage across browsers using a file-based database solution.
 
----
+## Features
 
-## 📁 Project Structure
-```
-netsentinel/
-├── backend/           → FastAPI logic, ACI clients, schedulers, logic engine
-├── data/              → JSON snapshots per site (online + offline)
-├── docs/              → Markdown docs and internal guides
-├── docker/            → Container setup
-├── scripts/           → Utility scripts
-└── frontend/          → (Future) UI components in React/Next.js
-```
+- **Professional Landing Page**: Clean, modern interface with blue-green gradient styling
+- **Dynamic Tool Management**: Add new tools through the admin panel as they become available
+- **Comprehensive Name Generator**: Generate standardized names using all Essential Energy naming conventions
+- **Datacenter Inventory Tool**: Track and manage datacenter inventory with automatic hardware detection
+- **File-Based Database**: Persistent storage across browsers using SQLite and FastAPI
+- **Cross-Browser Synchronization**: Seamless data sharing between different browsers and devices
+- **Offline Support**: Fallback to localStorage when backend is unavailable
 
----
+## Tools Included
 
-## 🧠 Platform Vision
-To provide a unified, modular, AI-enhanced platform for deep observability across network infrastructure — starting with Cisco ACI and expanding to cover enterprise, security, and wireless domains.
+1. **Comprehensive Name Generator**
+   - Supports all Essential Energy naming conventions
+   - Generates host names, VLAN names, interface descriptions, and more
+   - Includes quantity option for generating multiple sequential names
+   - Saves generated names to the shared database
 
----
+2. **Datacenter Inventory**
+   - Maps hostnames to hardware details
+   - Provides filtering by site location and component role
+   - Displays statistics on device distribution
+   - Supports importing and exporting inventory data
 
-## 🛠 Tech Stack
-- **Python + FastAPI** (backend APIs)
-- **PostgreSQL / SQLite** (data storage)
-- **YAML / JSON** (config and snapshots)
-- **React (planned)** (frontend UI)
+3. **Access Policy Generator**
+   - Creates standardized access policies for network security
+   - Follows Essential Energy security guidelines
+   - Saves policies to the shared database
 
----
+## Requirements
 
-## 📄 License
-MIT
+- Python 3.8 or higher
+- Modern web browser (Chrome, Firefox, Edge, or Safari)
+- 50MB of disk space for the database
+
+## Quick Start
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/bahatiaadish/devin_test.git
+   cd devin_test
+   ```
+
+2. Install backend requirements:
+   ```
+   cd backend
+   pip install -r requirements.txt
+   cd ..
+   ```
+
+3. Run both servers:
+   ```
+   ./run_servers.sh
+   ```
+
+4. Access the hub at http://localhost:8080
+
+## Documentation
+
+For detailed setup instructions and usage guides, see the [Setup Guide](docs/SETUP.md) and [User Guide](docs/USER_GUIDE.md).
+
+## License
+
+Copyright © 2025 Essential Energy. All rights reserved.
