@@ -58,6 +58,26 @@
             background-color: #20c997;
             color: white;
         }
+        
+        /* Table width improvements */
+        .table {
+            width: 100%;
+            table-layout: auto;
+        }
+        
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+        
+        .container {
+            max-width: 95%;
+            width: 95%;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
         .badge-border-leaf {
             background-color: #fd7e14;
             color: white;
@@ -96,38 +116,38 @@
             border-radius: 5px;
             margin-bottom: 15px;
         }
-        
+
         /* Table width improvements */
         .table {
             width: 100%;
             table-layout: auto;
         }
-        
+
         .table-responsive {
             width: 100%;
             overflow-x: auto;
         }
-        
+
         .container {
             max-width: 95%;
             width: 95%;
         }
-        
+
         .card-body {
             padding: 1rem;
         }
-        
+
         /* Table width improvements */
         .table {
             width: 100%;
             table-layout: auto;
         }
-        
+
         .table-responsive {
             width: 100%;
             overflow-x: auto;
         }
-        
+
         .container {
             max-width: 95%;
             width: 95%;
@@ -207,7 +227,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Inventory table section -->
         <div class="card mt-4">
             <div class="card-header">
@@ -244,7 +264,7 @@
                             No matching inventory items found. Try adjusting your filters or generate more hostnames using the Comprehensive Name Generator.
                         </div>
                     </div>
-                    
+
                     <!-- Inventory Tab Content with Editable Fields -->
                     <div class="tab-pane fade" id="inventory-content" role="tabpanel" aria-labelledby="inventory-tab">
                         <div class="alert alert-info mb-3">
@@ -277,7 +297,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Statistics section -->
         <div class="card mt-4">
             <div class="card-header">
@@ -325,7 +345,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Database management section -->
         <div class="card mt-4">
             <div class="card-header">
@@ -356,12 +376,12 @@
     <script>
         // Set the tool ID for this tool
         const TOOL_ID = DB_CONFIG.TOOLS.DATACENTER_INVENTORY;
-        
+
         // Function to refresh the UI when data changes
         function refreshDataCallback() {
             loadInventoryData();
         }
-        
+
         // ACI Core Components data for mapping
         const ACI_COMPONENTS = {
             // APIC Controllers
@@ -404,14 +424,14 @@
                 { productId: 'ND-NODE-L4', description: 'Nexus Dashboard Node', portSummary: 'N/A', rackUnits: '1U', powerRequirements: '500W', role: 'Individual nodes for ND clusters' }
             ]
         };
-        
+
         // Node ID allocation mapping
         const NODE_ID_MAPPING = {
             // APIC Controllers (1-5)
             'APIC': { min: 1, max: 5, role: 'apic' },
             'OPIC': { min: 1, max: 5, role: 'apic' },
             'EPIC': { min: 1, max: 5, role: 'apic' },
-            
+
             // Data Center Identifiers
             // 1: Northern DC IT
             // 2: Northern DC OT
@@ -419,59 +439,59 @@
             // 4: Southern DC OT
             // 5: Tertiary DC IT
             // 6: Tertiary DC OT
-            
+
             // Spine Switches (X96-X99)
-            'OSPI': { 
+            'OSPI': {
                 'AUNTH': { prefix: '1', min: 96, max: 99, role: 'spine' },
                 'AUSTH': { prefix: '3', min: 96, max: 99, role: 'spine' },
                 'AUTER': { prefix: '5', min: 96, max: 99, role: 'spine' }
             },
-            
+
             // Compute Leaf Switches (X01-X89)
-            'OLFS': { 
+            'OLFS': {
                 'AUNTH': { prefix: '1', min: 1, max: 89, role: 'leaf' },
                 'AUSTH': { prefix: '3', min: 1, max: 89, role: 'leaf' },
                 'AUTER': { prefix: '5', min: 1, max: 89, role: 'leaf' }
             },
-            
+
             // Enterprise Server Leaf Switches (X01-X89)
-            'ELFS': { 
+            'ELFS': {
                 'AUNTH': { prefix: '1', min: 1, max: 89, role: 'leaf' },
                 'AUSTH': { prefix: '3', min: 1, max: 89, role: 'leaf' },
                 'AUTER': { prefix: '5', min: 1, max: 89, role: 'leaf' }
             },
-            
+
             // Border Leaf Switches (X90-X95)
-            'OLFB': { 
+            'OLFB': {
                 'AUNTH': { prefix: '1', min: 90, max: 95, role: 'border-leaf' },
                 'AUSTH': { prefix: '3', min: 90, max: 95, role: 'border-leaf' },
                 'AUTER': { prefix: '5', min: 90, max: 95, role: 'border-leaf' }
             }
         };
-        
+
         // Initialize database when page loads
         window.addEventListener('DOMContentLoaded', () => {
-            initDatabase(TOOL_ID).then(() => {
+            initDatabase(TOOL_ID, true, refreshDataCallback).then(() => {
                 loadInventoryData();
             }).catch(error => {
                 console.error("Failed to initialize database:", error);
                 alert("Failed to initialize database. Some features may not work correctly.");
             });
-            
+
             // Database management event listeners
             document.getElementById('download-db-btn').addEventListener('click', function() {
                 downloadDatabase();
             });
-            
+
             document.getElementById('upload-db-btn').addEventListener('click', function() {
                 const fileInput = document.getElementById('db-file-input');
                 if (fileInput.files.length === 0) {
                     alert('Please select a file to upload');
                     return;
                 }
-                
+
                 const file = fileInput.files[0];
-                
+
                 uploadDatabase(file)
                     .then(() => {
                         alert('Database uploaded successfully');
@@ -481,22 +501,22 @@
                         alert(`Failed to upload database: ${error}`);
                     });
             });
-            
+
             // Filter event listeners
             document.getElementById('site-filter').addEventListener('change', applyFilters);
             document.getElementById('role-filter').addEventListener('change', applyFilters);
             document.getElementById('search-filter').addEventListener('input', applyFilters);
-            
+
             // Refresh button event listener
             document.getElementById('refresh-btn').addEventListener('click', loadInventoryData);
-            
+
             // Set up polling to check for database changes
             setInterval(checkForDatabaseChanges, 5000);
         });
-        
+
         // Last updated timestamp to track changes
         let lastUpdatedTimestamp = null;
-        
+
         // Check for database changes
         function checkForDatabaseChanges() {
             // Check the comprehensive generator database for changes
@@ -511,66 +531,66 @@
                     console.error("Error checking for database changes:", error);
                 });
         }
-        
+
         // Migrate APIC controller entries to use the correct models from bill of materials
         function migrateApicControllerEntries(records) {
             // Skip migration if no records
             if (!records || records.length === 0) return records;
-            
+
             // Flag to track if any records were updated
             let updatedRecords = false;
-            
+
             // Loop through all records and update APIC controllers with outdated models
             const migratedRecords = records.map(record => {
                 // Skip non-host naming records
                 if (record.conventionType !== 'Host Naming') return record;
-                
+
                 // Get the device type from the hostname
                 const hostname = record.name;
                 if (!hostname) return record;
-                
+
                 // Check if this is a datacenter hostname
                 if (!hostname.startsWith('AUNTH') && !hostname.startsWith('AUSTH') && !hostname.startsWith('AUTER')) {
                     return record;
                 }
-                
+
                 // Extract the device type (4 characters before the last 4 digits)
                 const deviceType = hostname.substring(hostname.length - 8, hostname.length - 4);
-                
+
                 // Skip if not an APIC controller type
                 if (deviceType !== 'APIC' && deviceType !== 'OPIC' && deviceType !== 'EPIC') {
                     return record;
                 }
-                
+
                 // Check if this record has details that need updating
                 if (record.details) {
                     // Check for outdated APIC-SERVER-M3 model or Unknown product
-                    if (record.details.productId === 'APIC-SERVER-M3' || 
+                    if (record.details.productId === 'APIC-SERVER-M3' ||
                         record.details.productId === 'Unknown' ||
                         !record.details.productId) {
-                        
+
                         // Get the correct hardware details for this device type
                         const role = determineRole('', deviceType, '');
                         const hardwareDetails = determineHardwareDetails(deviceType, role);
-                        
+
                         // Update the details with the correct model
                         record.details.productId = hardwareDetails.productId;
                         record.details.description = hardwareDetails.description;
                         record.details.portSummary = hardwareDetails.portSummary;
                         record.details.role = hardwareDetails.role;
-                        
+
                         // Flag that we updated records
                         updatedRecords = true;
                     }
                 }
-                
+
                 return record;
             });
-            
+
             // If we updated any records, save the changes back to the database
             if (updatedRecords) {
                 console.log("Updated outdated APIC controller models to latest versions");
-                
+
                 // For each updated record, save it back to the database
                 migratedRecords.forEach(record => {
                     if (record.conventionType === 'Host Naming' && record.id) {
@@ -583,16 +603,16 @@
                     }
                 });
             }
-            
+
             return migratedRecords;
         }
-        
+
         // Database schema version for migration tracking
         const CURRENT_SCHEMA_VERSION = 3; // Increment this when making schema changes
-        
+
         // Flag to mark edited entries
         const EDITED_FLAG = 'edited';
-        
+
         // Load inventory data from the comprehensive generator database
         function loadInventoryData() {
             // We need to load data from the comprehensive generator database
@@ -603,10 +623,10 @@
                         updateStatistics([]);
                         return;
                     }
-                    
+
                     // Migrate any outdated APIC controller entries
                     records = migrateApicControllerEntries(records);
-                    
+
                     // Update the last updated timestamp
                     getLastUpdatedTimestamp(DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR)
                         .then(timestamp => {
@@ -615,34 +635,34 @@
                         .catch(error => {
                             console.error("Error getting last updated timestamp:", error);
                         });
-                    
+
                     // Filter for host names with site codes AUNTH, AUSTH, and AUTER
                     const hostRecords = records.filter(record => {
                         if (record.conventionType !== 'Host Naming') return false;
-                        
+
                         // Check if the hostname starts with one of the target site codes
                         const hostname = record.name;
                         return hostname.startsWith('AUNTH') || hostname.startsWith('AUSTH') || hostname.startsWith('AUTER');
                     });
-                
+
                     // Process the host records and map them to hardware details
                     const inventoryItems = hostRecords.map(record => {
                         const hostname = record.name;
                         const siteLocation = hostname.substring(0, 5); // AUNTH, AUSTH, AUTER
-                        
+
                         // Extract the 4-digit device ID from the end
                         const deviceId = hostname.substring(hostname.length - 4);
-                        
+
                         // Extract the device type (4 characters before the deviceId)
                         const deviceType = hostname.substring(hostname.length - 8, hostname.length - 4);
-                        
+
                         // Extract the site type (characters between siteLocation and deviceType)
                         const siteType = hostname.substring(5, hostname.length - 8);
-                        
+
                         // Determine the role and hardware details based on device type and node ID
                         const role = determineRole(siteLocation, deviceType, deviceId);
                         const hardwareDetails = determineHardwareDetails(deviceType, role);
-                        
+
                         return {
                             id: record.id,
                             hostname: hostname,
@@ -658,13 +678,13 @@
                             dateCreated: record.dateCreated
                         };
                     });
-                    
+
                     // Save the inventory items to our own database
                     saveInventoryItems(inventoryItems);
-                    
+
                     // Apply filters and render the inventory table
                     applyFilters();
-                    
+
                     // Update statistics
                     updateStatistics(inventoryItems);
                 })
@@ -674,12 +694,12 @@
                     updateStatistics([]);
                 });
         }
-        
+
         // Save inventory items to our own database
         function saveInventoryItems(items) {
             // Track hostnames to prevent duplicates
             const uniqueHostnames = new Set();
-            
+
             // Initialize the database for this tool
             initDatabase(TOOL_ID)
                 .then(() => {
@@ -689,7 +709,7 @@
                 .then(existingRecords => {
                     // Create a map of edited entries by hostname
                     const editedEntries = new Map();
-                    
+
                     if (existingRecords && existingRecords.length > 0) {
                         existingRecords.forEach(record => {
                             // Check if this is an edited entry
@@ -697,7 +717,7 @@
                                 // Use hostname as the key
                                 const hostname = record.name;
                                 editedEntries.set(hostname, record);
-                                
+
                                 // Keep track of hostnames to prevent duplicates
                                 uniqueHostnames.add(hostname);
                             } else {
@@ -708,15 +728,15 @@
                             }
                         });
                     }
-                    
+
                     // Save each item as a record, preserving edited entries
                     items.forEach(item => {
                         const hostname = item.hostname;
-                        
+
                         // Only save if this hostname hasn't been seen already
                         if (!uniqueHostnames.has(hostname)) {
                             uniqueHostnames.add(hostname);
-                            
+
                             const record = {
                                 name: hostname,
                                 conventionType: 'Inventory Item',
@@ -733,7 +753,7 @@
                                 },
                                 userDescription: `${item.siteLocation} ${item.deviceType} ${item.deviceId}`
                             };
-                            
+
                             saveRecord(TOOL_ID, record)
                                 .catch(error => {
                                     console.error(`Error saving inventory item ${hostname}:`, error);
@@ -745,39 +765,39 @@
                     console.error("Error initializing inventory database:", error);
                 });
         }
-        
+
         // Determine the role based on device type and node ID
         function determineRole(siteLocation, deviceType, deviceId) {
             // For APIC controllers
             if (deviceType === 'APIC' || deviceType === 'OPIC' || deviceType === 'EPIC') {
                 return 'apic';
             }
-            
+
             // For NDO
             if (deviceType === 'ONDO') {
                 return 'ndo';
             }
-            
+
             // For spine and leaf switches
             if (NODE_ID_MAPPING[deviceType] && NODE_ID_MAPPING[deviceType][siteLocation]) {
                 const mapping = NODE_ID_MAPPING[deviceType][siteLocation];
                 const nodeId = parseInt(deviceId);
-                
+
                 // Check if the node ID falls within the range for this device type
                 if (nodeId >= mapping.min && nodeId <= mapping.max) {
                     return mapping.role;
                 }
             }
-            
+
             // Default role based on device type
             if (deviceType === 'OSPI') return 'spine';
             if (deviceType === 'OLFS') return 'leaf';
             if (deviceType === 'ELFS') return 'leaf';
             if (deviceType === 'OLFB') return 'border-leaf';
-            
+
             return 'unknown';
         }
-        
+
         // Determine hardware details based on device type and role
         function determineHardwareDetails(deviceType, role) {
             // Default values
@@ -787,23 +807,23 @@
                 portSummary: 'N/A',
                 role: 'Unknown role'
             };
-            
+
             // Check if we have hardware details for this device type
             if (ACI_COMPONENTS[deviceType] && ACI_COMPONENTS[deviceType].length > 0) {
                 // For simplicity, use the first matching hardware details
                 // In a real application, you might want to use more sophisticated matching logic
                 details = ACI_COMPONENTS[deviceType][0];
             }
-            
+
             return details;
         }
-        
+
         // Apply filters to the inventory data
         function applyFilters() {
             const siteFilter = document.getElementById('site-filter').value;
             const roleFilter = document.getElementById('role-filter').value;
             const searchFilter = document.getElementById('search-filter').value.toLowerCase();
-            
+
             // Load data from our database
             loadRecords(TOOL_ID)
                 .then(records => {
@@ -811,7 +831,7 @@
                         showNoDataMessage();
                         return;
                     }
-                    
+
                     // Apply filters
                     const filteredItems = records.filter(item => {
                         // For records saved with the new format
@@ -820,18 +840,18 @@
                             if (siteFilter !== 'all' && item.details.siteLocation !== siteFilter) {
                                 return false;
                             }
-                            
+
                             // Role filter
                             if (roleFilter !== 'all' && item.details.roleType !== roleFilter) {
                                 return false;
                             }
-                            
+
                             // Search filter
-                            if (searchFilter && !item.name.toLowerCase().includes(searchFilter) && 
+                            if (searchFilter && !item.name.toLowerCase().includes(searchFilter) &&
                                 !item.details.productId.toLowerCase().includes(searchFilter)) {
                                 return false;
                             }
-                            
+
                             return true;
                         }
                         // For records saved with the old format (direct properties)
@@ -840,22 +860,22 @@
                             if (siteFilter !== 'all' && item.siteLocation !== siteFilter) {
                                 return false;
                             }
-                            
+
                             // Role filter
                             if (roleFilter !== 'all' && item.roleType !== roleFilter) {
                                 return false;
                             }
-                            
+
                             // Search filter
-                            if (searchFilter && !item.hostname.toLowerCase().includes(searchFilter) && 
+                            if (searchFilter && !item.hostname.toLowerCase().includes(searchFilter) &&
                                 !item.productId.toLowerCase().includes(searchFilter)) {
                                 return false;
                             }
-                            
+
                             return true;
                         }
                     });
-                    
+
                     // Render the filtered items
                     renderInventoryTable(filteredItems);
                 })
@@ -864,41 +884,41 @@
                     showNoDataMessage();
                 });
         }
-        
+
         // Render the inventory table
         function renderInventoryTable(items) {
             const tableBody = document.getElementById('inventory-table-body');
             const editableTableBody = document.getElementById('editable-inventory-table-body');
             const noDataMessage = document.getElementById('no-data-message');
             const inventoryNoDataMessage = document.getElementById('inventory-no-data-message');
-            
+
             // Clear the tables
             tableBody.innerHTML = '';
             editableTableBody.innerHTML = '';
-            
+
             if (items.length === 0) {
                 noDataMessage.classList.remove('d-none');
                 inventoryNoDataMessage.classList.remove('d-none');
                 return;
             }
-            
+
             noDataMessage.classList.add('d-none');
             inventoryNoDataMessage.classList.add('d-none');
-            
+
             // Sort items by hostname (handle both new and old format)
             items.sort((a, b) => {
                 const hostnameA = a.conventionType === 'Inventory Item' ? a.name : a.hostname;
                 const hostnameB = b.conventionType === 'Inventory Item' ? b.name : b.hostname;
                 return hostnameA.localeCompare(hostnameB);
             });
-            
+
             // Add items to both tables
             items.forEach(item => {
                 // Handle both new and old format
                 let hostname, productId, description, portSummary, rackUnits, powerRequirements, roleType, deviceId, dateCreated;
                 let isEdited = false;
                 let itemId = null;
-                
+
                 if (item.conventionType === 'Inventory Item' && item.details) {
                     // New format (from API)
                     hostname = item.name;
@@ -911,7 +931,7 @@
                     deviceId = item.details.deviceId;
                     dateCreated = item.dateCreated;
                     itemId = item.id;
-                    
+
                     // Check if this is an edited entry
                     isEdited = item.details[EDITED_FLAG] === true;
                 } else {
@@ -927,7 +947,7 @@
                     dateCreated = item.dateCreated;
                     itemId = item.id;
                 }
-                
+
                 // Determine badge class based on role
                 let badgeClass = 'badge-unknown';
                 if (roleType === 'spine') badgeClass = 'badge-spine';
@@ -940,7 +960,7 @@
                 if (roleType === 'firewall') badgeClass = 'badge-firewall';
                 if (roleType === 'load-balancer') badgeClass = 'badge-load-balancer';
                 if (roleType === 'custom') badgeClass = 'badge-custom';
-                
+
                 // Create row for datacenter tab
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -951,7 +971,7 @@
                     <td>${new Date(dateCreated).toLocaleString()}</td>
                 `;
                 tableBody.appendChild(row);
-                
+
                 // Create row for inventory tab with editable fields
                 const editableRow = document.createElement('tr');
                 editableRow.dataset.id = itemId;
@@ -978,33 +998,33 @@
                 `;
                 editableTableBody.appendChild(editableRow);
             });
-            
+
             // Add event listeners for edit buttons
             document.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', handleEditItem);
             });
-            
+
             // Add event listeners for revert buttons
             document.querySelectorAll('.revert-btn').forEach(button => {
                 button.addEventListener('click', handleRevertItem);
             });
         }
-        
+
         // Show no data message
         function showNoDataMessage() {
             const tableBody = document.getElementById('inventory-table-body');
             const noDataMessage = document.getElementById('no-data-message');
-            
+
             tableBody.innerHTML = '';
             noDataMessage.classList.remove('d-none');
         }
-        
+
         // Handle editing an inventory item
         function handleEditItem(event) {
             const button = event.currentTarget;
             const itemId = button.dataset.id;
             const row = button.closest('tr');
-            
+
             // Check if we're already in edit mode
             if (row.classList.contains('edit-mode')) {
                 // Save the edits
@@ -1012,12 +1032,12 @@
             } else {
                 // Switch to edit mode
                 row.classList.add('edit-mode');
-                
+
                 // Change the edit button to a save button
                 button.innerHTML = '<i class="bi bi-check"></i>';
                 button.classList.remove('btn-outline-primary');
                 button.classList.add('btn-outline-success');
-                
+
                 // Make fields editable
                 const productIdCell = row.querySelector('[data-field="productId"]');
                 const descriptionCell = row.querySelector('[data-field="description"]');
@@ -1025,25 +1045,25 @@
                 const rackUnitsCell = row.querySelector('[data-field="rackUnits"]');
                 const powerRequirementsCell = row.querySelector('[data-field="powerRequirements"]');
                 const roleTypeCell = row.querySelector('[data-field="roleType"]');
-                
+
                 const productId = productIdCell.textContent;
                 const description = descriptionCell.textContent;
                 const portSummary = portSummaryCell.textContent;
                 const rackUnits = rackUnitsCell.textContent;
                 const powerRequirements = powerRequirementsCell.textContent;
                 const roleType = roleTypeCell.querySelector('.badge').textContent.trim();
-                
+
                 // Replace with input fields
                 productIdCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${productId}">`;
                 descriptionCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${description}">`;
                 portSummaryCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${portSummary}">`;
                 rackUnitsCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${rackUnits}">`;
                 powerRequirementsCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${powerRequirements}">`;
-                
+
                 // Create role type dropdown
                 const roleSelect = document.createElement('select');
                 roleSelect.className = 'form-select form-select-sm';
-                
+
                 // Add options for all roles
                 const roles = [
                     { value: 'spine', label: 'Spine' },
@@ -1057,7 +1077,7 @@
                     { value: 'load-balancer', label: 'Load Balancer' },
                     { value: 'custom', label: 'Custom' }
                 ];
-                
+
                 roles.forEach(role => {
                     const option = document.createElement('option');
                     option.value = role.value;
@@ -1065,17 +1085,17 @@
                     option.selected = role.label.toLowerCase() === roleType.toLowerCase();
                     roleSelect.appendChild(option);
                 });
-                
+
                 roleTypeCell.innerHTML = '';
                 roleTypeCell.appendChild(roleSelect);
             }
         }
-        
+
         // Save edits to an inventory item
         function saveItemEdits(row) {
             const itemId = parseInt(row.dataset.id);
             const hostname = row.dataset.hostname;
-            
+
             // Get the edited values
             const productId = row.querySelector('[data-field="productId"] input').value;
             const description = row.querySelector('[data-field="description"] input').value;
@@ -1083,13 +1103,13 @@
             const rackUnits = row.querySelector('[data-field="rackUnits"] input').value;
             const powerRequirements = row.querySelector('[data-field="powerRequirements"] input').value;
             const roleType = row.querySelector('[data-field="roleType"] select').value;
-            
+
             // Validate inputs
             if (!productId || !description) {
                 alert('Product ID and Description are required');
                 return;
             }
-            
+
             // Create a new record object with the edited values
             const newRecord = {
                 name: hostname,
@@ -1106,20 +1126,20 @@
                 },
                 userDescription: `Edited: ${hostname}`
             };
-            
+
             // Check if we're updating an existing record or creating a new one
             if (!isNaN(itemId)) {
                 // Try to load the existing record
                 loadRecords(TOOL_ID)
                     .then(records => {
                         const record = records.find(r => r.id === itemId);
-                        
+
                         if (record) {
                             // Update existing record
                             if (!record.details) {
                                 record.details = {};
                             }
-                            
+
                             record.details.productId = productId;
                             record.details.description = description;
                             record.details.portSummary = portSummary;
@@ -1127,7 +1147,7 @@
                             record.details.powerRequirements = powerRequirements;
                             record.details.roleType = roleType;
                             record.details[EDITED_FLAG] = true;
-                            
+
                             return updateRecord(TOOL_ID, itemId, record);
                         } else {
                             // Create new record if not found
@@ -1137,7 +1157,7 @@
                     .then(() => {
                         // Remove edit mode
                         row.classList.remove('edit-mode');
-                        
+
                         // Refresh the data
                         loadInventoryData();
                     })
@@ -1151,7 +1171,7 @@
                     .then(() => {
                         // Remove edit mode
                         row.classList.remove('edit-mode');
-                        
+
                         // Refresh the data
                         loadInventoryData();
                     })
@@ -1161,28 +1181,28 @@
                     });
             }
         }
-        
+
         // Handle reverting an edited item
         function handleRevertItem(event) {
             if (confirm('Are you sure you want to revert this item? It will be synced with the database again.')) {
                 const button = event.currentTarget;
                 const itemId = parseInt(button.dataset.id);
-                
+
                 // Load the current record
                 loadRecords(TOOL_ID)
                     .then(records => {
                         const record = records.find(r => r.id === itemId);
-                        
+
                         if (!record) {
                             alert('Error: Record not found');
                             return;
                         }
-                        
+
                         // Remove the edited flag
                         if (record.details) {
                             delete record.details[EDITED_FLAG];
                         }
-                        
+
                         // Update the record in the database
                         return updateRecord(TOOL_ID, itemId, record);
                     })
@@ -1196,12 +1216,12 @@
                     });
             }
         }
-        
+
         // Update statistics
         function updateStatistics(items) {
             // Update total devices count
             document.getElementById('total-devices').textContent = items.length;
-            
+
             // Count devices by role
             const roleCounts = {
                 'spine': 0,
@@ -1215,20 +1235,26 @@
                 'load-balancer': 0,
                 'custom': 0
             };
-            
+
             items.forEach(item => {
                 const roleType = item.roleType || (item.details && item.details.roleType);
                 if (roleType && roleCounts.hasOwnProperty(roleType)) {
                     roleCounts[roleType]++;
                 }
             });
-            
+
             // Update role counts
             document.getElementById('spine-count').textContent = roleCounts['spine'];
             document.getElementById('leaf-count').textContent = roleCounts['leaf'];
             document.getElementById('border-leaf-count').textContent = roleCounts['border-leaf'];
             document.getElementById('apic-count').textContent = roleCounts['apic'];
             document.getElementById('ndo-count').textContent = roleCounts['ndo'];
+        }
+
+        // Callback function for refreshing data during auto-sync
+        function refreshDataCallback() {
+            console.log('Auto-sync refresh triggered');
+            loadInventoryData();
         }
     </script>
 </body>
