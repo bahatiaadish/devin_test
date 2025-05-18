@@ -315,8 +315,10 @@
         
         // Node ID allocation mapping
         const NODE_ID_MAPPING = {
-            // APIC Controllers (1-29)
-            'APIC': { min: 1, max: 29, role: 'apic' },
+            // APIC Controllers (1-5)
+            'APIC': { min: 1, max: 5, role: 'apic' },
+            'OPIC': { min: 1, max: 5, role: 'apic' },
+            'EPIC': { min: 1, max: 5, role: 'apic' },
             
             // Data Center Identifiers
             // 1: Northern DC IT
@@ -418,6 +420,84 @@
                 });
         }
         
+        // Migrate APIC controller entries to use the correct models from bill of materials
+        function migrateApicControllerEntries(records) {
+            // Skip migration if no records
+            if (!records || records.length === 0) return records;
+            
+            // Flag to track if any records were updated
+            let updatedRecords = false;
+            
+            // Loop through all records and update APIC controllers with outdated models
+            const migratedRecords = records.map(record => {
+                // Skip non-host naming records
+                if (record.conventionType !== 'Host Naming') return record;
+                
+                // Get the device type from the hostname
+                const hostname = record.name;
+                if (!hostname) return record;
+                
+                // Check if this is a datacenter hostname
+                if (!hostname.startsWith('AUNTH') && !hostname.startsWith('AUSTH') && !hostname.startsWith('AUTER')) {
+                    return record;
+                }
+                
+                // Extract the device type (4 characters before the last 4 digits)
+                const deviceType = hostname.substring(hostname.length - 8, hostname.length - 4);
+                
+                // Skip if not an APIC controller type
+                if (deviceType !== 'APIC' && deviceType !== 'OPIC' && deviceType !== 'EPIC') {
+                    return record;
+                }
+                
+                // Check if this record has details that need updating
+                if (record.details) {
+                    // Check for outdated APIC-SERVER-M3 model or Unknown product
+                    if (record.details.productId === 'APIC-SERVER-M3' || 
+                        record.details.productId === 'Unknown' ||
+                        !record.details.productId) {
+                        
+                        // Get the correct hardware details for this device type
+                        const role = determineRole('', deviceType, '');
+                        const hardwareDetails = determineHardwareDetails(deviceType, role);
+                        
+                        // Update the details with the correct model
+                        record.details.productId = hardwareDetails.productId;
+                        record.details.description = hardwareDetails.description;
+                        record.details.portSummary = hardwareDetails.portSummary;
+                        record.details.role = hardwareDetails.role;
+                        
+                        // Flag that we updated records
+                        updatedRecords = true;
+                    }
+                }
+                
+                return record;
+            });
+            
+            // If we updated any records, save the changes back to the database
+            if (updatedRecords) {
+                console.log("Updated outdated APIC controller models to latest versions");
+                
+                // For each updated record, save it back to the database
+                migratedRecords.forEach(record => {
+                    if (record.conventionType === 'Host Naming' && record.id) {
+                        // Use the updateRecord function from shared_database.js
+                        updateRecord(DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR, record.id, {
+                            details: record.details
+                        }).catch(error => {
+                            console.error(`Error updating record ${record.id}:`, error);
+                        });
+                    }
+                });
+            }
+            
+            return migratedRecords;
+        }
+        
+        // Database schema version for migration tracking
+        const CURRENT_SCHEMA_VERSION = 2; // Increment this when making schema changes
+        
         // Load inventory data from the comprehensive generator database
         function loadInventoryData() {
             // We need to load data from the comprehensive generator database
@@ -428,6 +508,9 @@
                         updateStatistics([]);
                         return;
                     }
+                    
+                    // Migrate any outdated APIC controller entries
+                    records = migrateApicControllerEntries(records);
                     
                     // Update the last updated timestamp
                     getLastUpdatedTimestamp(DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR)
