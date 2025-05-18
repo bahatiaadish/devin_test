@@ -12,7 +12,8 @@ const DB_CONFIG = {
         DEVICES_GENERATOR: 'devices_generator',
         TENANT_GENERATOR: 'tenant_generator',
         ACCESS_POLICIES: 'access_policies',
-        L3OUT: 'l3out'
+        L3OUT: 'l3out',
+        DATACENTER_INVENTORY: 'datacenter_inventory'
     }
 };
 
