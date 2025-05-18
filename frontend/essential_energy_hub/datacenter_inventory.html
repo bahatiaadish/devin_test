@@ -74,6 +74,17 @@
             background-color: #6c757d;
             color: white;
         }
+        .badge-router, .badge-switch, .badge-firewall, .badge-load-balancer, .badge-custom {
+            background-color: #6610f2;
+            color: white;
+        }
+        .badge-edited {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .edit-mode {
+            background-color: #f8f9fa;
+        }
         .refresh-btn {
             position: absolute;
             right: 20px;
@@ -145,6 +156,11 @@
                                 <option value="border-leaf">Border Leaf Switches</option>
                                 <option value="apic">APIC Controllers</option>
                                 <option value="ndo">Nexus Dashboard</option>
+                                <option value="router">Routers</option>
+                                <option value="switch">Switches</option>
+                                <option value="firewall">Firewalls</option>
+                                <option value="load-balancer">Load Balancers</option>
+                                <option value="custom">Custom</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -159,29 +175,68 @@
         <!-- Inventory table section -->
         <div class="card mt-4">
             <div class="card-header">
-                Datacenter Inventory
+                <ul class="nav nav-tabs card-header-tabs" id="inventory-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="datacenter-tab" data-bs-toggle="tab" data-bs-target="#datacenter-content" type="button" role="tab" aria-controls="datacenter-content" aria-selected="true">Datacenter</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory-content" type="button" role="tab" aria-controls="inventory-content" aria-selected="false">Inventory</button>
+                    </li>
+                </ul>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Hostname</th>
-                                <th>Product ID</th>
-                                <th>Description</th>
-                                <th>Port Summary</th>
-                                <th>Role</th>
-                                <th>Node ID</th>
-                                <th>Date Created</th>
-                            </tr>
-                        </thead>
-                        <tbody id="inventory-table-body">
-                            <!-- Inventory items will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-                <div id="no-data-message" class="alert alert-info d-none">
-                    No matching inventory items found. Try adjusting your filters or generate more hostnames using the Comprehensive Name Generator.
+                <div class="tab-content" id="inventory-tabs-content">
+                    <!-- Datacenter Tab Content -->
+                    <div class="tab-pane fade show active" id="datacenter-content" role="tabpanel" aria-labelledby="datacenter-tab">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Hostname</th>
+                                        <th>Product ID</th>
+                                        <th>Description</th>
+                                        <th>Port Summary</th>
+                                        <th>Role</th>
+                                        <th>Node ID</th>
+                                        <th>Date Created</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventory-table-body">
+                                    <!-- Inventory items will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="no-data-message" class="alert alert-info d-none">
+                            No matching inventory items found. Try adjusting your filters or generate more hostnames using the Comprehensive Name Generator.
+                        </div>
+                    </div>
+                    
+                    <!-- Inventory Tab Content with Editable Fields -->
+                    <div class="tab-pane fade" id="inventory-content" role="tabpanel" aria-labelledby="inventory-tab">
+                        <div class="alert alert-info mb-3">
+                            <i class="bi bi-info-circle"></i> In this tab, you can edit device details and they will not be overwritten during database syncs. Edited entries are marked with <span class="badge bg-warning">Edited</span> badge.
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Hostname</th>
+                                        <th>Product ID</th>
+                                        <th>Description</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="editable-inventory-table-body">
+                                    <!-- Editable inventory items will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="inventory-no-data-message" class="alert alert-info d-none">
+                            No matching inventory items found. Try adjusting your filters or generate more hostnames using the Comprehensive Name Generator.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -496,7 +551,10 @@
         }
         
         // Database schema version for migration tracking
-        const CURRENT_SCHEMA_VERSION = 2; // Increment this when making schema changes
+        const CURRENT_SCHEMA_VERSION = 3; // Increment this when making schema changes
+        
+        // Flag to mark edited entries
+        const EDITED_FLAG = 'edited';
         
         // Load inventory data from the comprehensive generator database
         function loadInventoryData() {
@@ -582,40 +640,48 @@
         
         // Save inventory items to our own database
         function saveInventoryItems(items) {
-            // First, clear existing records for this tool
-            // This is a simplification - in a real implementation, we would use a bulk update API
-            
             // Track hostnames to prevent duplicates
             const uniqueHostnames = new Set();
             
             // Initialize the database for this tool
             initDatabase(TOOL_ID)
                 .then(() => {
-                    // Load existing records to clear them
+                    // Load existing records to preserve edited entries
                     return loadRecords(TOOL_ID);
                 })
                 .then(existingRecords => {
-                    // Delete all existing records
-                    const deletePromises = [];
+                    // Create a map of edited entries by hostname
+                    const editedEntries = new Map();
                     
                     if (existingRecords && existingRecords.length > 0) {
                         existingRecords.forEach(record => {
-                            deletePromises.push(deleteRecord(TOOL_ID, record.id));
+                            // Check if this is an edited entry
+                            if (record.details && record.details[EDITED_FLAG]) {
+                                // Use hostname as the key
+                                const hostname = record.name;
+                                editedEntries.set(hostname, record);
+                                
+                                // Keep track of hostnames to prevent duplicates
+                                uniqueHostnames.add(hostname);
+                            } else {
+                                // Delete non-edited entries
+                                deleteRecord(TOOL_ID, record.id).catch(error => {
+                                    console.error(`Error deleting record ${record.id}:`, error);
+                                });
+                            }
                         });
                     }
                     
-                    // Wait for all delete operations to complete
-                    return Promise.all(deletePromises);
-                })
-                .then(() => {
-                    // Save each item as a record
+                    // Save each item as a record, preserving edited entries
                     items.forEach(item => {
+                        const hostname = item.hostname;
+                        
                         // Only save if this hostname hasn't been seen already
-                        if (!uniqueHostnames.has(item.hostname)) {
-                            uniqueHostnames.add(item.hostname);
+                        if (!uniqueHostnames.has(hostname)) {
+                            uniqueHostnames.add(hostname);
                             
                             const record = {
-                                name: item.hostname,
+                                name: hostname,
                                 conventionType: 'Inventory Item',
                                 details: {
                                     siteLocation: item.siteLocation,
@@ -633,7 +699,7 @@
                             
                             saveRecord(TOOL_ID, record)
                                 .catch(error => {
-                                    console.error(`Error saving inventory item ${item.hostname}:`, error);
+                                    console.error(`Error saving inventory item ${hostname}:`, error);
                                 });
                         }
                     });
@@ -765,17 +831,22 @@
         // Render the inventory table
         function renderInventoryTable(items) {
             const tableBody = document.getElementById('inventory-table-body');
+            const editableTableBody = document.getElementById('editable-inventory-table-body');
             const noDataMessage = document.getElementById('no-data-message');
+            const inventoryNoDataMessage = document.getElementById('inventory-no-data-message');
             
-            // Clear the table
+            // Clear the tables
             tableBody.innerHTML = '';
+            editableTableBody.innerHTML = '';
             
             if (items.length === 0) {
                 noDataMessage.classList.remove('d-none');
+                inventoryNoDataMessage.classList.remove('d-none');
                 return;
             }
             
             noDataMessage.classList.add('d-none');
+            inventoryNoDataMessage.classList.add('d-none');
             
             // Sort items by hostname (handle both new and old format)
             items.sort((a, b) => {
@@ -784,12 +855,12 @@
                 return hostnameA.localeCompare(hostnameB);
             });
             
-            // Add items to the table
+            // Add items to both tables
             items.forEach(item => {
-                const row = document.createElement('tr');
-                
                 // Handle both new and old format
                 let hostname, productId, description, portSummary, roleType, deviceId, dateCreated;
+                let isEdited = false;
+                let itemId = null;
                 
                 if (item.conventionType === 'Inventory Item' && item.details) {
                     // New format (from API)
@@ -800,6 +871,10 @@
                     roleType = item.details.roleType;
                     deviceId = item.details.deviceId;
                     dateCreated = item.dateCreated;
+                    itemId = item.id;
+                    
+                    // Check if this is an edited entry
+                    isEdited = item.details[EDITED_FLAG] === true;
                 } else {
                     // Old format (from localStorage)
                     hostname = item.hostname;
@@ -809,6 +884,7 @@
                     roleType = item.roleType;
                     deviceId = item.deviceId;
                     dateCreated = item.dateCreated;
+                    itemId = item.id;
                 }
                 
                 // Determine badge class based on role
@@ -818,7 +894,14 @@
                 if (roleType === 'border-leaf') badgeClass = 'badge-border-leaf';
                 if (roleType === 'apic') badgeClass = 'badge-apic';
                 if (roleType === 'ndo') badgeClass = 'badge-ndo';
+                if (roleType === 'router') badgeClass = 'badge-router';
+                if (roleType === 'switch') badgeClass = 'badge-switch';
+                if (roleType === 'firewall') badgeClass = 'badge-firewall';
+                if (roleType === 'load-balancer') badgeClass = 'badge-load-balancer';
+                if (roleType === 'custom') badgeClass = 'badge-custom';
                 
+                // Create row for datacenter tab
+                const row = document.createElement('tr');
                 row.innerHTML = `
                     <td><strong>${hostname}</strong></td>
                     <td>${productId}</td>
@@ -828,8 +911,40 @@
                     <td>${deviceId}</td>
                     <td>${new Date(dateCreated).toLocaleString()}</td>
                 `;
-                
                 tableBody.appendChild(row);
+                
+                // Create row for inventory tab with editable fields
+                const editableRow = document.createElement('tr');
+                editableRow.dataset.id = itemId;
+                editableRow.dataset.hostname = hostname;
+                editableRow.innerHTML = `
+                    <td><strong>${hostname}</strong></td>
+                    <td data-field="productId">${productId}</td>
+                    <td data-field="description">${description}</td>
+                    <td data-field="roleType"><span class="badge rounded-pill ${badgeClass}">${roleType.replace('-', ' ')}</span></td>
+                    <td>${isEdited ? '<span class="badge bg-warning">Edited</span>' : '<span class="badge bg-secondary">Auto</span>'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary edit-btn" data-id="${itemId}">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        ${isEdited ? `
+                        <button class="btn btn-sm btn-outline-danger revert-btn" data-id="${itemId}">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </button>
+                        ` : ''}
+                    </td>
+                `;
+                editableTableBody.appendChild(editableRow);
+            });
+            
+            // Add event listeners for edit buttons
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', handleEditItem);
+            });
+            
+            // Add event listeners for revert buttons
+            document.querySelectorAll('.revert-btn').forEach(button => {
+                button.addEventListener('click', handleRevertItem);
             });
         }
         
@@ -840,6 +955,158 @@
             
             tableBody.innerHTML = '';
             noDataMessage.classList.remove('d-none');
+        }
+        
+        // Handle editing an inventory item
+        function handleEditItem(event) {
+            const button = event.currentTarget;
+            const itemId = button.dataset.id;
+            const row = button.closest('tr');
+            
+            // Check if we're already in edit mode
+            if (row.classList.contains('edit-mode')) {
+                // Save the edits
+                saveItemEdits(row);
+            } else {
+                // Switch to edit mode
+                row.classList.add('edit-mode');
+                
+                // Change the edit button to a save button
+                button.innerHTML = '<i class="bi bi-check"></i>';
+                button.classList.remove('btn-outline-primary');
+                button.classList.add('btn-outline-success');
+                
+                // Make fields editable
+                const productIdCell = row.querySelector('[data-field="productId"]');
+                const descriptionCell = row.querySelector('[data-field="description"]');
+                const roleTypeCell = row.querySelector('[data-field="roleType"]');
+                
+                const productId = productIdCell.textContent;
+                const description = descriptionCell.textContent;
+                const roleType = roleTypeCell.querySelector('.badge').textContent.trim();
+                
+                // Replace with input fields
+                productIdCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${productId}">`;
+                descriptionCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${description}">`;
+                
+                // Create role type dropdown
+                const roleSelect = document.createElement('select');
+                roleSelect.className = 'form-select form-select-sm';
+                
+                // Add options for all roles
+                const roles = [
+                    { value: 'spine', label: 'Spine' },
+                    { value: 'leaf', label: 'Leaf' },
+                    { value: 'border-leaf', label: 'Border Leaf' },
+                    { value: 'apic', label: 'APIC' },
+                    { value: 'ndo', label: 'NDO' },
+                    { value: 'router', label: 'Router' },
+                    { value: 'switch', label: 'Switch' },
+                    { value: 'firewall', label: 'Firewall' },
+                    { value: 'load-balancer', label: 'Load Balancer' },
+                    { value: 'custom', label: 'Custom' }
+                ];
+                
+                roles.forEach(role => {
+                    const option = document.createElement('option');
+                    option.value = role.value;
+                    option.textContent = role.label;
+                    option.selected = role.label.toLowerCase() === roleType.toLowerCase();
+                    roleSelect.appendChild(option);
+                });
+                
+                roleTypeCell.innerHTML = '';
+                roleTypeCell.appendChild(roleSelect);
+            }
+        }
+        
+        // Save edits to an inventory item
+        function saveItemEdits(row) {
+            const itemId = parseInt(row.dataset.id);
+            const hostname = row.dataset.hostname;
+            
+            // Get the edited values
+            const productId = row.querySelector('[data-field="productId"] input').value;
+            const description = row.querySelector('[data-field="description"] input').value;
+            const roleType = row.querySelector('[data-field="roleType"] select').value;
+            
+            // Validate inputs
+            if (!productId || !description) {
+                alert('Product ID and Description are required');
+                return;
+            }
+            
+            // Load the current record
+            loadRecords(TOOL_ID)
+                .then(records => {
+                    const record = records.find(r => r.id === itemId);
+                    
+                    if (!record) {
+                        alert('Error: Record not found');
+                        return;
+                    }
+                    
+                    // Update the record details
+                    if (!record.details) {
+                        record.details = {};
+                    }
+                    
+                    record.details.productId = productId;
+                    record.details.description = description;
+                    record.details.roleType = roleType;
+                    
+                    // Mark the record as edited
+                    record.details[EDITED_FLAG] = true;
+                    
+                    // Update the record in the database
+                    return updateRecord(TOOL_ID, itemId, record);
+                })
+                .then(() => {
+                    // Remove edit mode
+                    row.classList.remove('edit-mode');
+                    
+                    // Refresh the data
+                    loadInventoryData();
+                })
+                .catch(error => {
+                    console.error('Error saving edits:', error);
+                    alert('Error saving edits. Please try again.');
+                });
+        }
+        
+        // Handle reverting an edited item
+        function handleRevertItem(event) {
+            if (confirm('Are you sure you want to revert this item? It will be synced with the database again.')) {
+                const button = event.currentTarget;
+                const itemId = parseInt(button.dataset.id);
+                
+                // Load the current record
+                loadRecords(TOOL_ID)
+                    .then(records => {
+                        const record = records.find(r => r.id === itemId);
+                        
+                        if (!record) {
+                            alert('Error: Record not found');
+                            return;
+                        }
+                        
+                        // Remove the edited flag
+                        if (record.details) {
+                            delete record.details[EDITED_FLAG];
+                        }
+                        
+                        // Update the record in the database
+                        return updateRecord(TOOL_ID, itemId, record);
+                    })
+                    .then(() => {
+                        // Refresh the data
+                        loadInventoryData();
+                    })
+                    .catch(error => {
+                        console.error('Error reverting item:', error);
+                        alert('Error reverting item. Please try again.');
+                    });
+            }
         }
         
         // Update statistics
@@ -853,12 +1120,18 @@
                 'leaf': 0,
                 'border-leaf': 0,
                 'apic': 0,
-                'ndo': 0
+                'ndo': 0,
+                'router': 0,
+                'switch': 0,
+                'firewall': 0,
+                'load-balancer': 0,
+                'custom': 0
             };
             
             items.forEach(item => {
-                if (roleCounts.hasOwnProperty(item.roleType)) {
-                    roleCounts[item.roleType]++;
+                const roleType = item.roleType || (item.details && item.details.roleType);
+                if (roleType && roleCounts.hasOwnProperty(roleType)) {
+                    roleCounts[roleType]++;
                 }
             });
             
