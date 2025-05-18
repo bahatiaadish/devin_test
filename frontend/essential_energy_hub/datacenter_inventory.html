@@ -405,6 +405,10 @@
             'OSPI': [
                 { productId: 'N9K-C9316D-GX', description: 'Nexus 9300 Series, 16p 400G QSFP-DD', portSummary: '16x 400G QSFP-DD', rackUnits: '1U', powerRequirements: '1050W', role: 'High-performance spine switches' }
             ],
+            // Enterprise Spine Switches
+            'ESPI': [
+                { productId: 'N9K-C9316D-GX', description: 'Nexus 9300 Series, 16p 400G QSFP-DD', portSummary: '16x 400G QSFP-DD', rackUnits: '1U', powerRequirements: '1050W', role: 'Enterprise spine switches' }
+            ],
             // Leaf Switches
             'OLFS': [
                 { productId: 'N9K-C93180YC-FX3', description: 'Nexus 9300 48p 1/10/25G, 6p 40/100G, MACsec, SyncE', portSummary: '48x 1/10/25G + 6x 40/100G', rackUnits: '1U', powerRequirements: '650W', role: 'High-density leaf switches' }
@@ -442,6 +446,13 @@
 
             // Spine Switches (X96-X99)
             'OSPI': {
+                'AUNTH': { prefix: '1', min: 96, max: 99, role: 'spine' },
+                'AUSTH': { prefix: '3', min: 96, max: 99, role: 'spine' },
+                'AUTER': { prefix: '5', min: 96, max: 99, role: 'spine' }
+            },
+            
+            // Enterprise Spine Switches (X96-X99)
+            'ESPI': {
                 'AUNTH': { prefix: '1', min: 96, max: 99, role: 'spine' },
                 'AUSTH': { prefix: '3', min: 96, max: 99, role: 'spine' },
                 'AUTER': { prefix: '5', min: 96, max: 99, role: 'spine' }
@@ -699,7 +710,7 @@
         function saveInventoryItems(items) {
             // Track hostnames to prevent duplicates
             const uniqueHostnames = new Set();
-
+            
             // Initialize the database for this tool
             initDatabase(TOOL_ID)
                 .then(() => {
@@ -707,59 +718,94 @@
                     return loadRecords(TOOL_ID);
                 })
                 .then(existingRecords => {
-                    // Create a map of edited entries by hostname
-                    const editedEntries = new Map();
-
+                    // Create a map of existing entries by hostname
+                    const existingEntriesMap = new Map();
+                    
                     if (existingRecords && existingRecords.length > 0) {
                         existingRecords.forEach(record => {
-                            // Check if this is an edited entry
-                            if (record.details && record.details[EDITED_FLAG]) {
+                            if (record.conventionType === 'Inventory Item' && record.name) {
                                 // Use hostname as the key
                                 const hostname = record.name;
-                                editedEntries.set(hostname, record);
-
+                                existingEntriesMap.set(hostname, record);
+                                
                                 // Keep track of hostnames to prevent duplicates
                                 uniqueHostnames.add(hostname);
-                            } else {
-                                // Delete non-edited entries
-                                deleteRecord(TOOL_ID, record.id).catch(error => {
-                                    console.error(`Error deleting record ${record.id}:`, error);
-                                });
                             }
                         });
                     }
-
-                    // Save each item as a record, preserving edited entries
+                    
+                    // Process each inventory item
+                    const savePromises = [];
+                    
                     items.forEach(item => {
                         const hostname = item.hostname;
-
-                        // Only save if this hostname hasn't been seen already
+                        
+                        // Only save if this hostname hasn't been seen already in this batch
                         if (!uniqueHostnames.has(hostname)) {
                             uniqueHostnames.add(hostname);
-
-                            const record = {
-                                name: hostname,
-                                conventionType: 'Inventory Item',
-                                details: {
-                                    siteLocation: item.siteLocation,
-                                    siteType: item.siteType,
-                                    deviceType: item.deviceType,
-                                    deviceId: item.deviceId,
-                                    productId: item.productId,
-                                    description: item.description,
-                                    portSummary: item.portSummary,
-                                    role: item.role,
-                                    roleType: item.roleType
-                                },
-                                userDescription: `${item.siteLocation} ${item.deviceType} ${item.deviceId}`
-                            };
-
-                            saveRecord(TOOL_ID, record)
-                                .catch(error => {
-                                    console.error(`Error saving inventory item ${hostname}:`, error);
-                                });
+                            
+                            // Check if we already have this item in the database
+                            if (existingEntriesMap.has(hostname)) {
+                                // Only update if it's not marked as edited
+                                const existingRecord = existingEntriesMap.get(hostname);
+                                
+                                if (!existingRecord.details || !existingRecord.details[EDITED_FLAG]) {
+                                    // Update the existing record with new data
+                                    const updatedRecord = {
+                                        name: hostname,
+                                        conventionType: 'Inventory Item',
+                                        details: {
+                                            siteLocation: item.siteLocation,
+                                            siteType: item.siteType,
+                                            deviceType: item.deviceType,
+                                            deviceId: item.deviceId,
+                                            productId: item.productId,
+                                            description: item.description,
+                                            portSummary: item.portSummary,
+                                            role: item.role,
+                                            roleType: item.roleType
+                                        },
+                                        userDescription: `${item.siteLocation} ${item.deviceType} ${item.deviceId}`
+                                    };
+                                    
+                                    savePromises.push(
+                                        updateRecord(TOOL_ID, existingRecord.id, updatedRecord)
+                                            .catch(error => {
+                                                console.error(`Error updating inventory item ${hostname}:`, error);
+                                            })
+                                    );
+                                }
+                            } else {
+                                // Create a new record
+                                const newRecord = {
+                                    name: hostname,
+                                    conventionType: 'Inventory Item',
+                                    details: {
+                                        siteLocation: item.siteLocation,
+                                        siteType: item.siteType,
+                                        deviceType: item.deviceType,
+                                        deviceId: item.deviceId,
+                                        productId: item.productId,
+                                        description: item.description,
+                                        portSummary: item.portSummary,
+                                        role: item.role,
+                                        roleType: item.roleType
+                                    },
+                                    userDescription: `${item.siteLocation} ${item.deviceType} ${item.deviceId}`
+                                };
+                                
+                                savePromises.push(
+                                    saveRecord(TOOL_ID, newRecord)
+                                        .catch(error => {
+                                            console.error(`Error saving inventory item ${hostname}:`, error);
+                                        })
+                                );
+                            }
                         }
                     });
+                    
+                    // Wait for all save operations to complete
+                    return Promise.all(savePromises);
                 })
                 .catch(error => {
                     console.error("Error initializing inventory database:", error);
@@ -791,6 +837,7 @@
 
             // Default role based on device type
             if (deviceType === 'OSPI') return 'spine';
+            if (deviceType === 'ESPI') return 'spine';
             if (deviceType === 'OLFS') return 'leaf';
             if (deviceType === 'ELFS') return 'leaf';
             if (deviceType === 'OLFB') return 'border-leaf';
@@ -1253,7 +1300,8 @@
 
         // Callback function for refreshing data during auto-sync
         function refreshDataCallback() {
-            console.log('Auto-sync refresh triggered');
+            console.log('Auto-sync refresh triggered at', new Date().toISOString());
+            console.log('Last known timestamp:', lastUpdatedTimestamp);
             loadInventoryData();
         }
     </script>
