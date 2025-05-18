@@ -19,9 +19,10 @@ const DB_CONFIG = {
 /**
  * Initialize the database for a specific tool
  * @param {string} toolId - The ID of the tool using the database
+ * @param {boolean} autoSync - Whether to start automatic syncing (default: true)
  * @returns {Promise} - Resolves when the database is initialized
  */
-function initDatabase(toolId) {
+function initDatabase(toolId, autoSync = true) {
     if (!DB_CONFIG.TOOLS[toolId.toUpperCase()]) {
         console.error(`Invalid tool ID: ${toolId}`);
         return Promise.reject(`Invalid tool ID: ${toolId}`);
@@ -36,6 +37,21 @@ function initDatabase(toolId) {
         }
         return response.json();
     })
+    .then(data => {
+        if (autoSync) {
+            if (!window.autoSyncIntervals) {
+                window.autoSyncIntervals = {};
+            }
+            
+            if (window.autoSyncIntervals[toolId]) {
+                stopAutoSync(window.autoSyncIntervals[toolId]);
+            }
+            
+            window.autoSyncIntervals[toolId] = startAutoSync(toolId);
+        }
+        
+        return data;
+    })
     .catch(error => {
         console.error(`Error initializing database via API: ${error}`);
         console.warn('Falling back to localStorage');
@@ -48,6 +64,18 @@ function initDatabase(toolId) {
                 records: [],
                 lastUpdated: new Date().toISOString()
             }));
+        }
+        
+        if (autoSync) {
+            if (!window.autoSyncIntervals) {
+                window.autoSyncIntervals = {};
+            }
+            
+            if (window.autoSyncIntervals[toolId]) {
+                stopAutoSync(window.autoSyncIntervals[toolId]);
+            }
+            
+            window.autoSyncIntervals[toolId] = startAutoSync(toolId);
         }
         
         return Promise.resolve();
@@ -436,4 +464,116 @@ function getLastUpdatedTimestamp(toolId) {
             return Promise.reject(`Error getting timestamp: ${error}`);
         }
     });
+}
+
+/**
+ * Sync data with backend server every 5 seconds
+ * @param {string} toolId - The ID of the tool
+ * @returns {number} - The interval ID for the sync process
+ */
+function startAutoSync(toolId) {
+    if (!DB_CONFIG.TOOLS[toolId.toUpperCase()]) {
+        console.error(`Invalid tool ID: ${toolId}`);
+        return null;
+    }
+    
+    console.log(`Starting auto-sync for tool: ${toolId}`);
+    
+    let lastKnownTimestamp = null;
+    const toolDbKey = `${DB_CONFIG.KEY_PREFIX}${toolId}`;
+    
+    // First, get the current local timestamp
+    try {
+        const db = JSON.parse(localStorage.getItem(toolDbKey));
+        if (db && db.lastUpdated) {
+            lastKnownTimestamp = db.lastUpdated;
+        }
+    } catch (error) {
+        console.error(`Error getting local timestamp: ${error}`);
+    }
+    
+    const intervalId = setInterval(() => {
+        fetch(`${DB_CONFIG.API_URL}/last-updated/${toolId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to get timestamp: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const serverTimestamp = data.lastUpdated;
+            
+            if (!serverTimestamp || (lastKnownTimestamp && new Date(lastKnownTimestamp) > new Date(serverTimestamp))) {
+                try {
+                    const localDb = JSON.parse(localStorage.getItem(toolDbKey));
+                    if (localDb && localDb.records && localDb.records.length > 0) {
+                        localDb.records.forEach(record => {
+                            const recordData = {
+                                name: record.name,
+                                conventionType: record.conventionType,
+                                details: record.details,
+                                userDescription: record.userDescription
+                            };
+                            
+                            fetch(`${DB_CONFIG.API_URL}/records/${toolId}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(recordData)
+                            }).catch(error => {
+                                console.error(`Error pushing record to server: ${error}`);
+                            });
+                        });
+                    }
+                } catch (error) {
+                    console.error(`Error reading local data: ${error}`);
+                }
+            } 
+            else if (serverTimestamp && (!lastKnownTimestamp || new Date(serverTimestamp) > new Date(lastKnownTimestamp))) {
+                fetch(`${DB_CONFIG.API_URL}/records/${toolId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Failed to get records: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(records => {
+                    const localDb = {
+                        version: DB_CONFIG.VERSION,
+                        records: records,
+                        lastUpdated: serverTimestamp
+                    };
+                    
+                    localStorage.setItem(toolDbKey, JSON.stringify(localDb));
+                    lastKnownTimestamp = serverTimestamp;
+                    
+                    if (typeof renderHistory === 'function') {
+                        renderHistory();
+                    }
+                    
+                    console.log(`Synced newer data from server for tool: ${toolId}`);
+                })
+                .catch(error => {
+                    console.error(`Error pulling records from server: ${error}`);
+                });
+            }
+        })
+        .catch(error => {
+            console.error(`Error during auto-sync: ${error}`);
+        });
+    }, 5000); // Check every 5 seconds
+    
+    return intervalId;
+}
+
+/**
+ * Stop the automatic sync process
+ * @param {number} intervalId - The interval ID returned by startAutoSync
+ */
+function stopAutoSync(intervalId) {
+    if (intervalId) {
+        clearInterval(intervalId);
+        console.log('Auto-sync stopped');
+    }
 }
