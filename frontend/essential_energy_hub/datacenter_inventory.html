@@ -279,9 +279,15 @@
                 { productId: 'APIC-SERVER-L4', description: 'APIC Appliance - Large Config. (> 1200 Edge Ports)', portSummary: 'N/A', role: 'Individual APIC servers for large clusters' },
                 { productId: 'APIC-SERVER-M4', description: 'APIC Appliance - Medium Configuration (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'Individual APIC servers for medium clusters' }
             ],
-            // OPIC - Add the same hardware details as APIC
+            // OPIC - APIC controllers with OPIC device type
             'OPIC': [
-                { productId: 'APIC-SERVER-M3', description: 'APIC Controller for ACI Fabric Management', portSummary: 'N/A', role: 'APIC Controller' }
+                { productId: 'APIC-CLUSTER-M4', description: 'APIC Cluster - Medium Configurations (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'APIC Controller' },
+                { productId: 'APIC-SERVER-M4', description: 'APIC Appliance - Medium Configuration (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'APIC Controller' }
+            ],
+            // EPIC - APIC controllers with EPIC device type
+            'EPIC': [
+                { productId: 'APIC-CLUSTER-M4', description: 'APIC Cluster - Medium Configurations (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'APIC Controller' },
+                { productId: 'APIC-SERVER-M4', description: 'APIC Appliance - Medium Configuration (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'APIC Controller' }
             ],
             // Spine Switches
             'OSPI': [
@@ -557,7 +563,7 @@
         // Determine the role based on device type and node ID
         function determineRole(siteLocation, deviceType, deviceId) {
             // For APIC controllers
-            if (deviceType === 'APIC' || deviceType === 'OPIC') {
+            if (deviceType === 'APIC' || deviceType === 'OPIC' || deviceType === 'EPIC') {
                 return 'apic';
             }
             
