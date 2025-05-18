@@ -1036,42 +1036,70 @@
                 return;
             }
             
-            // Load the current record
-            loadRecords(TOOL_ID)
-                .then(records => {
-                    const record = records.find(r => r.id === itemId);
-                    
-                    if (!record) {
-                        alert('Error: Record not found');
-                        return;
-                    }
-                    
-                    // Update the record details
-                    if (!record.details) {
-                        record.details = {};
-                    }
-                    
-                    record.details.productId = productId;
-                    record.details.description = description;
-                    record.details.roleType = roleType;
-                    
-                    // Mark the record as edited
-                    record.details[EDITED_FLAG] = true;
-                    
-                    // Update the record in the database
-                    return updateRecord(TOOL_ID, itemId, record);
-                })
-                .then(() => {
-                    // Remove edit mode
-                    row.classList.remove('edit-mode');
-                    
-                    // Refresh the data
-                    loadInventoryData();
-                })
-                .catch(error => {
-                    console.error('Error saving edits:', error);
-                    alert('Error saving edits. Please try again.');
-                });
+            // Create a new record object with the edited values
+            const newRecord = {
+                name: hostname,
+                conventionType: 'Inventory Item',
+                details: {
+                    productId: productId,
+                    description: description,
+                    roleType: roleType,
+                    // Mark as edited to prevent overwriting during syncs
+                    [EDITED_FLAG]: true
+                },
+                userDescription: `Edited: ${hostname}`
+            };
+            
+            // Check if we're updating an existing record or creating a new one
+            if (!isNaN(itemId)) {
+                // Try to load the existing record
+                loadRecords(TOOL_ID)
+                    .then(records => {
+                        const record = records.find(r => r.id === itemId);
+                        
+                        if (record) {
+                            // Update existing record
+                            if (!record.details) {
+                                record.details = {};
+                            }
+                            
+                            record.details.productId = productId;
+                            record.details.description = description;
+                            record.details.roleType = roleType;
+                            record.details[EDITED_FLAG] = true;
+                            
+                            return updateRecord(TOOL_ID, itemId, record);
+                        } else {
+                            // Create new record if not found
+                            return saveRecord(TOOL_ID, newRecord);
+                        }
+                    })
+                    .then(() => {
+                        // Remove edit mode
+                        row.classList.remove('edit-mode');
+                        
+                        // Refresh the data
+                        loadInventoryData();
+                    })
+                    .catch(error => {
+                        console.error('Error saving edits:', error);
+                        alert('Error saving edits. Please try again.');
+                    });
+            } else {
+                // This is a new entry, save it directly
+                saveRecord(TOOL_ID, newRecord)
+                    .then(() => {
+                        // Remove edit mode
+                        row.classList.remove('edit-mode');
+                        
+                        // Refresh the data
+                        loadInventoryData();
+                    })
+                    .catch(error => {
+                        console.error('Error saving new entry:', error);
+                        alert('Error saving new entry. Please try again.');
+                    });
+            }
         }
         
         // Handle reverting an edited item
