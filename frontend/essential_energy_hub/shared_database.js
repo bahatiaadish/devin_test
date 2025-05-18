@@ -510,23 +510,59 @@ function startAutoSync(toolId, refreshCallback) {
                 try {
                     const localDb = JSON.parse(localStorage.getItem(toolDbKey));
                     if (localDb && localDb.records && localDb.records.length > 0) {
-                        localDb.records.forEach(record => {
-                            const recordData = {
-                                name: record.name,
-                                conventionType: record.conventionType,
-                                details: record.details,
-                                userDescription: record.userDescription
-                            };
+                        fetch(`${DB_CONFIG.API_URL}/records/${toolId}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Failed to get records: ${response.statusText}`);
+                            }
+                            return response.json();
+                        })
+                        .then(existingRecords => {
+                            const existingEntriesMap = new Map();
                             
-                            fetch(`${DB_CONFIG.API_URL}/records/${toolId}`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(recordData)
-                            }).catch(error => {
-                                console.error(`Error pushing record to server: ${error}`);
+                            if (existingRecords && existingRecords.length > 0) {
+                                existingRecords.forEach(record => {
+                                    if (record.name) {
+                                        existingEntriesMap.set(record.name, record);
+                                    }
+                                });
+                            }
+                            
+                            localDb.records.forEach(record => {
+                                const recordData = {
+                                    name: record.name,
+                                    conventionType: record.conventionType,
+                                    details: record.details,
+                                    userDescription: record.userDescription
+                                };
+                                
+                                if (existingEntriesMap.has(record.name)) {
+                                    const existingRecord = existingEntriesMap.get(record.name);
+                                    
+                                    fetch(`${DB_CONFIG.API_URL}/records/${toolId}/${existingRecord.id}`, {
+                                        method: 'PUT',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(recordData)
+                                    }).catch(error => {
+                                        console.error(`Error updating record on server: ${error}`);
+                                    });
+                                } else {
+                                    fetch(`${DB_CONFIG.API_URL}/records/${toolId}`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(recordData)
+                                    }).catch(error => {
+                                        console.error(`Error pushing record to server: ${error}`);
+                                    });
+                                }
                             });
+                        })
+                        .catch(error => {
+                            console.error(`Error checking existing records: ${error}`);
                         });
                     }
                 } catch (error) {
@@ -552,6 +588,7 @@ function startAutoSync(toolId, refreshCallback) {
                     lastKnownTimestamp = serverTimestamp;
                     
                     if (typeof refreshCallback === 'function') {
+                        console.log(`Running refresh callback for tool: ${toolId}`);
                         refreshCallback();
                     } 
                     else if (typeof renderHistory === 'function') {
