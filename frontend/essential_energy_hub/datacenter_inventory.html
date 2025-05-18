@@ -279,6 +279,10 @@
                 { productId: 'APIC-SERVER-L4', description: 'APIC Appliance - Large Config. (> 1200 Edge Ports)', portSummary: 'N/A', role: 'Individual APIC servers for large clusters' },
                 { productId: 'APIC-SERVER-M4', description: 'APIC Appliance - Medium Configuration (Up to 1200 Edge Ports)', portSummary: 'N/A', role: 'Individual APIC servers for medium clusters' }
             ],
+            // OPIC - Add the same hardware details as APIC
+            'OPIC': [
+                { productId: 'APIC-SERVER-M3', description: 'APIC Controller for ACI Fabric Management', portSummary: 'N/A', role: 'APIC Controller' }
+            ],
             // Spine Switches
             'OSPI': [
                 { productId: 'N9K-C9316D-GX', description: 'Nexus 9300 Series, 16p 400G QSFP-DD', portSummary: '16x 400G QSFP-DD', role: 'High-performance spine switches' }
@@ -553,7 +557,7 @@
         // Determine the role based on device type and node ID
         function determineRole(siteLocation, deviceType, deviceId) {
             // For APIC controllers
-            if (deviceType === 'APIC') {
+            if (deviceType === 'APIC' || deviceType === 'OPIC') {
                 return 'apic';
             }
             
