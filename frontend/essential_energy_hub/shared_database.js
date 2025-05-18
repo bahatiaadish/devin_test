@@ -321,17 +321,72 @@ function uploadDatabase(file) {
         reader.onload = function(event) {
             try {
                 const jsonData = JSON.parse(event.target.result);
+                const uploadPromises = [];
                 
                 for (const toolId in jsonData) {
                     const toolDbKey = `${DB_CONFIG.KEY_PREFIX}${toolId}`;
                     
                     if (Object.values(DB_CONFIG.TOOLS).includes(toolId)) {
                         localStorage.setItem(toolDbKey, JSON.stringify(jsonData[toolId]));
+                        
+                        if (jsonData[toolId] && jsonData[toolId].records && jsonData[toolId].records.length > 0) {
+                            uploadPromises.push(
+                                fetch(`${DB_CONFIG.API_URL}/records/${toolId}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(`Failed to get records: ${response.statusText}`);
+                                    }
+                                    return response.json();
+                                })
+                                .then(existingRecords => {
+                                    const deletePromises = existingRecords.map(record => 
+                                        fetch(`${DB_CONFIG.API_URL}/records/${toolId}/${record.id}`, {
+                                            method: 'DELETE'
+                                        })
+                                    );
+                                    
+                                    return Promise.all(deletePromises);
+                                })
+                                .then(() => {
+                                    const addPromises = jsonData[toolId].records.map(record => {
+                                        const recordData = {
+                                            name: record.name,
+                                            conventionType: record.conventionType,
+                                            details: record.details,
+                                            userDescription: record.userDescription
+                                        };
+                                        
+                                        return fetch(`${DB_CONFIG.API_URL}/records/${toolId}`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify(recordData)
+                                        });
+                                    });
+                                    
+                                    return Promise.all(addPromises);
+                                })
+                                .catch(error => {
+                                    console.error(`Error syncing tool ${toolId} with backend: ${error}`);
+                                    console.warn('Data saved to localStorage only');
+                                })
+                            );
+                        }
                     }
                 }
                 
+                Promise.all(uploadPromises)
+                    .then(() => {
+                        console.log('Database uploaded and synced with backend server');
+                        resolve();
+                    })
+                    .catch(error => {
+                        console.error(`Error during database sync: ${error}`);
+                        console.warn('Data may be partially synced');
+                        resolve(); // Still resolve since localStorage was updated
+                    });
                 
-                resolve();
             } catch (error) {
                 console.error(`Error uploading database: ${error}`);
                 reject(`Error uploading database: ${error}`);
