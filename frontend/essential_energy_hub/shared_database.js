@@ -90,18 +90,32 @@ function initDatabase(toolId, autoSync = true, refreshCallback = null) {
  * @param {object} record - The record to save
  * @returns {Promise} - Resolves with the ID of the saved record
  */
+/**
+ * Save a record to the database
+ * @param {string} toolId - The ID of the tool
+ * @param {object} record - The record to save
+ * @returns {Promise<object>} - The saved record
+ */
 function saveRecord(toolId, record) {
     if (!DB_CONFIG.TOOLS[toolId.toUpperCase()]) {
-        console.error(`Invalid tool ID: ${toolId}`);
         return Promise.reject(`Invalid tool ID: ${toolId}`);
     }
+    
+    console.log(`Saving record to tool: ${toolId}`, record);
+    
+    const recordData = {
+        name: record.name,
+        conventionType: record.type || record.conventionType,
+        details: record.details || {},
+        userDescription: record.userDescription || ''
+    };
     
     return fetch(`${DB_CONFIG.API_URL}/records/${toolId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(record)
+        body: JSON.stringify(recordData)
     })
     .then(response => {
         if (!response.ok) {
@@ -110,34 +124,87 @@ function saveRecord(toolId, record) {
         return response.json();
     })
     .then(data => {
-        return data.id;
+        console.log(`Record saved to API successfully: ${data.id}`);
+        
+        updateLocalStorage(toolId, data);
+        
+        return data;
     })
     .catch(error => {
-        console.error(`Error saving record via API: ${error}`);
+        console.error(`Error saving to API: ${error}`);
         console.warn('Falling back to localStorage');
         
         const toolDbKey = `${DB_CONFIG.KEY_PREFIX}${toolId}`;
         
         try {
-            const db = JSON.parse(localStorage.getItem(toolDbKey));
+            let db = JSON.parse(localStorage.getItem(toolDbKey));
             
+            if (!db) {
+                db = {
+                    version: DB_CONFIG.VERSION,
+                    records: [],
+                    lastUpdated: new Date().toISOString()
+                };
+            }
+            
+            // Generate a temporary ID for the record
             const newRecord = {
-                ...record,
-                id: Date.now() + Math.floor(Math.random() * 1000), // Generate unique ID
+                id: Date.now(),
+                name: recordData.name,
+                conventionType: recordData.conventionType,
+                details: recordData.details,
+                userDescription: recordData.userDescription,
                 dateCreated: new Date().toISOString()
             };
             
-            db.records.push(newRecord);
-            db.lastUpdated = new Date().toISOString();
+            const existingIndex = db.records.findIndex(r => r.name === newRecord.name);
+            if (existingIndex >= 0) {
+                db.records[existingIndex] = newRecord;
+            } else {
+                db.records.push(newRecord);
+            }
             
+            db.lastUpdated = new Date().toISOString();
             localStorage.setItem(toolDbKey, JSON.stringify(db));
             
-            return Promise.resolve(newRecord.id);
+            return newRecord;
         } catch (error) {
-            console.error(`Error saving record to localStorage: ${error}`);
             return Promise.reject(`Error saving record: ${error}`);
         }
     });
+}
+
+/**
+ * Update local storage with a record from the API
+ * @param {string} toolId - The ID of the tool
+ * @param {object} record - The record to save
+ */
+function updateLocalStorage(toolId, record) {
+    const toolDbKey = `${DB_CONFIG.KEY_PREFIX}${toolId}`;
+    
+    try {
+        let db = JSON.parse(localStorage.getItem(toolDbKey));
+        
+        if (!db) {
+            db = {
+                version: DB_CONFIG.VERSION,
+                records: [],
+                lastUpdated: new Date().toISOString()
+            };
+        }
+        
+        const existingIndex = db.records.findIndex(r => r.id === record.id);
+        if (existingIndex >= 0) {
+            db.records[existingIndex] = record;
+        } else {
+            db.records.push(record);
+        }
+        
+        db.lastUpdated = new Date().toISOString();
+        localStorage.setItem(toolDbKey, JSON.stringify(db));
+    } catch (error) {
+        console.error(`Error updating localStorage: ${error}`);
+    }
 }
 
 /**
@@ -495,8 +562,32 @@ function startAutoSync(toolId, refreshCallback) {
         console.error(`Error getting local timestamp: ${error}`);
     }
     
+    syncLocalToServer(toolId, lastKnownTimestamp);
+    
     const intervalId = setInterval(() => {
-        fetch(`${DB_CONFIG.API_URL}/last-updated/${toolId}`)
+        syncServerToLocal(toolId, lastKnownTimestamp, refreshCallback)
+            .then(newTimestamp => {
+                lastKnownTimestamp = newTimestamp;
+                
+                return syncLocalToServer(toolId, lastKnownTimestamp);
+            })
+            .catch(error => {
+                console.error(`Error during auto-sync: ${error}`);
+            });
+    }, 5000); // Check every 5 seconds
+    
+    return intervalId;
+}
+
+/**
+ * Sync data from server to local storage
+ * @param {string} toolId - The ID of the tool
+ * @param {string} lastKnownTimestamp - The last known timestamp
+ * @param {function} refreshCallback - Optional callback function to refresh the UI
+ * @returns {Promise<string>} - The new timestamp
+ */
+function syncServerToLocal(toolId, lastKnownTimestamp, refreshCallback) {
+    return fetch(`${DB_CONFIG.API_URL}/last-updated/${toolId}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to get timestamp: ${response.statusText}`);
@@ -506,108 +597,110 @@ function startAutoSync(toolId, refreshCallback) {
         .then(data => {
             const serverTimestamp = data.lastUpdated;
             
-            if (!serverTimestamp || (lastKnownTimestamp && new Date(lastKnownTimestamp) > new Date(serverTimestamp))) {
-                try {
-                    const localDb = JSON.parse(localStorage.getItem(toolDbKey));
-                    if (localDb && localDb.records && localDb.records.length > 0) {
-                        fetch(`${DB_CONFIG.API_URL}/records/${toolId}`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`Failed to get records: ${response.statusText}`);
-                            }
-                            return response.json();
-                        })
-                        .then(existingRecords => {
-                            const existingEntriesMap = new Map();
-                            
-                            if (existingRecords && existingRecords.length > 0) {
-                                existingRecords.forEach(record => {
-                                    if (record.name) {
-                                        existingEntriesMap.set(record.name, record);
-                                    }
-                                });
-                            }
-                            
-                            localDb.records.forEach(record => {
-                                const recordData = {
-                                    name: record.name,
-                                    conventionType: record.conventionType,
-                                    details: record.details,
-                                    userDescription: record.userDescription
-                                };
-                                
-                                if (existingEntriesMap.has(record.name)) {
-                                    const existingRecord = existingEntriesMap.get(record.name);
-                                    
-                                    fetch(`${DB_CONFIG.API_URL}/records/${toolId}/${existingRecord.id}`, {
-                                        method: 'PUT',
-                                        headers: {
-                                            'Content-Type': 'application/json'
-                                        },
-                                        body: JSON.stringify(recordData)
-                                    }).catch(error => {
-                                        console.error(`Error updating record on server: ${error}`);
-                                    });
-                                } else {
-                                    fetch(`${DB_CONFIG.API_URL}/records/${toolId}`, {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json'
-                                        },
-                                        body: JSON.stringify(recordData)
-                                    }).catch(error => {
-                                        console.error(`Error pushing record to server: ${error}`);
-                                    });
-                                }
-                            });
-                        })
-                        .catch(error => {
-                            console.error(`Error checking existing records: ${error}`);
-                        });
-                    }
-                } catch (error) {
-                    console.error(`Error reading local data: ${error}`);
-                }
-            } 
-            else if (serverTimestamp && (!lastKnownTimestamp || new Date(serverTimestamp) > new Date(lastKnownTimestamp))) {
-                fetch(`${DB_CONFIG.API_URL}/records/${toolId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Failed to get records: ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(records => {
-                    const localDb = {
-                        version: DB_CONFIG.VERSION,
-                        records: records,
-                        lastUpdated: serverTimestamp
-                    };
-                    
-                    localStorage.setItem(toolDbKey, JSON.stringify(localDb));
-                    lastKnownTimestamp = serverTimestamp;
-                    
-                    if (typeof refreshCallback === 'function') {
-                        console.log(`Running refresh callback for tool: ${toolId}`);
-                        refreshCallback();
-                    } 
-                    else if (typeof renderHistory === 'function') {
-                        renderHistory();
-                    }
-                    
-                    console.log(`Synced newer data from server for tool: ${toolId}`);
-                })
-                .catch(error => {
-                    console.error(`Error pulling records from server: ${error}`);
-                });
+            if (serverTimestamp && (!lastKnownTimestamp || new Date(serverTimestamp) > new Date(lastKnownTimestamp))) {
+                return fetch(`${DB_CONFIG.API_URL}/records/${toolId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Failed to get records: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(records => {
+                        const localDb = {
+                            version: DB_CONFIG.VERSION,
+                            records: records,
+                            lastUpdated: serverTimestamp
+                        };
+                        
+                        localStorage.setItem(toolDbKey, JSON.stringify(localDb));
+                        console.log(`Synced newer data from server for tool: ${toolId}`);
+                        
+                        if (typeof refreshCallback === 'function') {
+                            console.log(`Running refresh callback for tool: ${toolId}`);
+                            refreshCallback();
+                        } else if (typeof renderHistory === 'function') {
+                            renderHistory();
+                        }
+                        
+                        return serverTimestamp;
+                    });
             }
-        })
-        .catch(error => {
-            console.error(`Error during auto-sync: ${error}`);
+            
+            return lastKnownTimestamp;
         });
-    }, 5000); // Check every 5 seconds
+}
+
+/**
+ * Sync data from local storage to server
+ * @param {string} toolId - The ID of the tool
+ * @param {string} lastKnownTimestamp - The last known timestamp
+ * @returns {Promise<boolean>} - Whether the sync was successful
+ */
+function syncLocalToServer(toolId, lastKnownTimestamp) {
+    const toolDbKey = `${DB_CONFIG.KEY_PREFIX}${toolId}`;
     
-    return intervalId;
+    try {
+        const localDb = JSON.parse(localStorage.getItem(toolDbKey));
+        if (!localDb || !localDb.records || localDb.records.length === 0) {
+            return Promise.resolve(false);
+        }
+        
+        const recordsToSync = getUnsyncedRecords(localDb.records);
+        if (recordsToSync.length === 0) {
+            return Promise.resolve(false);
+        }
+        
+        console.log(`Syncing ${recordsToSync.length} records to server for tool: ${toolId}`);
+        
+        const syncPromises = recordsToSync.map(record => {
+            const recordData = {
+                name: record.name,
+                conventionType: record.conventionType,
+                details: record.details,
+                userDescription: record.userDescription
+            };
+            
+            return fetch(`${DB_CONFIG.API_URL}/records/${toolId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(recordData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to sync record: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                record.synced = true;
+                return data;
+            })
+            .catch(error => {
+                console.error(`Error syncing record to server: ${error}`);
+                return null;
+            });
+        });
+        
+        return Promise.all(syncPromises)
+            .then(() => {
+                localStorage.setItem(toolDbKey, JSON.stringify(localDb));
+                return true;
+            });
+    } catch (error) {
+        console.error(`Error reading local data: ${error}`);
+        return Promise.resolve(false);
+    }
+}
+
+/**
+ * Get records that haven't been synced to the server
+ * @param {Array} records - The records to check
+ * @returns {Array} - The unsynced records
+ */
+function getUnsyncedRecords(records) {
+    return records.filter(record => !record.synced);
 }
 
 /**

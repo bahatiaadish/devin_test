@@ -708,8 +708,11 @@
 
         // Save inventory items to our own database
         function saveInventoryItems(items) {
-            // Track hostnames to prevent duplicates
+            // Track hostnames to prevent duplicates within this batch
             const uniqueHostnames = new Set();
+            
+            // Log the number of items being processed
+            console.log(`Processing ${items.length} inventory items`);
             
             // Initialize the database for this tool
             initDatabase(TOOL_ID)
@@ -722,20 +725,24 @@
                     const existingEntriesMap = new Map();
                     
                     if (existingRecords && existingRecords.length > 0) {
+                        console.log(`Found ${existingRecords.length} existing inventory records`);
                         existingRecords.forEach(record => {
                             if (record.conventionType === 'Inventory Item' && record.name) {
                                 // Use hostname as the key
                                 const hostname = record.name;
                                 existingEntriesMap.set(hostname, record);
                                 
-                                // Keep track of hostnames to prevent duplicates
+                                // Keep track of hostnames to prevent duplicates within this batch
                                 uniqueHostnames.add(hostname);
                             }
                         });
                     }
                     
-                    // Process each inventory item
+                    // Process each inventory item with better duplicate checks
                     const savePromises = [];
+                    let duplicatesSkipped = 0;
+                    let recordsUpdated = 0;
+                    let recordsCreated = 0;
                     
                     items.forEach(item => {
                         const hostname = item.hostname;
@@ -744,71 +751,53 @@
                         if (!uniqueHostnames.has(hostname)) {
                             uniqueHostnames.add(hostname);
                             
-                            // Check if we already have this item in the database
-                            if (existingEntriesMap.has(hostname)) {
-                                // Only update if it's not marked as edited
-                                const existingRecord = existingEntriesMap.get(hostname);
-                                
-                                if (!existingRecord.details || !existingRecord.details[EDITED_FLAG]) {
-                                    // Update the existing record with new data
-                                    const updatedRecord = {
-                                        name: hostname,
-                                        conventionType: 'Inventory Item',
-                                        details: {
-                                            siteLocation: item.siteLocation,
-                                            siteType: item.siteType,
-                                            deviceType: item.deviceType,
-                                            deviceId: item.deviceId,
-                                            productId: item.productId,
-                                            description: item.description,
-                                            portSummary: item.portSummary,
-                                            role: item.role,
-                                            roleType: item.roleType
-                                        },
-                                        userDescription: `${item.siteLocation} ${item.deviceType} ${item.deviceId}`
-                                    };
-                                    
-                                    savePromises.push(
-                                        updateRecord(TOOL_ID, existingRecord.id, updatedRecord)
-                                            .catch(error => {
-                                                console.error(`Error updating inventory item ${hostname}:`, error);
-                                            })
-                                    );
-                                }
-                            } else {
-                                // Create a new record
-                                const newRecord = {
-                                    name: hostname,
-                                    conventionType: 'Inventory Item',
-                                    details: {
-                                        siteLocation: item.siteLocation,
-                                        siteType: item.siteType,
-                                        deviceType: item.deviceType,
-                                        deviceId: item.deviceId,
-                                        productId: item.productId,
-                                        description: item.description,
-                                        portSummary: item.portSummary,
-                                        role: item.role,
-                                        roleType: item.roleType
-                                    },
-                                    userDescription: `${item.siteLocation} ${item.deviceType} ${item.deviceId}`
-                                };
-                                
-                                savePromises.push(
-                                    saveRecord(TOOL_ID, newRecord)
-                                        .catch(error => {
-                                            console.error(`Error saving inventory item ${hostname}:`, error);
-                                        })
-                                );
-                            }
+                            // Create a new record
+                            const newRecord = {
+                                name: hostname,
+                                conventionType: 'Inventory Item',
+                                details: {
+                                    siteLocation: item.siteLocation,
+                                    siteType: item.siteType,
+                                    deviceType: item.deviceType,
+                                    deviceId: item.deviceId,
+                                    productId: item.productId,
+                                    description: item.description,
+                                    portSummary: item.portSummary,
+                                    role: item.role,
+                                    roleType: item.roleType
+                                },
+                                userDescription: `${item.siteLocation} ${item.deviceType} ${item.deviceId}`
+                            };
+                            
+                            // The backend API now handles deduplication
+                            savePromises.push(
+                                saveRecord(TOOL_ID, newRecord)
+                                    .then(savedRecord => {
+                                        if (existingEntriesMap.has(hostname)) {
+                                            recordsUpdated++;
+                                        } else {
+                                            recordsCreated++;
+                                        }
+                                        return savedRecord;
+                                    })
+                                    .catch(error => {
+                                        console.error(`Error saving inventory item ${hostname}:`, error);
+                                        return null;
+                                    })
+                            );
+                        } else {
+                            duplicatesSkipped++;
                         }
                     });
                     
                     // Wait for all save operations to complete
-                    return Promise.all(savePromises);
+                    return Promise.all(savePromises)
+                        .then(() => {
+                            console.log(`Inventory processing complete: ${recordsCreated} created, ${recordsUpdated} updated, ${duplicatesSkipped} duplicates skipped`);
+                        });
                 })
                 .catch(error => {
-                    console.error("Error initializing inventory database:", error);
+                    console.error("Error saving inventory items:", error);
                 });
         }
 

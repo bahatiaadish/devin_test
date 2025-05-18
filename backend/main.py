@@ -50,6 +50,32 @@ async def init_tool_database(tool_id: str, db: Session = Depends(get_db)):
 @app.post("/api/records/{tool_id}", response_model=RecordResponse)
 async def save_record(tool_id: str, record: RecordCreate, db: Session = Depends(get_db)):
     """Save a record to the database"""
+    existing_record = db.query(Record).filter(
+        Record.tool_id == tool_id, 
+        Record.name == record.name
+    ).first()
+    
+    if existing_record:
+        if record.conventionType is not None:
+            existing_record.convention_type = record.conventionType
+        if record.details is not None:
+            existing_record.details = record.details
+        if record.userDescription is not None:
+            existing_record.user_description = record.userDescription
+            
+        existing_record.last_updated = datetime.utcnow()
+        db.commit()
+        db.refresh(existing_record)
+        
+        return RecordResponse(
+            id=existing_record.id,
+            name=existing_record.name,
+            conventionType=existing_record.convention_type,
+            details=existing_record.details,
+            userDescription=existing_record.user_description,
+            dateCreated=existing_record.date_created
+        )
+    
     db_record = Record(
         tool_id=tool_id,
         name=record.name,

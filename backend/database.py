@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, JSON, DateTime, Text
+from sqlalchemy import create_engine, Column, Integer, String, JSON, DateTime, Text, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
@@ -20,6 +20,10 @@ class Record(Base):
     user_description = Column(Text, nullable=True)  # Equivalent to userDescription
     date_created = Column(DateTime, default=datetime.utcnow)
     last_updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    __table_args__ = (
+        UniqueConstraint('tool_id', 'name', name='_tool_name_uc'),
+    )
 
 Base.metadata.create_all(bind=engine)
 
