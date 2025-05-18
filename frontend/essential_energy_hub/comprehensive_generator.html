@@ -1796,7 +1796,13 @@
             // Clear existing options
             nodeIdDropdown.innerHTML = '<option value="">Select ID number...</option>';
             
-            // If either selection is empty, don't proceed
+            // Add "Custom" option first to ensure it's always available
+            const customOption = document.createElement('option');
+            customOption.value = "custom";
+            customOption.textContent = "Custom";
+            nodeIdDropdown.appendChild(customOption);
+            
+            // If either selection is empty, don't proceed with adding other options
             if (!siteLocation || !deviceType) {
                 console.log("Missing selection, not updating dropdown");
                 return;
@@ -1834,12 +1840,6 @@
                 option.textContent = nodeId;
                 nodeIdDropdown.appendChild(option);
             });
-            
-            // Add "Custom" option at the end
-            const customOption = document.createElement('option');
-            customOption.value = "custom";
-            customOption.textContent = "Custom";
-            nodeIdDropdown.appendChild(customOption);
             
             // Select the first option if available
             if (nodeIdDropdown.options.length > 1) {
