@@ -70,6 +70,10 @@
             background-color: #dc3545;
             color: white;
         }
+        .badge-unknown {
+            background-color: #6c757d;
+            color: white;
+        }
         .refresh-btn {
             position: absolute;
             right: 20px;
@@ -283,6 +287,9 @@
             'OLFS': [
                 { productId: 'N9K-C93180YC-FX3', description: 'Nexus 9300 48p 1/10/25G, 6p 40/100G, MACsec, SyncE', portSummary: '48x 1/10/25G + 6x 40/100G', role: 'High-density leaf switches' }
             ],
+            'ELFS': [
+                { productId: 'N9K-C93180YC-FX3', description: 'Nexus 9300 48p 1/10/25G, 6p 40/100G, MACsec, SyncE', portSummary: '48x 1/10/25G + 6x 40/100G', role: 'Enterprise Server Leaf Switch' }
+            ],
             'OLFB': [
                 { productId: 'N9K-C93180YC-FX3', description: 'Nexus 9300 48p 1/10/25G, 6p 40/100G, MACsec, SyncE', portSummary: '48x 1/10/25G + 6x 40/100G', role: 'Border leaf switches' }
             ],
@@ -318,6 +325,13 @@
             
             // Compute Leaf Switches (X01-X89)
             'OLFS': { 
+                'AUNTH': { prefix: '1', min: 1, max: 89, role: 'leaf' },
+                'AUSTH': { prefix: '3', min: 1, max: 89, role: 'leaf' },
+                'AUTER': { prefix: '5', min: 1, max: 89, role: 'leaf' }
+            },
+            
+            // Enterprise Server Leaf Switches (X01-X89)
+            'ELFS': { 
                 'AUNTH': { prefix: '1', min: 1, max: 89, role: 'leaf' },
                 'AUSTH': { prefix: '3', min: 1, max: 89, role: 'leaf' },
                 'AUTER': { prefix: '5', min: 1, max: 89, role: 'leaf' }
@@ -427,9 +441,15 @@
                     const inventoryItems = hostRecords.map(record => {
                         const hostname = record.name;
                         const siteLocation = hostname.substring(0, 5); // AUNTH, AUSTH, AUTER
-                        const siteType = hostname.substring(5, 7); // e.g., DC
-                        const deviceType = hostname.substring(7, 11); // e.g., OSPI, OLFS
-                        const deviceId = hostname.substring(11, 15); // e.g., 0001
+                        
+                        // Extract the 4-digit device ID from the end
+                        const deviceId = hostname.substring(hostname.length - 4);
+                        
+                        // Extract the device type (4 characters before the deviceId)
+                        const deviceType = hostname.substring(hostname.length - 8, hostname.length - 4);
+                        
+                        // Extract the site type (characters between siteLocation and deviceType)
+                        const siteType = hostname.substring(5, hostname.length - 8);
                         
                         // Determine the role and hardware details based on device type and node ID
                         const role = determineRole(siteLocation, deviceType, deviceId);
@@ -556,6 +576,7 @@
             // Default role based on device type
             if (deviceType === 'OSPI') return 'spine';
             if (deviceType === 'OLFS') return 'leaf';
+            if (deviceType === 'ELFS') return 'leaf';
             if (deviceType === 'OLFB') return 'border-leaf';
             
             return 'unknown';
@@ -698,7 +719,7 @@
                 }
                 
                 // Determine badge class based on role
-                let badgeClass = 'badge-secondary';
+                let badgeClass = 'badge-unknown';
                 if (roleType === 'spine') badgeClass = 'badge-spine';
                 if (roleType === 'leaf') badgeClass = 'badge-leaf';
                 if (roleType === 'border-leaf') badgeClass = 'badge-border-leaf';
