@@ -304,40 +304,105 @@ function deleteRecord(toolId, id) {
         return Promise.reject(`Invalid tool ID: ${toolId}`);
     }
     
-    return fetch(`${DB_CONFIG.API_URL}/records/${toolId}/${id}`, {
-        method: 'DELETE'
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Failed to delete record: ${response.statusText}`);
-        }
-        return response.json();
-    })
-    .catch(error => {
-        console.error(`Error deleting record via API: ${error}`);
-        console.warn('Falling back to localStorage');
-        
-        const toolDbKey = `${DB_CONFIG.KEY_PREFIX}${toolId}`;
-        
-        try {
-            const db = JSON.parse(localStorage.getItem(toolDbKey));
-            const recordIndex = db.records.findIndex(record => record.id === id);
-            
-            if (recordIndex === -1) {
-                return Promise.reject(`Record with ID ${id} not found`);
+    const deletePromises = [];
+    
+    deletePromises.push(
+        fetch(`${DB_CONFIG.API_URL}/records/${toolId}/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to delete record: ${response.statusText}`);
             }
+            return response.json();
+        })
+        .catch(error => {
+            console.error(`Error deleting record via API: ${error}`);
+            console.warn('Falling back to localStorage');
             
-            db.records = db.records.filter(record => record.id !== id);
+            const toolDbKey = `${DB_CONFIG.KEY_PREFIX}${toolId}`;
             
-            db.lastUpdated = new Date().toISOString();
-            localStorage.setItem(toolDbKey, JSON.stringify(db));
-            
-            return Promise.resolve();
-        } catch (error) {
-            console.error(`Error deleting record from localStorage: ${error}`);
-            return Promise.reject(`Error deleting record: ${error}`);
-        }
-    });
+            try {
+                const db = JSON.parse(localStorage.getItem(toolDbKey));
+                const recordIndex = db.records.findIndex(record => record.id === id);
+                
+                if (recordIndex === -1) {
+                    return Promise.reject(`Record with ID ${id} not found`);
+                }
+                
+                const deletedRecord = db.records[recordIndex];
+                
+                db.records = db.records.filter(record => record.id !== id);
+                
+                db.lastUpdated = new Date().toISOString();
+                localStorage.setItem(toolDbKey, JSON.stringify(db));
+                
+                return deletedRecord;
+            } catch (error) {
+                console.error(`Error deleting record from localStorage: ${error}`);
+                return Promise.reject(`Error deleting record: ${error}`);
+            }
+        })
+    );
+    
+    if (toolId === DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR) {
+        // First, get the record that's being deleted
+        deletePromises.push(
+            loadRecords(toolId)
+                .then(records => {
+                    const recordToDelete = records.find(record => record.id === id);
+                    
+                    if (recordToDelete && 
+                        recordToDelete.conventionType === 'Host Naming' && 
+                        (recordToDelete.name.startsWith('AUNTH') || 
+                         recordToDelete.name.startsWith('AUSTH') || 
+                         recordToDelete.name.startsWith('AUTER'))) {
+                        
+                        console.log(`Propagating deletion of ${recordToDelete.name} to datacenter inventory`);
+                        
+                        return loadRecords(DB_CONFIG.TOOLS.DATACENTER_INVENTORY)
+                            .then(inventoryRecords => {
+                                const matchingRecord = inventoryRecords.find(record => 
+                                    record.conventionType === 'Inventory Item' && 
+                                    record.name === recordToDelete.name
+                                );
+                                
+                                if (matchingRecord) {
+                                    const eventRecord = {
+                                        name: `event_${new Date().getTime()}`,
+                                        conventionType: 'Event',
+                                        details: {
+                                            timestamp: new Date().toISOString(),
+                                            actionType: 'delete',
+                                            source: 'name_generator',
+                                            recordName: recordToDelete.name,
+                                            recordType: recordToDelete.conventionType
+                                        },
+                                        userDescription: `${recordToDelete.name} deleted from name generator`
+                                    };
+                                    
+                                    saveRecord(DB_CONFIG.TOOLS.DATACENTER_INVENTORY, eventRecord);
+                                    
+                                    return fetch(`${DB_CONFIG.API_URL}/records/${DB_CONFIG.TOOLS.DATACENTER_INVENTORY}/${matchingRecord.id}`, {
+                                        method: 'DELETE'
+                                    });
+                                }
+                                
+                                return Promise.resolve();
+                            });
+                    }
+                    
+                    return Promise.resolve();
+                })
+        );
+    }
+    
+    return Promise.all(deletePromises)
+        .then(() => Promise.resolve())
+        .catch(error => {
+            console.error(`Error in propagating deletion: ${error}`);
+            return Promise.reject(error);
+        });
 }
 
 /**

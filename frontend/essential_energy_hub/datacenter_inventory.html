@@ -238,6 +238,9 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory-content" type="button" role="tab" aria-controls="inventory-content" aria-selected="false">Inventory</button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="events-tab" data-bs-toggle="tab" data-bs-target="#events-content" type="button" role="tab" aria-controls="events-content" aria-selected="false">Events</button>
+                    </li>
                 </ul>
             </div>
             <div class="card-body">
@@ -292,6 +295,30 @@
                         </div>
                         <div id="inventory-no-data-message" class="alert alert-info d-none">
                             No matching inventory items found. Try adjusting your filters or generate more hostnames using the Comprehensive Name Generator.
+                        </div>
+                    </div>
+
+                    <!-- Events Tab Content -->
+                    <div class="tab-pane fade" id="events-content" role="tabpanel" aria-labelledby="events-tab">
+                        <div class="card-title mt-3 mb-3">Event History</div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="events-table">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Action</th>
+                                        <th>Source</th>
+                                        <th>Record</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="events-table-body">
+                                    <!-- Events will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-3" id="no-events-message" style="display: none;">
+                            <p class="text-muted">No events found.</p>
                         </div>
                     </div>
                 </div>
@@ -775,8 +802,12 @@
                                     .then(savedRecord => {
                                         if (existingEntriesMap.has(hostname)) {
                                             recordsUpdated++;
+                                            // Log update event
+                                            logEvent('update', 'datacenter_inventory', hostname, 'Inventory Item');
                                         } else {
                                             recordsCreated++;
+                                            // Log create event
+                                            logEvent('create', 'datacenter_inventory', hostname, 'Inventory Item');
                                         }
                                         return savedRecord;
                                     })
@@ -914,6 +945,9 @@
 
                     // Render the filtered items
                     renderInventoryTable(filteredItems);
+                    
+                    // Also load events for the events tab
+                    loadEvents();
                 })
                 .catch(error => {
                     console.error("Error applying filters:", error);
@@ -1293,6 +1327,92 @@
             console.log('Last known timestamp:', lastUpdatedTimestamp);
             loadInventoryData();
         }
+
+        // Load events from the database
+        function loadEvents() {
+            loadRecords(TOOL_ID)
+                .then(records => {
+                    // Filter for event records
+                    const eventRecords = records.filter(record => record.conventionType === 'Event');
+                    
+                    // Sort events by timestamp (most recent first)
+                    eventRecords.sort((a, b) => {
+                        const timestampA = a.details?.timestamp ? new Date(a.details.timestamp) : new Date(0);
+                        const timestampB = b.details?.timestamp ? new Date(b.details.timestamp) : new Date(0);
+                        return timestampB - timestampA;
+                    });
+                    
+                    // Get the events table body
+                    const eventsTableBody = document.getElementById('events-table-body');
+                    eventsTableBody.innerHTML = '';
+                    
+                    // Show/hide no events message
+                    if (eventRecords.length === 0) {
+                        document.getElementById('no-events-message').style.display = 'block';
+                        return;
+                    } else {
+                        document.getElementById('no-events-message').style.display = 'none';
+                    }
+                    
+                    // Add events to the table
+                    eventRecords.forEach(event => {
+                        const row = document.createElement('tr');
+                        
+                        // Format timestamp
+                        const timestamp = event.details?.timestamp 
+                            ? new Date(event.details.timestamp).toLocaleString() 
+                            : 'Unknown';
+                        
+                        row.innerHTML = `
+                            <td>${timestamp}</td>
+                            <td>${event.details?.actionType || 'Unknown'}</td>
+                            <td>${event.details?.source || 'Unknown'}</td>
+                            <td>${event.details?.recordName || 'Unknown'}</td>
+                            <td>${event.details?.recordType || 'Unknown'}</td>
+                        `;
+                        
+                        eventsTableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error loading events:", error);
+                    document.getElementById('no-events-message').style.display = 'block';
+                });
+        }
+
+        // Log an event
+        function logEvent(actionType, source, recordName, recordType, additionalDetails = {}) {
+            const eventRecord = {
+                name: `event_${new Date().getTime()}`,
+                conventionType: 'Event',
+                details: {
+                    timestamp: new Date().toISOString(),
+                    actionType: actionType,
+                    source: source,
+                    recordName: recordName,
+                    recordType: recordType,
+                    ...additionalDetails
+                },
+                userDescription: `${actionType} ${recordName} from ${source}`
+            };
+            
+            // Save the event
+            saveRecord(TOOL_ID, eventRecord)
+                .catch(error => {
+                    console.error(`Error logging event: ${error}`);
+                });
+        }
+
+        // Add event handlers for tab changes
+        document.addEventListener('DOMContentLoaded', function() {
+            const eventsTab = document.getElementById('events-tab');
+            if (eventsTab) {
+                eventsTab.addEventListener('shown.bs.tab', function() {
+                    // Reload events when tab is shown
+                    loadEvents();
+                });
+            }
+        });
     </script>
 </body>
 </html>
