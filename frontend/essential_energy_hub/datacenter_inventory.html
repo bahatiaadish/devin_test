@@ -1064,6 +1064,9 @@
                             <i class="bi bi-arrow-counterclockwise"></i>
                         </button>
                         ` : ''}
+                        <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${itemId}" data-hostname="${hostname}">
+                            <i class="bi bi-trash"></i>
+                        </button>
                     </td>
                 `;
                 editableTableBody.appendChild(editableRow);
@@ -1078,6 +1081,37 @@
             document.querySelectorAll('.revert-btn').forEach(button => {
                 button.addEventListener('click', handleRevertItem);
             });
+            
+            // Add event listeners for delete buttons
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', handleDeleteItem);
+            });
+        }
+        
+        // Handle deleting an inventory item
+        function handleDeleteItem(event) {
+            const button = event.currentTarget;
+            const itemId = parseInt(button.dataset.id);
+            const hostname = button.dataset.hostname;
+            
+            deleteInventoryItem(itemId, hostname);
+        }
+        
+        // Delete an inventory item
+        function deleteInventoryItem(recordId, recordName) {
+            if (confirm(`Are you sure you want to delete ${recordName}?`)) {
+                // Log delete event before deleting
+                logEvent('delete', 'datacenter_inventory', recordName, 'Inventory Item');
+                
+                deleteRecord(TOOL_ID, recordId)
+                    .then(() => {
+                        loadInventoryData();
+                    })
+                    .catch(error => {
+                        console.error(`Error deleting record: ${error}`);
+                        alert(`Failed to delete record: ${error}`);
+                    });
+            }
         }
 
         // Show no data message
