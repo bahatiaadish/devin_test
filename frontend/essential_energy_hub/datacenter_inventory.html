@@ -651,14 +651,19 @@
         // Flag to mark edited entries
         const EDITED_FLAG = 'edited';
 
-        // Load inventory data from the comprehensive generator database
+        // Load inventory data from the comprehensive generator and the inventory database
         function loadInventoryData() {
-            // We need to load data from the comprehensive generator database
+            // Show loading message
+            document.getElementById('status-message').textContent = 'Loading inventory data...';
+            document.getElementById('status-container').classList.remove('d-none');
+            
+            // Load records from the comprehensive generator
             loadRecords(DB_CONFIG.TOOLS.COMPREHENSIVE_GENERATOR)
                 .then(records => {
                     if (!records || records.length === 0) {
                         showNoDataMessage();
                         updateStatistics([]);
+                        document.getElementById('status-container').classList.add('d-none');
                         return;
                     }
 
@@ -719,15 +724,20 @@
 
                     // Save the inventory items to our own database
                     saveInventoryItems(inventoryItems);
-
-                    // Apply filters and render the inventory table
-                    applyFilters();
-
-                    // Update statistics
-                    updateStatistics(inventoryItems);
+                    
+                    // Also load records from this tool's database for existing inventory items
+                    return loadRecords(TOOL_ID);
+                })
+                .then(records => {
+                    // Apply filters to the inventory items
+                    applyFilters(records);
+                    
+                    // Hide loading message
+                    document.getElementById('status-container').classList.add('d-none');
                 })
                 .catch(error => {
                     console.error("Error loading inventory data:", error);
+                    document.getElementById('status-message').textContent = 'Failed to load inventory data.';
                     showNoDataMessage();
                     updateStatistics([]);
                 });
@@ -886,13 +896,15 @@
         }
 
         // Apply filters to the inventory data
-        function applyFilters() {
+        function applyFilters(recordsParam) {
             const siteFilter = document.getElementById('site-filter').value;
             const roleFilter = document.getElementById('role-filter').value;
             const searchFilter = document.getElementById('search-filter').value.toLowerCase();
 
-            // Load data from our database
-            loadRecords(TOOL_ID)
+            // Use passed records or load from database if not provided
+            const recordsPromise = recordsParam ? Promise.resolve(recordsParam) : loadRecords(TOOL_ID);
+            
+            recordsPromise
                 .then(records => {
                     if (!records || records.length === 0) {
                         showNoDataMessage();
