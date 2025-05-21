@@ -1,0 +1,210 @@
+@import './variables.scss';
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Global styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: $light-gray;
+  color: $dark-gray;
+}
+
+/* Main layout */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-container {
+  display: flex;
+  flex: 1;
+}
+
+.main-content {
+  flex: 1;
+  padding: $spacing-lg;
+  background-color: $light-gray;
+}
+
+/* Header styles */
+.navbar-main {
+  background-color: $secondary-color !important;
+  box-shadow: $shadow-sm;
+  
+  .navbar-brand {
+    color: $white !important;
+    font-weight: bold;
+  }
+  
+  .nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+    
+    &:hover, &.active {
+      color: $white !important;
+    }
+  }
+  
+  .dropdown-menu {
+    border: none;
+    box-shadow: $shadow-md;
+  }
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 250px;
+  min-height: calc(100vh - 56px);
+  background-color: $secondary-color;
+  color: $white;
+  padding: $spacing-lg;
+}
+
+.sidebar-header {
+  padding-bottom: $spacing-md;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: $spacing-md;
+}
+
+.sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.75);
+  padding: $spacing-sm $spacing-md;
+  margin-bottom: $spacing-xs;
+  border-radius: $border-radius-sm;
+  
+  &:hover {
+    color: $white;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  &.active {
+    color: $white;
+    background-color: $primary-color;
+  }
+}
+
+/* Landing page styles */
+.landing-header {
+  text-align: center;
+  padding: $spacing-xxl 0;
+  background-color: $secondary-color;
+  color: $white;
+  margin-bottom: $spacing-xl;
+  border-radius: $border-radius-md;
+  
+  h1 {
+    font-weight: bold;
+    margin-bottom: $spacing-md;
+  }
+}
+
+.section-title {
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-sm;
+  border-bottom: 2px solid $primary-color;
+  color: $secondary-color;
+}
+
+.tool-card {
+  transition: transform $transition-speed ease, box-shadow $transition-speed ease;
+  border: none;
+  box-shadow: $shadow-sm;
+  height: 100%;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-md;
+  }
+  
+  .card-title {
+    color: $secondary-color;
+    font-weight: 600;
+  }
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .btn-primary {
+    background-color: $primary-color;
+    border-color: $primary-color;
+    margin-top: auto;
+    
+    &:hover {
+      background-color: darken($primary-color, 10%);
+      border-color: darken($primary-color, 10%);
+    }
+  }
+}
+
+.featured-tool-card {
+  border-left: 5px solid $primary-color;
+}
+
+.tool-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba($primary-color, 0.1);
+  margin-bottom: $spacing-md;
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: $primary-color;
+  border-color: $primary-color;
+  
+  &:hover, &:focus, &:active {
+    background-color: darken($primary-color, 10%) !important;
+    border-color: darken($primary-color, 10%) !important;
+  }
+}
+
+.btn-outline-primary {
+  color: $primary-color;
+  border-color: $primary-color;
+  
+  &:hover, &:focus, &:active {
+    background-color: $primary-color !important;
+    border-color: $primary-color !important;
+    color: $white !important;
+  }
+}
+
+.btn-secondary {
+  background-color: $secondary-color;
+  border-color: $secondary-color;
+  
+  &:hover, &:focus, &:active {
+    background-color: darken($secondary-color, 10%) !important;
+    border-color: darken($secondary-color, 10%) !important;
+  }
+}
+
+/* Authentication pages */
+.auth-container {
+  max-width: 500px;
+  margin: $spacing-xxl auto;
+  padding: $spacing-xl;
+  background-color: $white;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-md;
+}
+
+.auth-title {
+  text-align: center;
+  margin-bottom: $spacing-xl;
+  color: $secondary-color;
+}
+
+.auth-form {
+  margin-bottom: $spacing-lg;
+}
+
+.auth-link {
+  text-align: center;
+  margin-top: $spacing-lg;
+}

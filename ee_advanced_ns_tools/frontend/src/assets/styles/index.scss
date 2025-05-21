@@ -1,0 +1,73 @@
+@import './variables.scss';
+
+/* Global styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: $light-gray;
+  color: $dark-gray;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: $primary-color;
+  
+  &:hover {
+    color: darken($primary-color, 10%);
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: $secondary-color;
+  margin-bottom: $spacing-md;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
+
+.text-primary {
+  color: $primary-color !important;
+}
+
+.text-secondary {
+  color: $secondary-color !important;
+}
+
+.bg-primary {
+  background-color: $primary-color !important;
+}
+
+.bg-secondary {
+  background-color: $secondary-color !important;
+}
+
+/* Placeholder styles */
+.placeholder-icon {
+  width: 30px;
+  height: 30px;
+  background-color: rgba($primary-color, 0.2);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Responsive utilities */
+@media (max-width: $breakpoint-md) {
+  .d-md-none {
+    display: none !important;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .d-sm-none {
+    display: none !important;
+  }
+}

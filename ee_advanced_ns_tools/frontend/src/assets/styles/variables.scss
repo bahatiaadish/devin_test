@@ -1,0 +1,43 @@
+// Essential Energy color scheme
+$primary-color: #FF6600;
+$secondary-color: #002D62;
+$white: #FFFFFF;
+$light-gray: #F8F9FA;
+$medium-gray: #E9ECEF;
+$dark-gray: #343A40;
+$black: #000000;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-xxl: 3rem;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Font sizes
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-md: 1rem;
+$font-size-lg: 1.25rem;
+$font-size-xl: 1.5rem;
+$font-size-xxl: 2rem;
+
+// Border radius
+$border-radius-sm: 0.25rem;
+$border-radius-md: 0.5rem;
+$border-radius-lg: 1rem;
+
+// Shadows
+$shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+$shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+
+// Transitions
+$transition-speed: 0.3s;
