@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Essential Energy Security Zones - Interactive</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #2d3748;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #1a365d;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .section-header {
+            background-color: #3182ce;
+            color: white;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        .section-header:hover {
+            background-color: #2c5282;
+        }
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .section-content {
+            padding: 0;
+            display: none;
+        }
+        .section.active .section-content {
+            display: block;
+            padding: 20px;
+        }
+        .subsection {
+            background-color: #f8fafc;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        .subsection-header {
+            background-color: #4299e1;
+            color: white;
+            padding: 12px 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        .subsection-header:hover {
+            background-color: #3182ce;
+        }
+        .subsection-header h3 {
+            margin: 0;
+            font-size: 1.3em;
+        }
+        .subsection-content {
+            padding: 0;
+            display: none;
+        }
+        .subsection.active .subsection-content {
+            display: block;
+            padding: 15px;
+        }
+        .subsubsection {
+            background-color: #edf2f7;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        .subsubsection-header {
+            background-color: #63b3ed;
+            color: white;
+            padding: 10px 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        .subsubsection-header:hover {
+            background-color: #4299e1;
+        }
+        .subsubsection-header h4 {
+            margin: 0;
+            font-size: 1.1em;
+        }
+        .subsubsection-content {
+            padding: 0;
+            display: none;
+        }
+        .subsubsection.active .subsubsection-content {
+            display: block;
+            padding: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #718096;
+            padding: 12px;
+            text-align: left;
+            color: #000000;
+        }
+        th {
+            background-color: #4299e1;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #edf2f7;
+        }
+        tr:nth-child(odd) {
+            background-color: #f8fafc;
+        }
+        .icon {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            line-height: 20px;
+        }
+        .search-container {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        .search-input:focus {
+            border-color: #3182ce;
+            outline: none;
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+        .level-0 { background-color: #FC8181; }
+        .level-1 { background-color: #F6AD55; }
+        .level-2 { background-color: #F6E05E; }
+        .level-3 { background-color: #68D391; }
+        .level-4 { background-color: #4FD1C5; }
+        .level-5 { background-color: #63B3ED; }
+        .highlight {
+            background-color: #FEFCBF;
+            padding: 2px;
+            border-radius: 2px;
+        }
+        .no-results {
+            display: none;
+            padding: 20px;
+            text-align: center;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #718096;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #718096;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Essential Energy Security Zones</h1>
+            <div class="subtitle">Interactive Visualization of Security Zones Across the Organization</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search for zones, security levels, or descriptions...">
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color level-0"></div>
+                <span>Level 0 - External Untrusted</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color level-1"></div>
+                <span>Level 1 - Semi-Trusted</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color level-2"></div>
+                <span>Level 2 - Legacy Architecture</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color level-3"></div>
+                <span>Level 3 - Trusted</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color level-4"></div>
+                <span>Level 4 - Moderately Trusted</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color level-5"></div>
+                <span>Level 5 - Highly Trusted</span>
+            </div>
+        </div>
+
+        <div class="no-results">No matching zones found. Try a different search term.</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add content dynamically
+            loadZoneContent();
+            
+            // Setup search functionality
+            setupSearch();
+            
+            // Add event listeners for expandable sections AFTER content is loaded
+            // Small delay to ensure all content is fully rendered
+            setTimeout(function() {
+                setupExpandableSections();
+            }, 100);
+        });
+
+        function setupExpandableSections() {
+            // Wait for content to be fully loaded before attaching event listeners
+            setTimeout(() => {
+                // Add click event listeners to all section headers
+                document.querySelectorAll('.section-header').forEach(header => {
+                    header.addEventListener('click', function(e) {
+                        // Toggle active class
+                        const section = this.parentElement;
+                        section.classList.toggle('active');
+                        
+                        // Get content element
+                        const content = section.querySelector('.section-content');
+                        
+                        // Force display style directly
+                        if (section.classList.contains('active')) {
+                            content.style.display = 'block';
+                            content.style.padding = '20px';
+                        } else {
+                            content.style.display = 'none';
+                            content.style.padding = '0';
+                        }
+                        
+                        // Toggle the icon rotation
+                        const icon = this.querySelector('.icon');
+                        if (icon) {
+                            icon.style.transform = section.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                        }
+                        
+                        e.stopPropagation();
+                    });
+                });
+                
+                // Add click event listeners to all subsection headers
+                document.querySelectorAll('.subsection-header').forEach(header => {
+                    header.addEventListener('click', function(e) {
+                        // Toggle active class
+                        const subsection = this.parentElement;
+                        subsection.classList.toggle('active');
+                        
+                        // Get content element
+                        const content = subsection.querySelector('.subsection-content');
+                        
+                        // Force display style directly
+                        if (subsection.classList.contains('active')) {
+                            content.style.display = 'block';
+                            content.style.padding = '15px';
+                        } else {
+                            content.style.display = 'none';
+                            content.style.padding = '0';
+                        }
+                        
+                        // Toggle the icon rotation
+                        const icon = this.querySelector('.icon');
+                        if (icon) {
+                            icon.style.transform = subsection.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                        }
+                        
+                        e.stopPropagation();
+                    });
+                });
+                
+                // Add click event listeners to all subsubsection headers
+                document.querySelectorAll('.subsubsection-header').forEach(header => {
+                    header.addEventListener('click', function(e) {
+                        // Toggle active class
+                        const subsubsection = this.parentElement;
+                        subsubsection.classList.toggle('active');
+                        
+                        // Get content element
+                        const content = subsubsection.querySelector('.subsubsection-content');
+                        
+                        // Force display style directly
+                        if (subsubsection.classList.contains('active')) {
+                            content.style.display = 'block';
+                            content.style.padding = '10px';
+                        } else {
+                            content.style.display = 'none';
+                            content.style.padding = '0';
+                        }
+                        
+                        // Toggle the icon rotation
+                        const icon = this.querySelector('.icon');
+                        if (icon) {
+                            icon.style.transform = subsubsection.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                        }
+                        
+                        e.stopPropagation();
+                    });
+                });
+            }, 500); // Short delay to ensure DOM is fully populated
+        }
+        function loadZoneContent() {
+            const container = document.querySelector('.container');
+            
+            // Framework Section
+            const frameworkSection = createSection('framework-section', 'Security Zone Classification Framework');
+            container.appendChild(frameworkSection);
+            
+            // Datacenter Zones Section
+            const datacenterSection = createSection('datacenter-section', '1. Datacenter Zones');
+            container.appendChild(datacenterSection);
+            
+            // Non-Datacenter Zones Section
+            const nonDatacenterSection = createSection('non-datacenter-section', '2. Non-Datacenter Zones');
+            container.appendChild(nonDatacenterSection);
+            
+            // Management and Control Architectures Section
+            const managementSection = createSection('management-section', '3. Management and Control Architectures');
+            container.appendChild(managementSection);
+            
+            // Zone Security Implementation Section
+            const implementationSection = createSection('implementation-section', '4. Zone Security Implementation');
+            container.appendChild(implementationSection);
+            
+            // Compliance Alignment Section
+            const complianceSection = createSection('compliance-section', '5. Compliance Alignment');
+            container.appendChild(complianceSection);
+            
+            // Add footer
+            const footer = document.createElement('div');
+            footer.className = 'footer';
+            footer.innerHTML = 'Essential Energy Security Zones Visualization - ' + new Date().getFullYear();
+            container.appendChild(footer);
+            
+            // Add content to each section
+            addFrameworkContent(frameworkSection);
+            addDatacenterContent(datacenterSection);
+            addNonDatacenterContent(nonDatacenterSection);
+            addManagementContent(managementSection);
+            addImplementationContent(implementationSection);
+            addComplianceContent(complianceSection);
+        }
+        
+        function createSection(id, title) {
+            const section = document.createElement('div');
+            section.className = 'section';
+            section.id = id;
+            
+            const header = document.createElement('div');
+            header.className = 'section-header';
+            header.innerHTML = `<h2>${title}</h2><span class="icon">▼</span>`;
+            
+            const content = document.createElement('div');
+            content.className = 'section-content';
+            
+            section.appendChild(header);
+            section.appendChild(content);
+            
+            return section;
+        }
+        
+        function createSubsection(id, title) {
+            const subsection = document.createElement('div');
+            subsection.className = 'subsection';
+            subsection.id = id;
+            
+            const header = document.createElement('div');
+            header.className = 'subsection-header';
+            header.innerHTML = `<h3>${title}</h3><span class="icon">▼</span>`;
+            
+            const content = document.createElement('div');
+            content.className = 'subsection-content';
+            
+            subsection.appendChild(header);
+            subsection.appendChild(content);
+            
+            return subsection;
+        }
+        
+        function createSubsubsection(id, title) {
+            const subsubsection = document.createElement('div');
+            subsubsection.className = 'subsubsection';
+            subsubsection.id = id;
+            
+            const header = document.createElement('div');
+            header.className = 'subsubsection-header';
+            header.innerHTML = `<h4>${title}</h4><span class="icon">▼</span>`;
+            
+            const content = document.createElement('div');
+            content.className = 'subsubsection-content';
+            
+            subsubsection.appendChild(header);
+            subsubsection.appendChild(content);
+            
+            return subsubsection;
+        }
+        
+        function setupSearch() {
+            const searchInput = document.querySelector('.search-input');
+            const noResults = document.querySelector('.no-results');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                let hasResults = false;
+                
+                // Get all sections, subsections, and subsubsections
+                const sections = document.querySelectorAll('.section');
+                
+                sections.forEach(section => {
+                    let sectionHasMatch = false;
+                    
+                    // Check if section title matches
+                    const sectionTitle = section.querySelector('h2').textContent.toLowerCase();
+                    const sectionMatch = sectionTitle.includes(searchTerm);
+                    
+                    // Get all text content in the section
+                    const sectionContent = section.textContent.toLowerCase();
+                    const contentMatch = sectionContent.includes(searchTerm);
+                    
+                    if (sectionMatch || contentMatch) {
+                        sectionHasMatch = true;
+                        hasResults = true;
+                    }
+                    
+                    // Show/hide section based on match
+                    section.style.display = sectionHasMatch || searchTerm === '' ? 'block' : 'none';
+                    
+                    // If search term is not empty and section has a match, expand it
+                    if (searchTerm !== '' && sectionHasMatch) {
+                        section.classList.add('active');
+                        
+                        // Rotate the icon
+                        const icon = section.querySelector('.section-header .icon');
+                        if (icon) {
+                            icon.style.transform = 'rotate(180deg)';
+                        }
+                        
+                        // Highlight matching text
+                        highlightMatches(section, searchTerm);
+                    } else if (searchTerm === '') {
+                        // Remove highlights when search is cleared
+                        removeHighlights(section);
+                    }
+                });
+                
+                // Show/hide no results message
+                noResults.style.display = !hasResults && searchTerm !== '' ? 'block' : 'none';
+            });
+        }
+        
+        function highlightMatches(element, term) {
+            // Remove existing highlights first
+            removeHighlights(element);
+            
+            // Skip highlighting if term is empty
+            if (!term) return;
+            
+            // Get all text nodes in the element
+            const textNodes = getTextNodes(element);
+            
+            textNodes.forEach(node => {
+                const text = node.nodeValue;
+                const lowerText = text.toLowerCase();
+                let index = lowerText.indexOf(term);
+                
+                if (index >= 0) {
+                    // Create a document fragment to hold the highlighted text
+                    const fragment = document.createDocumentFragment();
+                    let lastIndex = 0;
+                    
+                    while (index >= 0) {
+                        // Add text before the match
+                        fragment.appendChild(document.createTextNode(text.substring(lastIndex, index)));
+                        
+                        // Create highlighted span for the match
+                        const highlight = document.createElement('span');
+                        highlight.className = 'highlight';
+                        highlight.textContent = text.substring(index, index + term.length);
+                        fragment.appendChild(highlight);
+                        
+                        // Update lastIndex and find next match
+                        lastIndex = index + term.length;
+                        index = lowerText.indexOf(term, lastIndex);
+                    }
+                    
+                    // Add remaining text
+                    if (lastIndex < text.length) {
+                        fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+                    }
+                    
+                    // Replace the original text node with the fragment
+                    node.parentNode.replaceChild(fragment, node);
+                }
+            });
+        }
+        
+        function removeHighlights(element) {
+            // Find all highlight spans
+            const highlights = element.querySelectorAll('.highlight');
+            
+            highlights.forEach(highlight => {
+                // Replace the highlight with its text content
+                const text = document.createTextNode(highlight.textContent);
+                highlight.parentNode.replaceChild(text, highlight);
+            });
+            
+            // Normalize the element to merge adjacent text nodes
+            element.normalize();
+        }
+        
+        function getTextNodes(element) {
+            const textNodes = [];
+            
+            function getNodes(node) {
+                if (node.nodeType === 3) { // Text node
+                    textNodes.push(node);
+                } else if (node.nodeType === 1) { // Element node
+                    for (let i = 0; i < node.childNodes.length; i++) {
+                        getNodes(node.childNodes[i]);
+                    }
+                }
+            }
+            
+            getNodes(element);
+            return textNodes;
+        }
+        function addFrameworkContent(section) {
+            const content = section.querySelector('.section-content');
+            content.innerHTML = `
+                <p>Essential Energy implements a hierarchical security zone model with six security levels (0-5), where each level represents increasing trust and security requirements:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Security Level</th>
+                            <th>Trust Level</th>
+                            <th>Description</th>
+                            <th>Example Systems</th>
+                            <th>Security Controls</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Level 0</td>
+                            <td>External Untrusted</td>
+                            <td>Public internet, external networks with no trust</td>
+                            <td>Internet-facing services, public websites</td>
+                            <td>NGFW, WAF, DDoS protection, IPS</td>
+                        </tr>
+                        <tr>
+                            <td>Level 1</td>
+                            <td>Semi-Trusted</td>
+                            <td>Partner networks, SaaS applications with limited trust</td>
+                            <td>Third-party integrations, vendor connections</td>
+                            <td>Encrypted VPN, API gateways, data validation</td>
+                        </tr>
+                        <tr>
+                            <td>Level 2</td>
+                            <td>Legacy Architecture</td>
+                            <td>SCADA Control systems, field devices</td>
+                            <td>RTUs, IEDs, control systems</td>
+                            <td>Network segmentation, protocol filtering, IPS</td>
+                        </tr>
+                        <tr>
+                            <td>Level 3</td>
+                            <td>Trusted</td>
+                            <td>Enterprise systems, OT support services</td>
+                            <td>Business applications, databases, file servers</td>
+                            <td>Firewall, RBAC, encryption, vulnerability management</td>
+                        </tr>
+                        <tr>
+                            <td>Level 4</td>
+                            <td>Moderately Trusted</td>
+                            <td>Enterprise security services, elevated management</td>
+                            <td>Security monitoring, network management</td>
+                            <td>L7 firewall, MFA, enhanced logging, IPS</td>
+                        </tr>
+                        <tr>
+                            <td>Level 5</td>
+                            <td>Highly Trusted</td>
+                            <td>Critical management, privileged access systems</td>
+                            <td>PAM, SIEM, infrastructure control plane, OOB management</td>
+                            <td>NGFW, micro-segmentation, MFA+PAM, JIT access, session recording, end-to-end encryption</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+        }
+        
+        function addDatacenterContent(section) {
+            const content = section.querySelector('.section-content');
+            
+            // Create subsections
+            const northSouthDCSubsection = createSubsection('north-south-dc', '1.1 North & South Datacenter Zones (Production)');
+            const tertiaryDCSubsection = createSubsection('tertiary-dc', '1.2 Tertiary Datacenter Zones (Management)');
+            const imzSubsection = createSubsection('imz', '1.3 Infrastructure Management Zone (IMZ)');
+            
+            // Add subsections to content
+            content.appendChild(northSouthDCSubsection);
+            content.appendChild(tertiaryDCSubsection);
+            content.appendChild(imzSubsection);
+            
+            // Add content to North & South DC subsection
+            const northSouthContent = northSouthDCSubsection.querySelector('.subsection-content');
+            
+            // Create subsubsections for North & South DC
+            const enterpriseITSubsubsection = createSubsubsection('enterprise-it', 'Enterprise IT Zones');
+            const otSubsubsection = createSubsubsection('ot-zones', 'Operational Technology (OT) Zones');
+            
+            // Add subsubsections to North & South DC content
+            northSouthContent.appendChild(enterpriseITSubsubsection);
+            northSouthContent.appendChild(otSubsubsection);
+            
+            // Add content to Enterprise IT subsubsection
+            const enterpriseITContent = enterpriseITSubsubsection.querySelector('.subsubsection-content');
+            enterpriseITContent.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zone Name</th>
+                            <th>Security Level</th>
+                            <th>Description</th>
+                            <th>Key Systems</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Enterprise DMZ</td>
+                            <td>Level 3</td>
+                            <td>Buffer between external and internal systems</td>
+                            <td>Reverse proxies, load balancers, web servers</td>
+                        </tr>
+                        <tr>
+                            <td>Enterprise Security Services</td>
+                            <td>Level 4</td>
+                            <td>Security monitoring, threat management</td>
+                            <td>SIEM, EDR, vulnerability scanners</td>
+                        </tr>
+                        <tr>
+                            <td>Enterprise Telco Services</td>
+                            <td>Level 4</td>
+                            <td>Telecommunications services management</td>
+                            <td>VoIP systems, SIP trunking, UC platforms</td>
+                        </tr>
+                        <tr>
+                            <td>Enterprise Common Services</td>
+                            <td>Level 3</td>
+                            <td>Shared services like DNS, NTP, DHCP</td>
+                            <td>DNS servers, NTP servers, DHCP servers</td>
+                        </tr>
+                        <tr>
+                            <td>Enterprise Systems</td>
+                            <td>Level 3</td>
+                            <td>Business applications and databases</td>
+                            <td>ERP, CRM, HR systems, databases</td>
+                        </tr>
+                        <tr>
+                            <td>Enterprise Authentication</td>
+                            <td>Level 3-5</td>
+                            <td>Identity and access management services</td>
+                            <td>Active Directory, RADIUS, MFA systems</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            // Add content to OT subsubsection
+            const otContent = otSubsubsection.querySelector('.subsubsection-content');
+            otContent.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zone Name</th>
+                            <th>Security Level</th>
+                            <th>Description</th>
+                            <th>Key Systems</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>OT DMZ</td>
+                            <td>Level 3.5</td>
+                            <td>Buffer between IT and OT environments</td>
+                            <td>Data diodes, protocol converters, historians</td>
+                        </tr>
+                        <tr>
+                            <td>OT Support Services</td>
+                            <td>Level 3</td>
+                            <td>Support systems for OT environment</td>
+                            <td>Patch management, backup systems, monitoring</td>
+                        </tr>
+                        <tr>
+                            <td>OT Security</td>
+                            <td>Level 3</td>
+                            <td>Security monitoring for OT systems</td>
+                            <td>OT-specific SIEM, IDS/IPS, asset management</td>
+                        </tr>
+                        <tr>
+                            <td>OT Telco</td>
+                            <td>Level 3</td>
+                            <td>Telecommunications for OT systems</td>
+                            <td>Radio systems, MPLS networks, field communications</td>
+                        </tr>
+                        <tr>
+                            <td>ADMS Operations</td>
+                            <td>Level 3</td>
+                            <td>Advanced Distribution Management Systems</td>
+                            <td>ADMS servers, operator workstations, training systems</td>
+                        </tr>
+                        <tr>
+                            <td>ADMS Control DMZ</td>
+                            <td>Level 2.5</td>
+                            <td>Buffer between operations and control</td>
+                            <td>Protocol gateways, data validation systems</td>
+                        </tr>
+                        <tr>
+                            <td>SCADA Control</td>
+                            <td>Level 2</td>
+                            <td>Supervisory Control and Data Acquisition</td>
+                            <td>SCADA servers, HMI systems, real-time databases</td>
+                        </tr>
+                        <tr>
+                            <td>Development Control DMZ</td>
+                            <td>Level 2.5</td>
+                            <td>Development environment for control systems</td>
+                            <td>Test environments, development systems</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            // Add content to Tertiary DC subsection
+            const tertiaryContent = tertiaryDCSubsection.querySelector('.subsection-content');
+            
+            // Create subsubsections for Tertiary DC
+            const managementZonesSubsubsection = createSubsubsection('management-zones', 'Management Zones');
+            const authenticationZonesSubsubsection = createSubsubsection('authentication-zones', 'Authentication Zones');
+            
+            // Add subsubsections to Tertiary DC content
+            tertiaryContent.appendChild(managementZonesSubsubsection);
+            tertiaryContent.appendChild(authenticationZonesSubsubsection);
+            
+            // Add content to Management Zones subsubsection
+            const managementZonesContent = managementZonesSubsubsection.querySelector('.subsubsection-content');
+            managementZonesContent.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zone Name</th>
+                            <th>Security Level</th>
+                            <th>Description</th>
+                            <th>Key Systems</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Standard Management Zone</td>
+                            <td>Level 3</td>
+                            <td>General monitoring, service desk tools, reporting</td>
+                            <td>Monitoring systems, ticketing systems, reporting tools</td>
+                        </tr>
+                        <tr>
+                            <td>Elevated Management Zone</td>
+                            <td>Level 4</td>
+                            <td>Network management, configuration management, security monitoring</td>
+                            <td>Network management systems, configuration management, security monitoring</td>
+                        </tr>
+                        <tr>
+                            <td>Privileged Management Zone</td>
+                            <td>Level 5</td>
+                            <td>Out-of-band management, infrastructure control plane, PAM</td>
+                            <td>PAM systems, OOB management, infrastructure control plane</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            // Add content to Authentication Zones subsubsection
+            const authenticationZonesContent = authenticationZonesSubsubsection.querySelector('.subsubsection-content');
+            authenticationZonesContent.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zone Name</th>
+                            <th>Security Level</th>
+                            <th>Description</th>
+                            <th>Key Systems</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Standard Authentication</td>
+                            <td>Level 3</td>
+                            <td>Basic AD authentication</td>
+                            <td>Domain controllers, LDAP servers</td>
+                        </tr>
+                        <tr>
+                            <td>MFA Authentication</td>
+                            <td>Level 4</td>
+                            <td>Multi-factor authentication services</td>
+                            <td>MFA servers, token services, authentication gateways</td>
+                        </tr>
+                        <tr>
+                            <td>Privileged Authentication</td>
+                            <td>Level 5</td>
+                            <td>Privileged access workflows and controls</td>
+                            <td>PAM systems, JIT access control, session recording</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+        }
+        
+        function addNonDatacenterContent(section) {
+            const content = section.querySelector('.section-content');
+            
+            // Create subsections
+            const fieldDeviceSubsection = createSubsection('field-device', '2.1 Field Device Zones (Level 0-1)');
+            const controlSystemSubsection = createSubsection('control-system', '2.2 Control System Zones (Level 2)');
+            const remoteSiteSubsection = createSubsection('remote-site', '2.3 Remote Site Zones');
+            const energySectorSubsection = createSubsection('energy-sector', '2.4 Australian Energy Sector Specific Domains');
+            
+            // Add subsections to content
+            content.appendChild(fieldDeviceSubsection);
+            content.appendChild(controlSystemSubsection);
+            content.appendChild(remoteSiteSubsection);
+            content.appendChild(energySectorSubsection);
+            
+            // Add content to Field Device subsection
+            const fieldDeviceContent = fieldDeviceSubsection.querySelector('.subsection-content');
+            fieldDeviceContent.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zone Name</th>
+                            <th>Security Level</th>
+                            <th>Description</th>
+                            <th>Key Systems</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Field Devices</td>
+                            <td>Level 0-1</td>
+                            <td>RTUs, IEDs, field sensors and actuators</td>
+                            <td>Remote Terminal Units, sensors, actuators, PLCs</td>
+                        </tr>
+                        <tr>
+                            <td>Field Communications</td>
+                            <td>Level 0-1</td>
+                            <td>Communication networks for field devices</td>
+                            <td>Radio networks, cellular modems, serial links</td>
+                        </tr>
+                        <tr>
+                            <td>Remote Terminal Units</td>
+                            <td>Level 0-1</td>
+                            <td>RTUs at remote locations</td>
+                            <td>RTU hardware, firmware, local I/O</td>
+                        </tr>
+                        <tr>
+                            <td>Intelligent Electronic Devices</td>
+                            <td>Level 0-1</td>
+                            <td>IEDs at substations and field locations</td>
+                            <td>Protection relays, reclosers, capacitor bank controllers</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            // Add content to Control System subsection
+            const controlSystemContent = controlSystemSubsection.querySelector('.subsection-content');
+            controlSystemContent.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zone Name</th>
+                            <th>Security Level</th>
+                            <th>Description</th>
+                            <th>Key Systems</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>SCADA Control Systems</td>
+                            <td>Level 2</td>
+                            <td>Systems that directly control and monitor field devices</td>
+                            <td>SCADA servers, front-end processors, protocol converters</td>
+                        </tr>
+                        <tr>
+                            <td>Control Room Systems</td>
+                            <td>Level 2</td>
+                            <td>Operator workstations and HMI systems</td>
+                            <td>HMI workstations, video walls, alarm systems</td>
+                        </tr>
+                        <tr>
+                            <td>Real-time Processing</td>
+                            <td>Level 2</td>
+                            <td>Real-time data processing equipment</td>
+                            <td>Real-time databases, historians, calculation engines</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            // Add content to Remote Site subsection
+            const remoteSiteContent = remoteSiteSubsection.querySelector('.subsection-content');
+            remoteSiteContent.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zone Name</th>
+                            <th>Security Level</th>
+                            <th>Description</th>
+                            <th>Key Systems</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Depot Sites</td>
+                            <td>Level 2-3</td>
+                            <td>Operational depots with local systems</td>
+                            <td>Local servers, workstations, network equipment</td>
+                        </tr>
+                        <tr>
+                            <td>Substation Sites</td>
+                            <td>Level 1-2</td>
+                            <td>Electrical substations with control equipment</td>
+                            <td>Substation automation, protection systems, local HMI</td>
+                        </tr>
+                        <tr>
+                            <td>Remote Office Sites</td>
+                            <td>Level 3</td>
+                            <td>Remote office locations with business systems</td>
+                            <td>Office workstations, printers, local servers</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            // Add content to Energy Sector subsection
+            const energySectorContent = energySectorSubsection.querySelector('.subsection-content');
+            energySectorContent.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zone Name</th>
+                            <th>Security Level</th>
+                            <th>Description</th>
+                            <th>Key Systems</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Market Systems Domain</td>
+                            <td>Level 3-4</td>
+                            <td>Interfaces to AEMO, wholesale energy market systems</td>
+                            <td>Market gateways, bidding systems, settlement systems</td>
+                        </tr>
+                        <tr>
+                            <td>Renewable Integration Domain</td>
+                            <td>Level 2-3</td>
+                            <td>Integration with solar farms, wind farms, battery storage</td>
+                            <td>Renewable management systems, integration gateways</td>
+                        </tr>
+                        <tr>
+                            <td>Virtual Power Plant Management</td>
+                            <td>Level 2-3</td>
+                            <td>Management of distributed energy resources</td>
+                            <td>VPP management platforms, aggregation systems</td>
+                        </tr>
+                        <tr>
+                            <td>Third-party Renewable Assets</td>
+                            <td>Level 1-2</td>
+                            <td>Integration with third-party owned/operated assets</td>
+                            <td>Integration gateways, data exchange systems</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+        }
+        
+        function addManagementContent(section) {
+            const content = section.querySelector('.section-content');
+            
+            // Create subsections
+            const inbandSubsection = createSubsection('inband-management', '3.1 In-Band Management');
+            const oobSubsection = createSubsection('oob-management', '3.2 Out-of-Band Management');
+            
+            // Add subsections to content
+            content.appendChild(inbandSubsection);
+            content.appendChild(oobSubsection);
+            
+            // Add content to In-Band Management subsection
+            const inbandContent = inbandSubsection.querySelector('.subsection-content');
+            inbandContent.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zone Name</th>
+                            <th>Security Level</th>
+                            <th>Description</th>
+                            <th>Key Systems</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Management VLANs/VXLANs</td>
+                            <td>Level 3-4</td>
+                            <td>Dedicated VLANs for management traffic</td>
+                            <td>Management network segments, routing infrastructure</td>
+                        </tr>
+                        <tr>
+                            <td>Management Firewalls</td>
+                            <td>Level 4</td>
+                            <td>Firewalls protecting management traffic</td>
+                            <td>Next-gen firewalls, IPS systems, traffic inspection</td>
+                        </tr>
+                        <tr>
+                            <td>Management Jump Servers</td>
+                            <td>Level 3-4</td>
+                            <td>Jump hosts for administrative access</td>
+                            <td>Bastion hosts, RDP/SSH gateways, session recording</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            // Add content to Out-of-Band Management subsection
+            const oobContent = oobSubsection.querySelector('.subsection-content');
+            oobContent.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zone Name</th>
+                            <th>Security Level</th>
+                            <th>Description</th>
+                            <th>Key Systems</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dedicated OOB Network</td>
+                            <td>Level 5</td>
+                            <td>Physically separate network for management</td>
+                            <td>Dedicated switches, routers, firewalls</td>
+                        </tr>
+                        <tr>
+                            <td>OOB Firewalls</td>
+                            <td>Level 5</td>
+                            <td>Firewalls protecting OOB traffic</td>
+                            <td>Dedicated firewalls, traffic inspection</td>
+                        </tr>
+                        <tr>
+                            <td>OOB Access Control</td>
+                            <td>Level 5</td>
+                            <td>Access control for OOB management</td>
+                            <td>PAM systems, MFA, JIT access</td>
+                        </tr>
+                        <tr>
+                            <td>OOB Monitoring</td>
+                            <td>Level 5</td>
+                            <td>Monitoring of OOB infrastructure</td>
+                            <td>Dedicated monitoring systems, alerting</td>
+                        </tr>
+                        <tr>
+                            <td>Remote Console Network</td>
+                            <td>Level 5</td>
+                            <td>Network for server remote management interfaces</td>
+                            <td>iDRAC, iLO, IMM, IPMI systems</td>
+                        </tr>
+                        <tr>
+                            <td>Terminal Access</td>
+                            <td>Level 5</td>
+                            <td>Serial console servers for emergency access</td>
+                            <td>Console servers, terminal servers</td>
+                        </tr>
+                        <tr>
+                            <td>KVM Over IP</td>
+                            <td>Level 5</td>
+                            <td>Remote KVM access to physical servers</td>
+                            <td>KVM switches, IP-KVM systems</td>
+                        </tr>
+                        <tr>
+                            <td>Power Management</td>
+                            <td>Level 5</td>
+                            <td>Remote power control capabilities</td>
+                            <td>Intelligent PDUs, remote power switches</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+        }
+        
+        function addImplementationContent(section) {
+            const content = section.querySelector('.section-content');
+            content.innerHTML = `
+                <p>Each security zone implements controls appropriate to its security level:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Control Category</th>
+                            <th>Standard Zones (L3)</th>
+                            <th>Elevated Zones (L4)</th>
+                            <th>Privileged Zones (L5)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Authentication</td>
+                            <td>AD Authentication</td>
+                            <td>MFA + AD</td>
+                            <td>MFA + PAM + AD</td>
+                        </tr>
+                        <tr>
+                            <td>Network Security</td>
+                            <td>L4 Firewall</td>
+                            <td>L7 Firewall + IPS</td>
+                            <td>NGFW + Micro-segmentation</td>
+                        </tr>
+                        <tr>
+                            <td>Access Control</td>
+                            <td>Basic RBAC</td>
+                            <td>Enhanced RBAC</td>
+                            <td>JIT Access + Approval</td>
+                        </tr>
+                        <tr>
+                            <td>Session Security</td>
+                            <td>Timeout</td>
+                            <td>Timeout + Monitoring</td>
+                            <td>Full Session Recording</td>
+                        </tr>
+                        <tr>
+                            <td>Auditing</td>
+                            <td>Basic Logging</td>
+                            <td>Enhanced Logging</td>
+                            <td>Comprehensive Audit</td>
+                        </tr>
+                        <tr>
+                            <td>Encryption</td>
+                            <td>Transport Encryption</td>
+                            <td>Transport + Storage</td>
+                            <td>End-to-End Encryption</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Cross-Datacenter Relationships</h3>
+                <p>The security zones are distributed across three datacenters with specific relationships:</p>
+                <ul>
+                    <li><strong>North and South Datacenters</strong>: Active-active configuration for production workloads</li>
+                    <li><strong>Tertiary Datacenter</strong>: Dedicated to management functions with three-tier management structure</li>
+                    <li><strong>Cross-DC Communication</strong>: Secured through encrypted tunnels with consistent security policies</li>
+                </ul>
+            `;
+        }
+        
+        function addComplianceContent(section) {
+            const content = section.querySelector('.section-content');
+            content.innerHTML = `
+                <p>The zone architecture aligns with multiple regulatory frameworks:</p>
+                <ul>
+                    <li><strong>Australian Energy Sector Cyber Security Framework (AESCSF)</strong>: Provides a maturity model for cyber security capabilities in the energy sector</li>
+                    <li><strong>Australian Signals Directorate Information Security Manual (ISM)</strong>: Outlines security controls for Australian government systems</li>
+                    <li><strong>Security of Critical Infrastructure Act 2018 (SOCI Act)</strong>: Establishes a framework to manage national security risks to critical infrastructure</li>
+                    <li><strong>ISO 27001</strong>: International standard for information security management</li>
+                    <li><strong>ISA/IEC 62443</strong>: Standards for industrial automation and control systems security</li>
+                </ul>
+                
+                <h3>Key Compliance Principles</h3>
+                <ul>
+                    <li><strong>Defense in Depth</strong>: Multiple layers of security controls</li>
+                    <li><strong>Least Privilege</strong>: Minimal access rights for users and systems</li>
+                    <li><strong>Segregation of Duties</strong>: Separation of critical functions</li>
+                    <li><strong>Need to Know</strong>: Access only to information required for job functions</li>
+                    <li><strong>Default Deny</strong>: All communication is denied unless explicitly allowed</li>
+                    <li><strong>Secure by Design</strong>: Security built into architecture from the beginning</li>
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html>
