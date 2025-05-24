@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Cisco ACI and F5 BIG-IP Traffic Flows</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Interactive Cisco ACI and F5 BIG-IP Traffic Flows</h1>
+        
+        <p>This interactive visualization allows you to explore different traffic flow patterns in Cisco ACI and F5 BIG-IP integration scenarios. Click on the tabs to view different diagrams, and use the flow control buttons to highlight specific traffic paths.</p>
+        
+        <div class="tabs">
+            <button class="tab active" data-tab="east-west-tab">East-West Traffic</button>
+            <button class="tab" data-tab="service-chain-tab">Service Chaining</button>
+            <button class="tab" data-tab="l4-l7-tab">L4-L7 Service Insertion</button>
+            <button class="tab" data-tab="multisite-tab">Multi-site PBR</button>
+        </div>
+        
+        <!-- East-West Traffic Tab -->
+        <div id="east-west-tab" class="tab-content active">
+            <h2>East-West Traffic Redirection Between Application Tiers</h2>
+            
+            <p>This diagram shows how PBR enables traffic redirection between application tiers (Web, App, DB). Select specific traffic flows to highlight them:</p>
+            
+            <div id="east-west-diagram-controls" class="flow-controls">
+                <button class="flow-button all" data-flow="all" data-diagram="east-west-diagram">Show All Flows</button>
+                <button class="flow-button" data-flow="web-to-app" data-diagram="east-west-diagram">Web to App Flow</button>
+                <button class="flow-button" data-flow="app-to-web" data-diagram="east-west-diagram">App to Web Return Flow</button>
+                <button class="flow-button" data-flow="app-to-db" data-diagram="east-west-diagram">App to DB Flow</button>
+                <button class="flow-button" data-flow="db-to-app" data-diagram="east-west-diagram">DB to App Return Flow</button>
+                <button class="flow-button none" data-flow="none" data-diagram="east-west-diagram">Hide All Flows</button>
+            </div>
+            
+            <div class="zoom-controls">
+                <button class="zoom-button zoom-out" data-diagram="east-west-diagram">-</button>
+                <span class="zoom-level" data-diagram="east-west-diagram">100%</span>
+                <button class="zoom-button zoom-in" data-diagram="east-west-diagram">+</button>
+                <button class="zoom-button zoom-reset" data-diagram="east-west-diagram">Reset</button>
+            </div>
+            
+            <div id="east-west-diagram" class="diagram-container">
+                <img src="images/east_west_pbr.png" alt="East-West Traffic Diagram" class="diagram-image">
+            </div>
+            
+            <div id="east-west-diagram-descriptions">
+                <div class="flow-description" data-flow="web-to-app">
+                    <h3>Web to App Flow (Forward Path)</h3>
+                    <p>This flow shows how web servers communicate with application servers:</p>
+                    <ol>
+                        <li>Web server initiates a request to the App VIP (10.2.1.100)</li>
+                        <li>The request is intercepted by PBR Policy 1</li>
+                        <li>PBR redirects the traffic to the F5 BIG-IP load balancer</li>
+                        <li>The load balancer processes and selects an appropriate App server</li>
+                        <li>Traffic is forwarded to the selected App server</li>
+                    </ol>
+                    <p>This ensures that all traffic from Web to App tier passes through the load balancer for proper application services and security.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="app-to-web">
+                    <h3>App to Web Return Flow</h3>
+                    <p>This flow shows how application servers respond back to web servers:</p>
+                    <ol>
+                        <li>App server generates a response to the Web server</li>
+                        <li>The response is intercepted by PBR Policy 1</li>
+                        <li>PBR redirects the return traffic to the F5 BIG-IP load balancer</li>
+                        <li>The load balancer processes the return traffic</li>
+                        <li>Traffic is forwarded back to the Web server</li>
+                    </ol>
+                    <p>This maintains connection state and ensures symmetric traffic flow through the load balancer.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="app-to-db">
+                    <h3>App to DB Flow (Forward Path)</h3>
+                    <p>This flow shows how application servers communicate with database servers:</p>
+                    <ol>
+                        <li>App server initiates a request to the DB VIP (10.3.1.200)</li>
+                        <li>The request is intercepted by PBR Policy 2</li>
+                        <li>PBR redirects the traffic to the F5 BIG-IP load balancer</li>
+                        <li>The load balancer processes and selects an appropriate DB server</li>
+                        <li>Traffic is forwarded to the selected DB server</li>
+                    </ol>
+                    <p>This ensures that all traffic from App to DB tier passes through the load balancer for proper application services and security.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="db-to-app">
+                    <h3>DB to App Return Flow</h3>
+                    <p>This flow shows how database servers respond back to application servers:</p>
+                    <ol>
+                        <li>DB server generates a response to the App server</li>
+                        <li>The response is intercepted by PBR Policy 2</li>
+                        <li>PBR redirects the return traffic to the F5 BIG-IP load balancer</li>
+                        <li>The load balancer processes the return traffic</li>
+                        <li>Traffic is forwarded back to the App server</li>
+                    </ol>
+                    <p>This maintains connection state and ensures symmetric traffic flow through the load balancer.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="all">
+                    <h3>All East-West Traffic Flows</h3>
+                    <p>This view shows all traffic flows between application tiers:</p>
+                    <ul>
+                        <li><strong>Blue Arrows:</strong> Web to App forward traffic</li>
+                        <li><strong>Orange Dashed Arrows:</strong> App to Web return traffic</li>
+                        <li><strong>Green Arrows:</strong> App to DB forward traffic</li>
+                        <li><strong>Purple Dashed Arrows:</strong> DB to App return traffic</li>
+                    </ul>
+                    <p>PBR ensures that all inter-tier traffic flows through the appropriate F5 BIG-IP load balancers, maintaining connection state and enabling application services between tiers.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Service Chaining Tab -->
+        <div id="service-chain-tab" class="tab-content">
+            <h2>PBR with Service Chaining (Multiple Services in Sequence)</h2>
+            
+            <p>This diagram shows how PBR enables traffic to flow through multiple security and application services in sequence. Select specific traffic flows to highlight them:</p>
+            
+            <div id="service-chain-diagram-controls" class="flow-controls">
+                <button class="flow-button all" data-flow="all" data-diagram="service-chain-diagram">Show All Flows</button>
+                <button class="flow-button" data-flow="client-to-firewall" data-diagram="service-chain-diagram">Client to Firewall</button>
+                <button class="flow-button" data-flow="firewall-to-waf" data-diagram="service-chain-diagram">Firewall to WAF</button>
+                <button class="flow-button" data-flow="waf-to-load-balancer" data-diagram="service-chain-diagram">WAF to Load Balancer</button>
+                <button class="flow-button" data-flow="load-balancer-to-server" data-diagram="service-chain-diagram">Load Balancer to Server</button>
+                <button class="flow-button" data-flow="return-path" data-diagram="service-chain-diagram">Return Path</button>
+                <button class="flow-button none" data-flow="none" data-diagram="service-chain-diagram">Hide All Flows</button>
+            </div>
+            
+            <div class="zoom-controls">
+                <button class="zoom-button zoom-out" data-diagram="service-chain-diagram">-</button>
+                <span class="zoom-level" data-diagram="service-chain-diagram">100%</span>
+                <button class="zoom-button zoom-in" data-diagram="service-chain-diagram">+</button>
+                <button class="zoom-button zoom-reset" data-diagram="service-chain-diagram">Reset</button>
+            </div>
+            
+            <div id="service-chain-diagram" class="diagram-container">
+                <img src="images/service_chain_pbr.png" alt="Service Chain Diagram" class="diagram-image">
+            </div>
+            
+            <div id="service-chain-diagram-descriptions">
+                <div class="flow-description" data-flow="client-to-firewall">
+                    <h3>Client to Firewall Flow</h3>
+                    <p>This flow shows the initial traffic path from client to the first service in the chain:</p>
+                    <ol>
+                        <li>Client initiates a request to the application</li>
+                        <li>Traffic enters the ACI fabric through the L3Out</li>
+                        <li>PBR Policy 1 intercepts the traffic</li>
+                        <li>PBR redirects traffic to the Next-Gen Firewall</li>
+                        <li>Firewall performs security inspection</li>
+                    </ol>
+                    <p>This ensures that all traffic is first inspected by the firewall for security threats before proceeding further.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="firewall-to-waf">
+                    <h3>Firewall to WAF Flow</h3>
+                    <p>This flow shows traffic moving from the firewall to the web application firewall:</p>
+                    <ol>
+                        <li>Firewall completes inspection and forwards traffic</li>
+                        <li>PBR Policy 2 intercepts the traffic</li>
+                        <li>PBR redirects traffic to the Web Application Firewall</li>
+                        <li>WAF performs application-layer inspection</li>
+                    </ol>
+                    <p>After passing general security inspection, traffic is analyzed for application-specific attacks like SQL injection and XSS.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="waf-to-load-balancer">
+                    <h3>WAF to Load Balancer Flow</h3>
+                    <p>This flow shows traffic moving from the WAF to the load balancer:</p>
+                    <ol>
+                        <li>WAF completes inspection and forwards traffic</li>
+                        <li>PBR Policy 3 intercepts the traffic</li>
+                        <li>PBR redirects traffic to the F5 BIG-IP Load Balancer</li>
+                        <li>Load balancer processes the traffic</li>
+                    </ol>
+                    <p>After security inspection, traffic reaches the load balancer for distribution to appropriate servers.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="load-balancer-to-server">
+                    <h3>Load Balancer to Server Flow</h3>
+                    <p>This flow shows traffic from the load balancer to the web servers:</p>
+                    <ol>
+                        <li>Load balancer selects an appropriate web server based on its algorithm</li>
+                        <li>Traffic is forwarded to the selected web server</li>
+                        <li>Web server processes the request</li>
+                    </ol>
+                    <p>The load balancer ensures optimal distribution of traffic across available servers.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="return-path">
+                    <h3>Return Path Flow</h3>
+                    <p>This flow shows how response traffic follows the reverse path through all services:</p>
+                    <ol>
+                        <li>Web server generates a response</li>
+                        <li>PBR Policy 3 redirects return traffic to the load balancer</li>
+                        <li>Load balancer processes the return traffic</li>
+                        <li>PBR Policy 2 redirects to the WAF</li>
+                        <li>WAF inspects the return traffic</li>
+                        <li>PBR Policy 1 redirects to the firewall</li>
+                        <li>Firewall inspects and forwards the return traffic</li>
+                        <li>Response returns to the client through the L3Out</li>
+                    </ol>
+                    <p>This ensures symmetric traffic flow through all services in the chain, maintaining connection state and security inspection in both directions.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="all">
+                    <h3>Complete Service Chain Flow</h3>
+                    <p>This view shows the complete traffic flow through the service chain:</p>
+                    <ul>
+                        <li><strong>Blue Arrows:</strong> Forward traffic path (client to server)</li>
+                        <li><strong>Orange Dashed Arrows:</strong> Return traffic path (server to client)</li>
+                    </ul>
+                    <p>The Service Graph and PBR policies ensure that traffic flows through all services in the correct sequence, with each service focusing on its specific function. This creates a comprehensive security and application delivery solution.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- L4-L7 Service Insertion Tab -->
+        <div id="l4-l7-tab" class="tab-content">
+            <h2>PBR with L4-L7 Service Insertion Beyond Load Balancing</h2>
+            
+            <p>This diagram illustrates how PBR enables multiple services on a single F5 BIG-IP platform. Select specific traffic flows to highlight them:</p>
+            
+            <div id="l4-l7-diagram-controls" class="flow-controls">
+                <button class="flow-button all" data-flow="all" data-diagram="l4-l7-diagram">Show All Flows</button>
+                <button class="flow-button" data-flow="client-to-ssl-module" data-diagram="l4-l7-diagram">Client to SSL Module</button>
+                <button class="flow-button" data-flow="ssl-to-ips-module" data-diagram="l4-l7-diagram">SSL to IPS Module</button>
+                <button class="flow-button" data-flow="ips-to-load-balancer" data-diagram="l4-l7-diagram">IPS to Load Balancer</button>
+                <button class="flow-button" data-flow="load-balancer-to-server" data-diagram="l4-l7-diagram">Load Balancer to Server</button>
+                <button class="flow-button" data-flow="return-path" data-diagram="l4-l7-diagram">Return Path</button>
+                <button class="flow-button none" data-flow="none" data-diagram="l4-l7-diagram">Hide All Flows</button>
+            </div>
+            
+            <div class="zoom-controls">
+                <button class="zoom-button zoom-out" data-diagram="l4-l7-diagram">-</button>
+                <span class="zoom-level" data-diagram="l4-l7-diagram">100%</span>
+                <button class="zoom-button zoom-in" data-diagram="l4-l7-diagram">+</button>
+                <button class="zoom-button zoom-reset" data-diagram="l4-l7-diagram">Reset</button>
+            </div>
+            
+            <div id="l4-l7-diagram" class="diagram-container">
+                <img src="images/l4_l7_service_insertion.png" alt="L4-L7 Service Insertion Diagram" class="diagram-image">
+            </div>
+            
+            <div id="l4-l7-diagram-descriptions">
+                <div class="flow-description" data-flow="client-to-ssl-module">
+                    <h3>Client to SSL Module Flow</h3>
+                    <p>This flow shows the initial HTTPS traffic path from client to the SSL module:</p>
+                    <ol>
+                        <li>Client initiates an HTTPS request</li>
+                        <li>Traffic enters the ACI fabric through the L3Out</li>
+                        <li>PBR Policy intercepts the traffic</li>
+                        <li>PBR redirects traffic to the F5 Virtual Server</li>
+                        <li>Traffic reaches the SSL Offload Module</li>
+                    </ol>
+                    <p>This ensures that all encrypted traffic is first processed by the SSL module for decryption before further inspection.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="ssl-to-ips-module">
+                    <h3>SSL to IPS Module Flow</h3>
+                    <p>This flow shows decrypted traffic moving from the SSL module to the IPS/IDS module:</p>
+                    <ol>
+                        <li>SSL module decrypts HTTPS traffic to HTTP</li>
+                        <li>Decrypted traffic is forwarded to the IPS/IDS Module</li>
+                        <li>IPS/IDS performs deep packet inspection on clear-text traffic</li>
+                    </ol>
+                    <p>Decryption allows the IPS to inspect traffic that would otherwise be hidden by encryption, detecting threats that might be concealed in encrypted communications.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="ips-to-load-balancer">
+                    <h3>IPS to Load Balancer Module Flow</h3>
+                    <p>This flow shows inspected traffic moving from the IPS module to the load balancer module:</p>
+                    <ol>
+                        <li>IPS/IDS completes inspection and forwards traffic</li>
+                        <li>Traffic reaches the Load Balancer Module</li>
+                        <li>Load balancer processes the traffic</li>
+                    </ol>
+                    <p>After security inspection, traffic reaches the load balancer for distribution to appropriate servers.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="load-balancer-to-server">
+                    <h3>Load Balancer to Server Flow</h3>
+                    <p>This flow shows traffic from the load balancer module to the web servers:</p>
+                    <ol>
+                        <li>Load balancer selects an appropriate web server based on its algorithm</li>
+                        <li>Traffic is forwarded to the selected web server</li>
+                        <li>Web server processes the request</li>
+                    </ol>
+                    <p>The load balancer ensures optimal distribution of traffic across available servers.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="return-path">
+                    <h3>Return Path Flow</h3>
+                    <p>This flow shows how response traffic follows the reverse path through all services:</p>
+                    <ol>
+                        <li>Web server generates a response</li>
+                        <li>PBR redirects return traffic to the F5 platform</li>
+                        <li>Traffic reaches the Load Balancer Module</li>
+                        <li>Load balancer processes the return traffic</li>
+                        <li>Traffic is forwarded to the IPS/IDS Module</li>
+                        <li>IPS inspects the return traffic</li>
+                        <li>Traffic is forwarded to the SSL Module</li>
+                        <li>SSL encrypts HTTP back to HTTPS</li>
+                        <li>Response returns to the client through the L3Out</li>
+                    </ol>
+                    <p>This ensures symmetric traffic flow through all services on the F5 platform, maintaining connection state and security inspection in both directions.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="all">
+                    <h3>Complete L4-L7 Service Flow</h3>
+                    <p>This view shows the complete traffic flow through the F5 BIG-IP platform services:</p>
+                    <ul>
+                        <li><strong>Blue Arrows:</strong> Forward traffic path (client to server)</li>
+                        <li><strong>Orange Dashed Arrows:</strong> Return traffic path (server to client)</li>
+                        <li><strong>Green Dotted Arrows:</strong> Alternative server selection path</li>
+                        <li><strong>Purple Dotted Arrows:</strong> Alternative server return path</li>
+                    </ul>
+                    <p>The F5 BIG-IP platform provides multiple services (SSL offload, IPS/IDS, load balancing) on a single device, with PBR ensuring all traffic flows through the platform for comprehensive processing.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Multi-site PBR Tab -->
+        <div id="multisite-tab" class="tab-content">
+            <h2>Multi-site PBR Configurations with Stretched VLANs</h2>
+            
+            <p>This diagram shows how PBR works in a multi-site environment with stretched network segments. Select specific traffic flows to highlight them:</p>
+            
+            <div id="multisite-diagram-controls" class="flow-controls">
+                <button class="flow-button all" data-flow="all" data-diagram="multisite-diagram">Show All Flows</button>
+                <button class="flow-button" data-flow="site-1-forward-path" data-diagram="multisite-diagram">Site 1 Forward Path</button>
+                <button class="flow-button" data-flow="site-1-return-path" data-diagram="multisite-diagram">Site 1 Return Path</button>
+                <button class="flow-button" data-flow="site-2-forward-path" data-diagram="multisite-diagram">Site 2 Forward Path</button>
+                <button class="flow-button" data-flow="site-2-return-path" data-diagram="multisite-diagram">Site 2 Return Path</button>
+                <button class="flow-button" data-flow="cross-site-connections" data-diagram="multisite-diagram">Cross-Site Connections</button>
+                <button class="flow-button none" data-flow="none" data-diagram="multisite-diagram">Hide All Flows</button>
+            </div>
+            
+            <div class="zoom-controls">
+                <button class="zoom-button zoom-out" data-diagram="multisite-diagram">-</button>
+                <span class="zoom-level" data-diagram="multisite-diagram">100%</span>
+                <button class="zoom-button zoom-in" data-diagram="multisite-diagram">+</button>
+                <button class="zoom-button zoom-reset" data-diagram="multisite-diagram">Reset</button>
+            </div>
+            
+            <div id="multisite-diagram" class="diagram-container">
+                <img src="images/multisite_pbr.png" alt="Multi-site PBR Diagram" class="diagram-image">
+            </div>
+            
+            <div id="multisite-diagram-descriptions">
+                <div class="flow-description" data-flow="site-1-forward-path">
+                    <h3>Site 1 Forward Path</h3>
+                    <p>This flow shows the traffic path from client to server within Site 1:</p>
+                    <ol>
+                        <li>Client 1 initiates a request to the VIP (10.1.1.100)</li>
+                        <li>Traffic enters the ACI fabric through the L3Out in Site 1</li>
+                        <li>PBR Policy in Site 1 intercepts the traffic</li>
+                        <li>PBR redirects traffic to the local F5 BIG-IP</li>
+                        <li>F5 BIG-IP selects a local web server</li>
+                        <li>Traffic is forwarded to the selected web server in Site 1</li>
+                    </ol>
+                    <p>This ensures that traffic entering Site 1 is processed locally for optimal performance.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="site-1-return-path">
+                    <h3>Site 1 Return Path</h3>
+                    <p>This flow shows the return traffic path within Site 1:</p>
+                    <ol>
+                        <li>Web Server 1 generates a response</li>
+                        <li>PBR Policy in Site 1 intercepts the return traffic</li>
+                        <li>PBR redirects return traffic to the local F5 BIG-IP</li>
+                        <li>F5 BIG-IP processes the return traffic</li>
+                        <li>Traffic is forwarded back to the client through the L3Out in Site 1</li>
+                    </ol>
+                    <p>This maintains symmetric traffic flow through the local F5 BIG-IP in Site 1.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="site-2-forward-path">
+                    <h3>Site 2 Forward Path</h3>
+                    <p>This flow shows the traffic path from client to server within Site 2:</p>
+                    <ol>
+                        <li>Client 2 initiates a request to the VIP (10.1.1.100)</li>
+                        <li>Traffic enters the ACI fabric through the L3Out in Site 2</li>
+                        <li>PBR Policy in Site 2 intercepts the traffic</li>
+                        <li>PBR redirects traffic to the local F5 BIG-IP</li>
+                        <li>F5 BIG-IP selects a local web server</li>
+                        <li>Traffic is forwarded to the selected web server in Site 2</li>
+                    </ol>
+                    <p>This ensures that traffic entering Site 2 is processed locally for optimal performance.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="site-2-return-path">
+                    <h3>Site 2 Return Path</h3>
+                    <p>This flow shows the return traffic path within Site 2:</p>
+                    <ol>
+                        <li>Web Server 2 generates a response</li>
+                        <li>PBR Policy in Site 2 intercepts the return traffic</li>
+                        <li>PBR redirects return traffic to the local F5 BIG-IP</li>
+                        <li>F5 BIG-IP processes the return traffic</li>
+                        <li>Traffic is forwarded back to the client through the L3Out in Site 2</li>
+                    </ol>
+                    <p>This maintains symmetric traffic flow through the local F5 BIG-IP in Site 2.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="cross-site-connections">
+                    <h3>Cross-Site Connections</h3>
+                    <p>This flow shows the stretched objects and cross-site traffic possibilities:</p>
+                    <ol>
+                        <li>Multi-Site Orchestrator synchronizes policies across sites</li>
+                        <li>Stretched VRF provides common routing domain across sites</li>
+                        <li>Stretched Bridge Domains extend L2 connectivity</li>
+                        <li>Stretched EPGs ensure consistent policy application</li>
+                        <li>Cross-site client requests can be processed by either site</li>
+                        <li>F5 BIG-IP can direct traffic to servers in either site if needed</li>
+                    </ol>
+                    <p>While traffic typically stays local to each site for optimal performance, the stretched objects enable cross-site communication when necessary.</p>
+                </div>
+                
+                <div class="flow-description" data-flow="all">
+                    <h3>Complete Multi-site PBR Configuration</h3>
+                    <p>This view shows the complete multi-site environment with all traffic flows:</p>
+                    <ul>
+                        <li><strong>Blue Arrows:</strong> Site 1 forward traffic path</li>
+                        <li><strong>Orange Dashed Arrows:</strong> Site 1 return traffic path</li>
+                        <li><strong>Green Arrows:</strong> Site 2 forward traffic path</li>
+                        <li><strong>Purple Dashed Arrows:</strong> Site 2 return traffic path</li>
+                        <li><strong>Yellow Dotted Arrows:</strong> Cross-site connections and stretched objects</li>
+                    </ul>
+                    <p>The Multi-Site Orchestrator provides centralized policy management, while local PBR policies ensure traffic stays within each site when possible for optimal performance. Stretched objects provide consistent addressing and policy application across sites.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/script.js"></script>
+</body>
+</html>
